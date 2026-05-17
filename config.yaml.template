@@ -1,0 +1,158 @@
+# Hermes Agent Configuration — Static Core Template
+# =============================================================================
+# This is a SUGGESTED configuration template for the Static Core architecture.
+# See MANIFESTO.md for design principles and ARCHITECTURE.md for full rationale.
+#
+# Design philosophy (Manifesto Pillar 1: Radical Simplicity):
+# "Only set what needs to change. Everything else uses Hermes defaults."
+#
+# Copy this file to ~/.hermes/config.yaml and customize.
+# Secrets (API keys) go in ~/.hermes/.env, never in this file.
+# =============================================================================
+
+# =============================================================================
+# MODEL — OpenRouter provider, DeepSeek model, no reasoning tokens
+# =============================================================================
+# Manifesto Pillar 4 (Total Portability): Single provider = single credential,
+#   instant model switching, no vendor lock-in.
+# Manifesto Pillar 6 (Token Discipline): MoE architecture + reasoning_effort=none
+#   = minimal cost per turn. Every token earned its place.
+# Architecture §6 (Design Decisions): Full problem→solution→rationale chain
+#   for each choice below.
+# =============================================================================
+
+model:
+  # Primary model: DeepSeek V4 Pro.
+  # Rationale: MoE (Mixture of Experts) architecture. Best cost/performance
+  #   ratio in market as of May 2026. Fewer active parameters per query = cheaper
+  #   tokens without proportional quality loss.
+  # Pillars: 1 (Simplicity), 6 (Token Discipline).
+  # See: Architecture §6 — DeepSeek as Primary Model.
+  default: "deepseek/deepseek-v4-pro"
+
+  # Inference provider: OpenRouter.
+  # Rationale: Single API gateway to all major model providers. ~5% credit fee,
+  #   0% token markup. Rapid switching without reconfiguration. Universal API
+  #   surface = maximum portability.
+  # Pillars: 4 (Portability).
+  # See: Architecture §6 — OpenRouter as Sole Inference Provider.
+  provider: "openrouter"
+
+  # API endpoint: OpenRouter's chat completions endpoint.
+  # Rationale: Universal compatibility. Same endpoint serves all models.
+  base_url: "https://openrouter.ai/api/v1"
+
+  # API mode: Chat completions (OpenAI-compatible).
+  # Rationale: Standard protocol. All providers behind OpenRouter support it.
+  api_mode: "chat_completions"
+
+# =============================================================================
+# AGENT — Reasoning effort, verbosity
+# =============================================================================
+# Manifesto Pillar 2 (Explicit Control): The agent does not guess. It does not
+#   elaborate unsolicited. It answers and waits.
+# Manifesto Pillar 3 (Determinism over Heuristics): reasoning_effort=none makes
+#   behavior predictable — no hidden reasoning tokens inflating cost.
+# =============================================================================
+
+agent:
+  # Reasoning effort: NONE.
+  # Rationale: Empirical studies (2025-2026) demonstrate reasoning tokens
+  #   produce exponential cost increases with negligible quality improvements
+  #   on MoE architectures. The model already routes internally.
+  #   This is the single most impactful cost-reduction setting.
+  # Pillars: 1 (Simplicity), 6 (Token Discipline).
+  # See: Architecture §6 — reasoning_effort=none.
+  reasoning_effort: "none"
+
+  # Verbose mode: OFF.
+  # Rationale: The agent communicates with extreme semantic density as a
+  #   permanent behavioral reflex (encoded in SOUL.md, not configurable here).
+  #   Verbose output from the scaffolding would conflict with token discipline.
+  #   No unsolicited commentary. No filler.
+  # Pillars: 2 (Explicit Control), 6 (Token Discipline).
+  verbose: false
+
+# =============================================================================
+# TERMINAL — Local installation, no Docker, no SSH
+# =============================================================================
+# Manifesto Pillar 5 (Single Source of Truth): Local filesystem = direct
+#   access to all user data. No network latency. No credential overhead.
+# Manifesto Pillar 9 (Reproducibility): Local install is trivially reproducible
+#   across machines (WSL2, CachyOS/Arch).
+# Architecture §2 (The Paradigm Shift): Cloud is shifting from data custodian
+#   to AI inference provider — agents reach into local data via API.
+# Architecture §6 — Local Installation over SSH.
+# =============================================================================
+
+terminal:
+  # Backend: LOCAL.
+  # Rationale: Direct filesystem access provides the richest possible context
+  #   for the agent. No Docker overhead (abandoned by design). No SSH latency.
+  #   Security is enforced through scope rules in SOUL.md (read everywhere,
+  #   write only to a single dedicated output directory).
+  # Pillars: 4 (Portability), 5 (SSoT), 9 (Reproducibility).
+  backend: "local"
+
+  # Timeout: 180 seconds (Hermes default).
+  # Rationale: Sufficient for complex multi-step operations without being
+  #   excessively permissive. Hermes default — no override needed.
+  timeout: 180
+
+  # Working directory: auto-detected (Hermes default).
+  # Rationale: Hermes detects the session's working directory automatically.
+  #   No manual override needed. Leave unset = default behavior.
+  # Pillars: 1 (Simplicity) — don't set what you don't need to change.
+
+# =============================================================================
+# SKILLS — All disabled by default
+# =============================================================================
+# Manifesto Pillar 1 (Radical Simplicity): Skills are a tax on focus.
+#   Each loaded skill costs tokens and cognitive overhead.
+# Manifesto Pillar 2 (Explicit Control): Skills are cast manually, only when
+#   the user decides. No automatic loading. No automatic creation.
+# Manifesto Pillar 7 (Active Externalization): Behavioral rules belong in
+#   the SOUL (injected permanently), not in optionally-loaded skills.
+# Architecture §6 — Skills: All Disabled by Default.
+# Architecture §7 (The Minimalist Core): "Auto-load skills" = NOT done.
+# =============================================================================
+
+# No skills enabled by default.
+# When a skill is needed, the user casts it explicitly.
+# Only hub-maintained skills are used. Zero custom skill maintenance.
+# Maximum active at any time: 5-8.
+# See: ARCHITECTURE.md — Skill Philosophy.
+
+# =============================================================================
+# SECURITY — Enabled, minimal configuration
+# =============================================================================
+# Manifesto Pillar 1 (Simplicity): Security without complexity.
+#   Tirith is a lightweight built-in scanner. No external dependencies.
+# =============================================================================
+
+security:
+  # Tirith: ENABLED.
+  # Rationale: Lightweight command security scanning. Built into Hermes.
+  #   No external dependencies. No configuration overhead. Enabled by default.
+  tirith_enabled: true
+
+# =============================================================================
+# EVERYTHING ELSE — Hermes defaults. No overrides.
+# =============================================================================
+# The following settings are intentionally NOT configured here because
+# Hermes provides reasonable defaults for all of them:
+#
+#   compression.enabled — Hermes auto-manages context window saturation.
+#   tool_loop_guardrails — Default thresholds are sufficient.
+#   credential_pool — Not needed for single-user local installation.
+#   max_iterations — Hermes default.
+#   context_length — Auto-detected from provider.
+#   max_tokens — Auto-detected from model's native ceiling.
+#   provider_routing — OpenRouter defaults are optimal.
+#   browser — Not used in this architecture.
+#   Gateway platforms — Not used in this architecture (CLI-only agent).
+#
+# Manifesto Pillar 1 (Radical Simplicity): "Only set what needs to change."
+# Architecture §7 (The Minimalist Core): Every omitted setting is a deliberate
+#   act of architectural discipline.
+# =============================================================================
