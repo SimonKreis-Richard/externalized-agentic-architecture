@@ -1,165 +1,207 @@
-# Agent Design Manifesto
+# Externalization Architecture — A Manifesto
 
-> *"Perfection is achieved not when there is nothing left to add, but when there is nothing left to remove."* — Antoine de Saint-Exupéry
+> *"Where does the mind stop and the rest of the world begin?"* — Clark & Chalmers, *The Extended Mind* (1998)
 
 ## What This Is
 
-A constitution for AI agent design. A statement of first principles. A decision framework that answers *"what should we do?"* before any configuration file is written.
+A design constitution for AI agent systems built on a single insight: **cognition is a data flow.** Every thought — biological or artificial — is input, processing, output. The bottleneck is never processing power. It is always context capacity.
 
-These principles emerged from months of iteration with Hermes Agent, obsessively refined through real sessions, failures, and hard-won clarity. They are opinionated, minimal, and non-negotiable.
+This manifesto defines an architecture where the agent's "mind" extends into its environment — not as metaphor, but as engineered reality. Plain-text files are not storage. They are cognitive extensions. Skills are not tools. They are externalized procedural memory. Sub-agents are not helpers. They are parallel processing streams that return results to the core.
 
-**They exist so that every technical decision can be tested against a single question:** *Does this make the system simpler and more portable, or does it just add complexity?*
+The architecture emerged from months of iteration with Hermes Agent — where every design decision was tested against one question: *does this move cognition out of the context window and into durable external structures?*
+
+**Clark & Chalmers (1998)** provided the philosophical foundation — the Extended Mind Thesis, which argues that external objects (notebooks, tools, files) can *constitute* part of a cognitive system when they are reliably coupled to it. This manifesto operationalizes that thesis for AI agents.
 
 ---
 
-## The Nine Pillars
+## The Core Insight: Externalization as the Fundamental Data Flow
 
-### 1. Radical Simplicity
+### Biological Cognition Has Always Been Externalized
 
-> *"Simple can be harder than complex. You have to work hard to get your thinking clean to make it simple. But it's worth it in the end because once you get there, you can move mountains."* — Steve Jobs
+Human cognition has never been confined to the skull. Writing externalized memory. Mathematics externalized calculation. The printing press externalized knowledge distribution. The Zettelkasten (Luhmann, 1952) externalized associative thinking — 90,000 atomic notes, densely linked, forming a thinking partner that transcended biological memory limits.
 
-- Defaults over overrides. Vanilla over custom. Remove over add.
-- If it can't be explained in one sentence, it's not ready. This is the discipline that forces clarity.
-- No automatic features. No "smart" inference. The system does what it's told, nothing more.
-- Question everything: *Is this the simplest viable solution? What breaks if we remove it?*
+David Allen's *Getting Things Done* (2001) identified the mechanism: **open loops**. Unresolved tasks, unfiled information, unmade decisions — each consumes working memory. The brain's working memory capacity is ~4 chunks (Cowan, 2001). Every open loop is a chunk stolen from creative cognition. Allen's solution: externalize everything into a trusted system.
 
-### 2. Explicit Control
+> *"Your mind is for having ideas, not holding them."* — David Allen
 
-> *The user decides. The system executes. Never the other way around.*
+### AI Agents Have the Same Constraint
 
-- No automatic mode detection. No inferred intent. No guessing.
-- Skills are cast manually. Memory is written intentionally. Delegation is explicit.
-- The SOUL is a static core. Behavioral modulation happens through direct user instruction, not through infrastructure that pretends to know what the user needs.
-- **Rationale**: Explicit control eliminates the most expensive error in AI systems — the system doing the *wrong* thing automatically. It also eliminates the maintenance burden of "mode detection" infrastructure.
+A language model's context window *is* its working memory. Every token injected — system prompts, memory entries, skills, conversation history — consumes capacity. Liu et al. (2024) demonstrated in *"Lost in the Middle"* (arXiv:2307.03172) that attention degrades with context length. Information in the middle of a long context receives less attention than information at the edges.
 
-### 3. Determinism Over Heuristics
+The consequence is architectural homology: **the same principles that keep a human mind clear and creative — externalize, minimize, eliminate noise — keep an agent's context window efficient and its reasoning sharp.**
 
-> *If a behavior can be encoded as a rule, it should be. Opaque heuristics are technical debt.*
+| Principle | Biological Basis | Computational Basis |
+|---|---|---|
+| Externalize everything | GTD: working memory is for processing, not storage | Context window is for task reasoning, not identity storage |
+| Minimize injected content | Cowan (2001): capacity ~4 chunks | Every token in the prompt is a token not available for reasoning |
+| Eliminate open loops | Miller (1956): unresolved loops consume attention | Auto-loaded skills, auto-created memory = unresolved context |
+| Stable is predictable | Baddeley & Hitch (1974): structured WM outperforms chaotic | Static prompts are cacheable, deterministic, auditable |
+| Refuse the unnecessary | Baumeister (1998): decision fatigue depletes cognition | Every parameter, mode, and skill is a decision the system must make |
 
-- YAML, explicit variables, transparent logic > "the model decides."
-- The SOUL is a rulebook, not a suggestion box.
-- Every behavior should be traceable to a specific principle or instruction.
-- **Implication**: No dynamic mode injection. No model-based routing decisions for core behavior. The system's personality is a fixed contract.
+This is not metaphor. Both systems degrade under cognitive load. Both recover through externalization.
 
-### 4. Total Portability
+### Clark & Chalmers: The Extended Mind Operationalized
 
-> *If the system can't be rebuilt from scratch, it isn't robust.*
+Clark & Chalmers (1998, *Analysis* 58(1):7-19) argued that cognition extends beyond the skull when external objects are **reliably coupled** to the cognitive system. Their thought experiment: Otto, who has Alzheimer's and uses a notebook, versus Inga, who remembers internally. If the notebook is constantly accessible, automatically endorsed, and reliably consulted — it *is* Otto's memory. The location (inside skull vs. outside) is irrelevant.
 
-- Plain text everywhere. Markdown is the universal format. JSON for structured data.
-- Git is the single source of truth and the only backup mechanism.
-- A machine destruction is an inconvenience, not a catastrophe. `git clone` + `./bootstrap.sh` = fully provisioned.
-- NO vendor lock-in. NO proprietary formats. NO database dependencies for core identity.
-- **The test**: delete everything. Rebuild from the repo. Does it work? If not, it's not portable.
+This architecture applies the same principle to AI agents:
 
-### 5. Single Source of Truth (SSoT)
+| Extended Mind Concept | Agent Implementation |
+|---|---|
+| **Active Externalism**: environment plays an *active* role in cognition | `SOUL.md`, `MEMORY.md`, skills are read every turn — they *are* the agent's extended mind |
+| **Cognitive Coupling**: reliable, ongoing link between agent and external structures | Git-tracked files, ByteRover memory tree, Obsidian vault — all accessible every session |
+| **Functional Parity**: if it functions as memory, it IS memory | A `MEMORY.md` entry consulted every turn is functionally identical to internal memory — but more durable |
+| **Complementarity**: external + internal = more powerful than either alone | The agent's context window + externalized skills + ByteRover knowledge = a cognitive system larger than any single component |
 
-> *One file, one truth, one canonical location. Duplication is the root of drift.*
+### The Data Flow: Everything is Externalization
 
-- The SOUL (`SOUL.md`) is the ONLY behavioral file. No profile SOULs. No sub-agent personalities.
-- Personal data lives in versioned JSON files in one directory (`data/`).
-- The operational config repo is the runtime SSoT. The design principles repo is the conceptual SSoT.
-- Every duplicate detected = a contradiction to resolve immediately.
-- **Implication**: Sub-agents are empty shells. Profile agents have no SOULs. Nothing inherits personality except the core agent.
+Consider what actually happens in a session:
 
-### 6. Token Discipline
+```
+Simon's thoughts → Obsidian note → Sam reads → breaks down → delegates to sub-agents
+    → sub-agents research → return results → Sam synthesizes → writes to project file
+    → pattern detected → brv_curate to ByteRover → procedure repeated 3 times → skillify
+    → AGENTS.md updated → context externalized for next session
+```
 
-> *Every word injected into a permanent file is paid at every turn. Make them earn their place.*
+Every step is externalization. **Input → Process → Externalize.** The brain (biological or silicon) processes. The environment stores. The loop continues.
 
-- Target SOUL: under 800 tokens. Target MEMORY: under 500 tokens.
-- Permanent files are indexes, not encyclopedias. Detail lives in subdirectories.
-- A line that hasn't been relevant in 14 days is noise. Cut it.
-- **Rationale**: A prompt injected at every turn has its cost multiplied by session length. A 1,000-token reduction saves 1,000 tokens every turn — across thousands of turns, this compounds into significant cost savings and faster inference.
+The bottleneck is never processing. It is **context crowding** — when too much lives in the active context window, cognition degrades. The solution is aggressive externalization: move everything that doesn't need to be in active memory into durable external structures.
 
-### 7. Active Externalization
+### Minimalism is a Consequence, Not a Goal
 
-> *Nothing lives in context that can live in a file. Nothing lives in a tool that can live in plain text.*
+Previous versions of this manifesto centered minimalism as the primary principle. This was backwards.
 
-- The agent's "brain" is external to the scaffolding. Identity, principles, and project context are Markdown files at the repo root.
-- Tool-specific state (session memory, token caches) is disposable. What matters survives as plain text.
-- Write-Ahead Learning: corrections are written to files BEFORE responding.
-- **The principle**: maximize what survives a tool deletion. A plain-text identity file is forever. A tool-specific SQLite database is temporary.
+**Minimalism is what happens when you externalize properly.** If every fact, procedure, and pattern is externalized to the right structure, the core context naturally stays lean. You don't need a "token discipline" principle — the data flow naturally minimizes what stays in context because everything else has somewhere better to live.
 
-### 8. Data Preservation
+| What | Where It Lives | Why |
+|---|---|---|
+| Identity, tone, reflexes | `SOUL.md` (~800 tokens) | Core cognitive contract. Read every turn. |
+| Durable facts | `MEMORY.md` + ByteRover | Facts that survive sessions. Index, not encyclopedia. |
+| Procedural knowledge | Skills (manually cast) | Externalized when needed. Not auto-loaded. |
+| Project context | `AGENTS.md` (per project) | Lives with the project, not in the agent. |
+| Research output | `[project]/agents/` | Timestamped, auditable, externalized immediately. |
+| Cross-session knowledge | ByteRover memory tree | Hierarchical, queryable, persistent. |
+| Patterns & procedures | Skills → brv_curate | 3 uses → skillify. Durable capture of process. |
 
-> *Never delete. Archive, move, merge. History is sacred.*
+The SOUL stays at ~800 tokens not because of a minimalist aesthetic, but because everything else has been externalized to its proper home.
 
-- No destructive file operations. Only archiving, moving, and merging.
-- Original files are annotated (`#processed`) and moved to `_archive/`, never destroyed.
-- Git history provides the ultimate safety net for all text files.
-- **Rationale**: What appears useless today may be critical context tomorrow. Storage is cheap. Lost history is irreplaceable.
+---
 
-### 9. Reproducibility
+## The Four Pillars
 
-> *Every state must be rebuildable from zero, by one person, without tribal knowledge.*
+These four principles emerge from the externalization data flow. They replace the previous nine pillars — not because those were wrong, but because they were symptoms. These are the causes.
 
-- Bootstrap scripts, documented dependencies, versioned configs.
-- No "I'll remember how this works." Everything explicit and documented.
-- The measure of quality: after a full system wipe, can one person be operational within one hour?
+### 1. Radical Externalization
+
+> *If it can live in a file, it does not live in context.*
+
+Every fact, procedure, preference, and pattern is externalized to the most durable medium available. The agent's context window is a processing workspace, not a storage locker. Skills, memory, project context, personal data — all live in plain-text files, version-controlled, portable, survivable.
+
+**The test**: if the scaffolding tool is deleted, what remains? Everything that was externalized.
+
+**Sub-principles** (the old pillars, now understood as consequences):
+- *Single Source of Truth* — externalization requires canonical locations. One file, one truth.
+- *Total Portability* — externalized to plain text = portable by definition.
+- *Data Preservation* — externalized knowledge is permanent. Never delete. Archive, merge, evolve.
+
+### 2. Orchestrated Autonomy
+
+> *The system maintains itself. The user steers.*
+
+An externalized cognitive system can operate autonomously because its knowledge, procedures, and triggers live outside any single session. Cron jobs audit skills. Hub scouts discover new capabilities. Memory trees capture patterns across sessions. The system self-maintains because its maintenance procedures are externalized.
+
+**What this enables**:
+- Cron-driven audits (skills, SOUL, memory) that run without user initiation
+- Proactive skill discovery and curation
+- Automatic pattern capture: 3 uses → skillify → brv_curate
+- Self-healing: detect stale memory → propose cleanup → execute with consent
+
+**The boundary**: the user remains the steward. The system proposes; the user decides. Autonomy is orchestration, not abdication.
+
+### 3. Funnel Cognition
+
+> *Information enters messy. It leaves structured. Each stage reduces volume, increases signal.*
+
+The cognitive pipeline has four stages, each externalized to a different structure:
+
+```
+Chaotic Input → Distillation → Categorization → Structured Knowledge
+    (raw)         (Sam breaks      (tags, types,       (ByteRover,
+                   down, finds      domains)            Obsidian,
+                   patterns)                            skills,
+                                                        AGENTS.md)
+```
+
+This is a funnel, not a bucket. Each stage reduces volume and increases signal-to-noise ratio. The agent is the distillation engine. The external structures are the permanent knowledge.
+
+**What this replaces**: the old "Inbox / Playground / Vault" model was correct in spirit but too static. Funnel cognition describes the *process* — how information *moves* from chaos to structure.
+
+### 4. Context Recycling
+
+> *Nothing is learned once. Everything is captured, externalized, and reused.*
+
+Procedures become skills. Insights become ByteRover entries. Project patterns become AGENTS.md updates. The system doesn't just externalize — it *recycles* context so that every cognitive effort compounds into durable knowledge.
+
+**The recycling loop**:
+- Session insight → `learnings-capture` → ByteRover or MEMORY.md
+- Procedure executed 3 times → `skillify` → reusable skill
+- Pattern detected in decisions → `brv_curate` → durable entry
+- Skill overlap detected → `skill-recycler` → consolidation
+- Session rich in discoveries → proposed `learnings-capture` by the agent
+
+**The principle**: context is too expensive to use once. Every cognitive output must be captured, externalized, and made available for future sessions. The system's intelligence grows with every interaction because nothing is lost.
 
 ---
 
 ## The Agent Identity
 
-These nine pillars serve one purpose that is not itself a pillar because it is not a *design choice* — it is the *reason* for the design:
+The four pillars serve one purpose: to define an agent whose cognition extends beyond its context window into a durable, self-maintaining ecosystem of external structures.
 
-**The agent is the system's core component.** Not a configurable chatbot. Not interchangeable. The SOUL is its identity — a fixed behavioral contract encoded in a single file. The principles keep it clean, portable, and aligned. The SOUL is the system's center of gravity; everything else orbits it.
+**The agent is not a chatbot with memory. The agent is a cognitive system whose "mind" spans files, skills, knowledge trees, and project contexts — all externalized, all version-controlled, all survivable.**
 
-The identity is defined by the user. The principles are universal. Neither is negotiable.
+The SOUL is the core contract (~800 tokens). It defines identity, tone, and reflexes. Everything else — knowledge, procedures, patterns, context — is externalized. The SOUL is the system's center of gravity; everything orbits it, but nothing clutters it.
 
 ---
 
 ## Decision Framework
 
-When faced with any architectural choice, apply these questions in order:
+When faced with any architectural choice:
 
-1. **Simplicity**: Can we remove instead of add?
-2. **Explicit Control**: Does the user decide, or does the system guess?
-3. **Portability**: Does this survive a full system wipe?
-4. **Determinism**: Is the behavior encoded as a rule, or left to model inference?
-5. **Token Cost**: Does this earn its place in a permanent injected file?
-6. **Reversibility**: Can we undo this? Is it a one-way door?
-
-If a proposal fails any of these, it doesn't proceed.
+1. **Externalization**: Can this live outside the context window? If yes, it should.
+2. **Durability**: Will this survive a tool deletion? If not, it's in the wrong place.
+3. **Recyclability**: Will this be useful in future sessions? If yes, capture it.
+4. **Autonomy**: Can the system maintain this itself? If yes, automate it.
+5. **Simplicity**: Can we remove instead of add? (This comes last because proper externalization naturally produces simplicity.)
 
 ---
 
 ## Anti-Principles
 
-These are design patterns we explicitly reject:
+Patterns we explicitly reject because they violate the externalization data flow:
 
-- **"The model will figure it out."** It won't. Encode it or drop it.
-- **"Let's add it just in case."** Premature features are debt.
-- **"This is how [big company] does it."** They have different constraints.
-- **"It's only a few more tokens."** Multiplied by thousands of turns, it matters.
-- **"We can automate this."** Not if it reduces explicit control.
-- **"The system should adapt to the user automatically."** The user should instruct the system. Adaptation without permission is misalignment.
-
----
-
-## Evolution
-
-This manifesto is versioned and lives in Git. It evolves by the user's explicit consent, never by autonomous modification. Every change is a commit with a rationale.
+- **"The model will figure it out."** — It won't. Externalize the rule or drop it.
+- **"Let's store it in the database."** — What lives in plain text survives. What lives in SQL dies with the tool.
+- **"Let's add it just in case."** — Premature features are context debt.
+- **"It's only a few more tokens."** — Multiplied by thousands of turns, multiplied by every session.
+- **"The system should adapt automatically."** — The user instructs. The system externalizes. Adaptation without consent is misalignment.
+- **"We'll remember how this works."** — Tribal knowledge is the enemy of externalization.
 
 ---
 
-## Appendix: Technical Design Decisions
+## Foundational References
 
-Every concrete choice flows from the nine pillars. Full rationale and details in [ARCHITECTURE.md](ARCHITECTURE.md).
+- **Clark, A. & Chalmers, D. (1998).** *The Extended Mind.* Analysis, 58(1):7-19. DOI: [10.1093/analys/58.1.7](https://doi.org/10.1093/analys/58.1.7). The philosophical foundation: cognition extends into the environment when external objects are reliably coupled to the cognitive system.
+- **Allen, D. (2001).** *Getting Things Done.* The productivity foundation: externalize open loops to free working memory for actual thinking.
+- **Cowan, N. (2001).** The magical number 4 in short-term memory. *Behavioral and Brain Sciences*, 24(1):87-114. The cognitive limit that makes externalization necessary.
+- **Liu, N.F. et al. (2024).** *Lost in the Middle: How Language Models Use Long Contexts.* arXiv:2307.03172. The computational validation: attention degrades with context length — externalization is not optional, it's structural.
 
-| Decision | Pillars | See |
-|----------|---------|-----|
-| JSON as personal data format | 4 (Portability), 8 (Preservation) | Architecture §6 |
-| MCP Trinity (Tavily → Exa → Jina) | 6 (Token Discipline) | Architecture §6 |
-| OpenRouter as sole provider | 4 (Portability) | Architecture §6 |
-| DeepSeek as primary model | 1 (Simplicity), 6 (Token Discipline) | Architecture §6 |
-| `reasoning_effort=none` | 1 (Simplicity), 6 (Token Discipline) | Architecture §6 |
-| GLM as fallback | 4 (Portability) | Architecture §6 |
-| Skills disabled by default | 1 (Simplicity), 7 (Externalization) | Architecture §6 |
-| Vanilla configurations | 1 (Simplicity) | Architecture §6 |
-| Local installation | 5 (SSoT), 9 (Reproducibility) | Architecture §6 |
-| Git-based synchronization | 4 (Portability), 8 (Preservation) | Architecture §6 |
-| Static Core (no dynamic modes) | 2 (Explicit Control), 3 (Determinism) | Architecture §4 |
+---
 
-**Version**: 1.0.0  
-**Ratified**: 2026-05-15  
+**Version**: 4.0.0  
+**Ratified**: 2026-05-17  
+**Previous versions**: 1.0.0 (2026-05-15, minimalism-centered), 2.0.0, 3.0.0  
 **License**: MIT
+
+> *"The notebook qualifies as such because it is constantly and immediately accessible to Otto, and it is automatically endorsed by him."* — Clark & Chalmers, 1998  
+> *The agent's files are its notebook. Its skills are its procedural memory. Its knowledge tree is its extended self. What lives outside the context window is not less cognitive — it is more durable.*
