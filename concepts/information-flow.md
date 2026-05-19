@@ -6,15 +6,18 @@
 
 ## Everything is a Data Flow
 
-Consider a real session trace:
+Consider a real session trace — every step leaves a node in the **fil d'Ariane**:
 
 ```
-Simon thinks → writes in Obsidian → Sam reads note
-    → Sam breaks down task → delegates research to sub-agents
-    → sub-agents search web → return findings → Sam synthesizes
-    → Sam writes result to project/agents/ → pattern detected → brv_curate to ByteRover
-    → procedure repeated 3 times → skillify → reusable skill
-    → project context updated → AGENTS.md enriched
+┌─ Session Start ──────────────────────────────────────────────┐
+│ Simon thinks → writes in Obsidian → Sam reads note           │
+│   → Sam breaks down task → delegates research to sub-agents  │
+│   → sub-agents search web → return findings                  │
+│   → Sam synthesizes → writes result to project/agents/       │
+│   → pattern detected → skillify → reusable skill             │
+│   → project context updated → AGENTS.md enriched             │
+│   → session trace appended to /traces/                       │
+└─ Each arrow = a node in the trace ───────────────────────────┘
 ```
 
 Every step is **input → process → externalize**. The brain (Sam) processes. The environment stores. The loop continues. The context window is the processing workspace — everything that can be externalized, is externalized.
@@ -25,46 +28,52 @@ This is Clark & Chalmers' **active externalism** in practice: the environment pl
 
 ## The Funnel: Four Stages
 
-Information enters chaotic and leaves structured. Each stage reduces volume, increases signal.
+Information enters chaotic and leaves structured. Each stage reduces volume, increases signal. **Each stage creates a named node in the fil d'Ariane trace.**
 
 ### Stage 1: Chaotic Input
-Raw, unfiltered, unstructured.
+Raw, unfiltered, unstructured.  
+*Node type: `input`*
 - User thoughts (typed or spoken)
 - Web research results
 - Sub-agent output
 - File contents
-- ByteRover query results
+- session_search results
 - Conversation context
 
 No filtering at this stage. Everything is captured.
 
 ### Stage 2: Distillation (Sam, the Core Agent)
-The agent processes raw input:
+The agent processes raw input.  
+*Node type: `processing`*
 - Breaks down complex instructions
 - Identifies what needs research vs. execution
 - Delegates parallel work to sub-agents
 - Finds patterns, connections, contradictions
 - Decides what is durable vs. ephemeral
 
-This is the *processing* stage. It happens in the context window.
+This is the *processing* stage. It happens in the context window. Each decision taken here is logged as a trace node.
 
 ### Stage 3: Categorization
-Each output is routed to its proper external home:
+Each output is routed to its proper external home.  
+*Node type: `routing`*
 
 | Output Type | Destination | Rule |
 |---|---|---|
 | Procedure (3rd use) | Skill | `skillify` → `0-custom-skills/` |
-| Durable fact | `MEMORY.md` or ByteRover | User-approved, compact, stable |
+| Durable fact | `MEMORY.md` or skill | User-approved, compact, stable |
 | Project context | `AGENTS.md` | Lives with the project |
 | Session output | `[project]/agents/YYYY-MM-DD_desc.ext` | Timestamped, auditable |
-| Pattern or insight | ByteRover (brv_curate) | Hierarchical knowledge tree |
-| Decision or push | ByteRover (brv_curate) | Pattern capture |
+| Pattern or insight | memory or skill capture | Hierarchical knowledge tree |
+| Decision or push | memory or skill capture | Pattern capture |
 | Transient/tactical | Conversation only | Evaporates after session |
 
+Every routing action emits a trace node recording what was stored, where, and why.
+
 ### Stage 4: Structured Knowledge
-Durable, queryable, version-controlled.
+Durable, queryable, version-controlled.  
+*Node type: `storage`*
 - Skills (`0-custom-skills/` + `skills/`)
-- ByteRover memory tree
+- cross-session memory
 - `MEMORY.md` + `USER.md`
 - `data/*.json`
 - Project `AGENTS.md` files
@@ -74,19 +83,76 @@ This is the agent's **extended mind** — what survives a tool deletion, a machi
 
 ---
 
+## Le fil d'Ariane dans le pipeline
+
+Each stage emits a **trace node** that is appended to the session's fil d'Ariane. The trace is a JSON-sequence file that records every operation:
+
+```json
+[
+  {"t": "2026-05-19T10:00:01Z", "type": "input",     "desc": "Simon wrote note in Obsidian: 'explore MCP protocol'"},
+  {"t": "2026-05-19T10:00:03Z", "type": "processing","desc": "Sam decomposed task into 3 research subtopics"},
+  {"t": "2026-05-19T10:00:05Z", "type": "routing",   "desc": "Delegated subtopic 1 to sub-agent alpha"},
+  {"t": "2026-05-19T10:00:07Z", "type": "routing",   "desc": "Delegated subtopic 2 to sub-agent beta"},
+  {"t": "2026-05-19T10:00:09Z", "type": "input",     "desc": "Sub-agent alpha returned 4 search results"},
+  {"t": "2026-05-19T10:00:11Z", "type": "processing","desc": "Sam synthesized results → wrote summary"},
+  {"t": "2026-05-19T10:00:13Z", "type": "routing",   "desc": "Wrote summary to project/agents/2026-05-19_mcp-exploration.md"},
+  {"t": "2026-05-19T10:00:15Z", "type": "storage",   "desc": "Detected pattern → skillify → saved to 0-custom-skills/"},
+  {"t": "2026-05-19T10:00:17Z", "type": "storage",   "desc": "Updated AGENTS.md with new context"}
+]
+```
+
+This is the **observability layer** for the cognitive pipeline. It answers:
+- **What happened?** Every operation is timestamped and described.
+- **Why?** Each node carries the context of the decision.
+- **Where did it go?** Routing nodes record the destination path.
+- **How did we get here?** The chain of nodes reconstructs the full reasoning path.
+
+The fil d'Ariane lives at `[project]/traces/YYYY-MM-DD_session-trace.json` and is rotated daily.
+
+---
+
+## Lazy Loading
+
+Skills and memory are **not loaded at startup**. Loading everything on session init would:
+- Exceed context windows
+- Waste tokens on irrelevant knowledge
+- Slow session start
+
+Instead, the system loads only:
+1. **Core context**: `SOUL.md`, `USER.md`, `MEMORY.md` — always loaded (small, durable)
+2. **Project context**: `AGENTS.md` of the current project
+3. **On-demand skills**: loaded by `run_skill` tool or `session_search` matching
+4. **Session trace**: written continuously, read on restart for continuity
+
+When a need arises — a task, a question, a pattern match — the agent fetches the relevant skill or memory chunk. This is the **lazy loading** principle: load what you need, when you need it.
+
+```python
+# Pseudo-code: lazy loading in practice
+def load_skill(name):
+    if name not in loaded_skills:
+        skill = read_file(f"0-custom-skills/{name}.md")
+        loaded_skills[name] = skill
+        log_trace("loading", f"Loaded skill {name}")
+    return loaded_skills[name]
+```
+
+Lazy loading makes the system scalable: tens or hundreds of skills can exist without collapsing the context window.
+
+---
+
 ## The Recycling Loop
 
 Context is too expensive to use once. The system recycles:
 
 ```
-Session insight ──→ learnings-capture ──→ ByteRover or MEMORY.md
+Session insight ──→ learnings-capture ──→ MEMORY.md or skill
 Procedure ×3 ──────→ skillify ───────────→ reusable skill  
-Decision pattern ──→ brv_curate ─────────→ ByteRover entry
+Decision pattern ──→ save as skill or memory ─────────→ durable skill entry
 Skill overlap ─────→ skill-recycler ─────→ consolidation
 Rich session ──────→ Sam proposes capture → user approves
 ```
 
-This is automated and proactive. Sam initiates captures. Cron jobs run audits. The system compounds.
+Each recycling action is a node in the fil d'Ariane, recording what was recycled and where.
 
 ---
 
@@ -122,15 +188,17 @@ Markdown + JSON, nothing else.
 | Extended Mind Concept | Implementation |
 |---|---|
 | **Active Externalism** | SOUL.md, MEMORY.md, skills are read every turn — they *are* the extended mind |
-| **Cognitive Coupling** | Git-tracked files, ByteRover tree, Obsidian vault — accessible every session |
+| **Cognitive Coupling** | Git-tracked files, skills + memory system, Obsidian vault — accessible every session |
 | **Functional Parity** | A MEMORY.md entry consulted every turn = functionally identical to internal memory |
-| **Complementarity** | Context window + externalized skills + ByteRover = cognitive system larger than any single component |
+| **Complementarity** | Context window + externalized skills + memory system = cognitive system larger than any single component |
 | **Otto's Notebook** | The agent's files ARE its notebook. Constantly accessible. Automatically endorsed. |
+| **Fil d'Ariane** | Every session step leaves a trace node — the full reasoning path is reconstructable after the fact |
+| **Lazy Loading** | Skills are loaded on demand, not at startup — keeping the context window lean and the knowledge base deep |
 
 ---
 
-**Version**: 4.0.0  
-**Last updated**: 2026-05-17  
-**Aligned with**: MANIFESTO.md v4.0.0
+**Version**: 5.0.0  
+**Last updated**: 2026-05-19  
+**Aligned with**: MANIFESTO.md v5.0.0
 
 > *"The notebook qualifies as such because it is constantly and immediately accessible to Otto, and it is automatically endorsed by him."* — Clark & Chalmers, 1998

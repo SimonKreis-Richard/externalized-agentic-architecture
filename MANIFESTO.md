@@ -4,17 +4,15 @@
 
 ## What This Is
 
-A design constitution for AI agent systems built on a single insight: **cognition is a data flow.** Every thought — biological or artificial — is input, processing, output. The bottleneck is never processing power. It is always context capacity.
+A design constitution for AI agent systems built on a single insight: **cognition is a data flow.** Every thought — biological or artificial — is input, processing, externalization. The bottleneck is never processing power. It is always context capacity.
 
-This manifesto defines an architecture where the agent's "mind" extends into its environment — not as metaphor, but as engineered reality. Plain-text files are not storage. They are cognitive extensions. Skills are not tools. They are externalized procedural memory. Sub-agents are not helpers. They are parallel processing streams that return results to the core.
+This manifesto defines an architecture where the agent's "mind" extends into its environment — not as metaphor, but as engineered reality. Plain-text files are not storage. They are cognitive extensions. Skills are not tools. They are externalized procedural memory. Sub-agents are not helpers. They are parallel processing streams that return results to the core. The Git repository is not version control. It is the trace — the Ariadne's thread that allows any decision to be traced back to its origin.
 
-The architecture emerged from months of iteration with Hermes Agent — where every design decision was tested against one question: *does this move cognition out of the context window and into durable external structures?*
-
-**Clark & Chalmers (1998)** provided the philosophical foundation — the Extended Mind Thesis, which argues that external objects (notebooks, tools, files) can *constitute* part of a cognitive system when they are reliably coupled to it. This manifesto operationalizes that thesis for AI agents.
+This architecture operationalizes Clark & Chalmers's Extended Mind Thesis (1998) for AI agents: external objects (files, notes, skill directories) *constitute* part of a cognitive system when they are reliably coupled to it.
 
 ---
 
-## The Core Insight: Externalization as the Fundamental Data Flow
+## The Core Insight: Externalization as the Complete Data Flow
 
 ### Biological Cognition Has Always Been Externalized
 
@@ -28,6 +26,8 @@ David Allen's *Getting Things Done* (2001) identified the mechanism: **open loop
 
 A language model's context window *is* its working memory. Every token injected — system prompts, memory entries, skills, conversation history — consumes capacity. Liu et al. (2024) demonstrated in *"Lost in the Middle"* (arXiv:2307.03172) that attention degrades with context length. Information in the middle of a long context receives less attention than information at the edges.
 
+Recent work by Su et al. (2026, arXiv:2604.24594) on **Skill Retrieval Augmentation (SRA-Bench)** confirms this empirically at scale: explicitly enumerating available skills within the context window fails to scale. As skill corpora expand, context budgets are consumed rapidly, and agents become markedly less accurate in identifying the right skill. The emerging paradigm — dynamic retrieval of skills from external corpora on demand — is not a convenience. It is a structural necessity.
+
 The consequence is architectural homology: **the same principles that keep a human mind clear and creative — externalize, minimize, eliminate noise — keep an agent's context window efficient and its reasoning sharp.**
 
 | Principle | Biological Basis | Computational Basis |
@@ -36,6 +36,7 @@ The consequence is architectural homology: **the same principles that keep a hum
 | Minimize injected content | Cowan (2001): capacity ~4 chunks | Every token in the prompt is a token not available for reasoning |
 | Eliminate open loops | Miller (1956): unresolved loops consume attention | Auto-loaded skills, auto-created memory = unresolved context |
 | Stable is predictable | Baddeley & Hitch (1974): structured WM outperforms chaotic | Static prompts are cacheable, deterministic, auditable |
+| Load lazily, not eagerly | Stigmem (2026): boot stub + manifest beats full preload | Lazy instruction discovery reduces context by 50–87% |
 | Refuse the unnecessary | Baumeister (1998): decision fatigue depletes cognition | Every parameter, mode, and skill is a decision the system must make |
 
 This is not metaphor. Both systems degrade under cognitive load. Both recover through externalization.
@@ -48,43 +49,64 @@ This architecture applies the same principle to AI agents:
 
 | Extended Mind Concept | Agent Implementation |
 |---|---|
-| **Active Externalism**: environment plays an *active* role in cognition | `SOUL.md`, `MEMORY.md`, skills are read every turn — they *are* the agent's extended mind |
-| **Cognitive Coupling**: reliable, ongoing link between agent and external structures | Git-tracked files, ByteRover memory tree, Obsidian vault — all accessible every session |
-| **Functional Parity**: if it functions as memory, it IS memory | A `MEMORY.md` entry consulted every turn is functionally identical to internal memory — but more durable |
-| **Complementarity**: external + internal = more powerful than either alone | The agent's context window + externalized skills + ByteRover knowledge = a cognitive system larger than any single component |
+| **Active Externalism**: environment plays an *active* role in cognition | SOUL, MEMORY, skills are read every turn — they *are* the agent's extended mind |
+| **Cognitive Coupling**: reliable, ongoing link between agent and external structures | Git-tracked files, skill system, Obsidian vault — all accessible every session |
+| **Functional Parity**: if it functions as memory, it IS memory | A MEMORY.md entry consulted every turn is functionally identical to internal memory — but more durable |
+| **Complementarity**: external + internal = more powerful than either alone | The agent's context window + externalized skills + memory system = a cognitive system larger than any single component |
 
-### The Data Flow: Everything is Externalization
+---
 
-Consider what actually happens in a session:
+## The Ariadne's Thread: Externalization as Trace
+
+The central concept of this architecture is the **Ariadne's thread** — the trace that every cognitive act leaves in the external system. In the original myth, Theseus enters the labyrinth and unrolls a thread so he can retrace his path. Each decision, each procedure, each insight in this architecture produces a durable token that becomes part of the thread.
+
+### The Complete Data Flow
+
+The system is not merely "radically externalized" — it is a **pipeline** where every actor externalizes *to* the next actor, and the trace accumulates at every step:
 
 ```
-Simon's thoughts → Obsidian note → Sam reads → breaks down → delegates to sub-agents
-    → sub-agents research → return results → Sam synthesizes → writes to project file
-    → pattern detected → brv_curate to ByteRover → procedure repeated 3 times → skillify
-    → AGENTS.md updated → context externalized for next session
+Human thought → Note-taking system → Agent context → Skill system → Git repository
+   (raw idea)     (structured note)   (task breakdown,    (procedural    (immutable
+                                     delegation)          capture)       trace)
 ```
 
-Every step is externalization. **Input → Process → Externalize.** The brain (biological or silicon) processes. The environment stores. The loop continues.
+Each arrow is an act of externalization. Each externalization creates a token on the thread:
 
-The bottleneck is never processing. It is **context crowding** — when too much lives in the active context window, cognition degrades. The solution is aggressive externalization: move everything that doesn't need to be in active memory into durable external structures.
+1. **Human → Note-taking system**: A thought is captured as a structured note (Obsidian, plain-text). This is externalization from biological to digital. The note becomes the first token on the thread.
 
-### Minimalism is a Consequence, Not a Goal
+2. **Note-taking system → Agent context**: The agent reads the note, decomposes the task, assigns sub-agents. The agent's reasoning is not ephemeral — it is recorded in conversation logs, agent files, and project documents. Each sub-agent result is externalized back to a file.
 
-Previous versions of this manifesto centered minimalism as the primary principle. This was backwards.
+3. **Agent context → Skill system**: When a procedure is executed three times, it becomes a skill — externalized procedural memory. The act of skillification records the pattern so it never needs to be re-derived. This is the second token.
 
-**Minimalism is what happens when you externalize properly.** If every fact, procedure, and pattern is externalized to the right structure, the core context naturally stays lean. You don't need a "token discipline" principle — the data flow naturally minimizes what stays in context because everything else has somewhere better to live.
+4. **Skill system → Git repository**: Every change — every file edit, every skill creation, every memory update — is committed to version control. Git is the master thread. Any decision in the system's history can be traced to the commit that introduced it, the conversation that motivated it, and the human thought that originated it.
 
-| What | Where It Lives | Why |
-|---|---|---|
-| Identity, tone, reflexes | `SOUL.md` (~800 tokens) | Core cognitive contract. Read every turn. |
-| Durable facts | `MEMORY.md` + ByteRover | Facts that survive sessions. Index, not encyclopedia. |
-| Procedural knowledge | Skills (manually cast) | Externalized when needed. Not auto-loaded. |
-| Project context | `AGENTS.md` (per project) | Lives with the project, not in the agent. |
-| Research output | `[project]/agents/` | Timestamped, auditable, externalized immediately. |
-| Cross-session knowledge | ByteRover memory tree | Hierarchical, queryable, persistent. |
-| Patterns & procedures | Skills → brv_curate | 3 uses → skillify. Durable capture of process. |
+```
+Externalization Pipeline (complete):
 
-The SOUL stays at ~800 tokens not because of a minimalist aesthetic, but because everything else has been externalized to its proper home.
+┌────────────────┐     ┌────────────────┐     ┌────────────────┐     ┌────────────────┐
+│  Human Thought  │ ──► │ Note-taking Sys │ ──► │  Agent Context  │ ──► │  Skill/Memory   │
+│  (biological)   │     │  (Obsidian, md) │     │  (session)      │     │  (file system)  │
+└────────────────┘     └────────────────┘     └────────────────┘     └────────────────┘
+                                                                              │
+                                                                              ▼
+                                                                     ┌────────────────┐
+                                                                     │  Git Repository │
+                                                                     │  (the thread)   │
+                                                                     └────────────────┘
+```
+
+**Every token in this pipeline is part of the thread.** The system is fully traceable: any decision, any procedure, any insight can be traced back to its origin by following the externalization chain in reverse (Git → skills → session logs → notes → human thought).
+
+### The Thread is Not Metaphor
+
+The Ariadne's thread is a concrete, verifiable property of the system:
+
+- **Every Git commit** documents *why* a change was made, with references to the session that produced it.
+- **Every skill** contains provenance metadata — which session created it, which pattern it encodes, when it was last validated.
+- **Every memory entry** is timestamped and linked to the context that generated it.
+- **Every sub-agent result** is saved to a project file before the session ends.
+
+The thread is what makes the system **reversible**. If a procedure produces unexpected results, the thread allows the operator to walk back through each externalization step to find the point of divergence. Without the thread, the system is a black box that forgets its own history.
 
 ---
 
@@ -100,6 +122,10 @@ Every fact, procedure, preference, and pattern is externalized to the most durab
 
 **The test**: if the scaffolding tool is deleted, what remains? Everything that was externalized.
 
+**Loaded lazily, never eagerly**: The Anthropic Agent Skills Architecture (2025) defines three levels of loading — metadata (~100 tokens, always loaded), instructions (~5k tokens, loaded on trigger), and resources (unlimited, loaded on demand). This architecture adopts the same principle. Skills are not auto-loaded into context. They exist as directories on the filesystem. The agent loads only the name and description at startup; the full instructions enter context only when the skill is triggered. Resources and scripts never enter context — they are executed via the filesystem, and only their output is consumed.
+
+This mirrors the Stigmem "Stop Preloading Everything" finding (2026): replacing full instruction-file preloads with a boot stub (~300–500 tokens) plus an instruction manifest, backed by a recall tool, reduced per-heartbeat context consumption by 50–87% with zero regressions.
+
 **Sub-principles** (the old pillars, now understood as consequences):
 - *Single Source of Truth* — externalization requires canonical locations. One file, one truth.
 - *Total Portability* — externalized to plain text = portable by definition.
@@ -109,13 +135,14 @@ Every fact, procedure, preference, and pattern is externalized to the most durab
 
 > *The system maintains itself. The user steers.*
 
-An externalized cognitive system can operate autonomously because its knowledge, procedures, and triggers live outside any single session. Cron jobs audit skills. Hub scouts discover new capabilities. Memory trees capture patterns across sessions. The system self-maintains because its maintenance procedures are externalized.
+An externalized cognitive system can operate autonomously because its knowledge, procedures, and triggers live outside any single session. Scheduled audits examine skills for staleness, detect dead references, and propose consolidation. Sub-agents are dispatched for parallel research and return structured results. Memory is captured across sessions and indexed for retrieval.
 
 **What this enables**:
-- Cron-driven audits (skills, SOUL, memory) that run without user initiation
+- Scheduled audits (skills, core identity, memory) that run without user initiation
 - Proactive skill discovery and curation
-- Automatic pattern capture: 3 uses → skillify → brv_curate
+- Automatic pattern capture: 3 uses → skillify → save as skill or memory
 - Self-healing: detect stale memory → propose cleanup → execute with consent
+- Parallel delegation: sub-agents research, synthesize, report — each result externalized to the thread
 
 **The boundary**: the user remains the steward. The system proposes; the user decides. Autonomy is orchestration, not abdication.
 
@@ -127,30 +154,29 @@ The cognitive pipeline has four stages, each externalized to a different structu
 
 ```
 Chaotic Input → Distillation → Categorization → Structured Knowledge
-    (raw)         (Sam breaks      (tags, types,       (ByteRover,
-                   down, finds      domains)            Obsidian,
-                   patterns)                            skills,
-                                                        AGENTS.md)
+    (raw)         (agent breaks      (tags, types,       (skills,
+                   down, finds        domains)            Obsidian,
+                   patterns)                              MEMORY, Git)
 ```
 
-This is a funnel, not a bucket. Each stage reduces volume and increases signal-to-noise ratio. The agent is the distillation engine. The external structures are the permanent knowledge.
+This is a funnel, not a bucket. Each stage reduces volume and increases signal-to-noise ratio. The agent is the distillation engine. The external structures are the permanent knowledge. The funnel is what produces the thread — each stage adds a token.
 
-**What this replaces**: the old "Inbox / Playground / Vault" model was correct in spirit but too static. Funnel cognition describes the *process* — how information *moves* from chaos to structure.
+The SRA-Bench findings validate this architecture empirically: the bottleneck in skill augmentation is not retrieval but **incorporation** — the agent's ability to determine *which* skill to load and *when* external loading is actually needed. A funnel that gives the agent progressively structured access to external knowledge (rather than dumping everything into context) directly addresses this bottleneck.
 
 ### 4. Context Recycling
 
 > *Nothing is learned once. Everything is captured, externalized, and reused.*
 
-Procedures become skills. Insights become ByteRover entries. Project patterns become AGENTS.md updates. The system doesn't just externalize — it *recycles* context so that every cognitive effort compounds into durable knowledge.
+Procedures become skills. Insights become durable skill entries. Project patterns become project context updates. The system doesn't just externalize — it *recycles* context so that every cognitive effort compounds into durable knowledge.
 
 **The recycling loop**:
-- Session insight → `learnings-capture` → ByteRover or MEMORY.md
-- Procedure executed 3 times → `skillify` → reusable skill
-- Pattern detected in decisions → `brv_curate` → durable entry
-- Skill overlap detected → `skill-recycler` → consolidation
-- Session rich in discoveries → proposed `learnings-capture` by the agent
+- Session insight → captured → memory or skill
+- Procedure executed 3 times → skillified → reusable skill
+- Pattern detected in decisions → saved as skill or memory → durable entry
+- Skill overlap detected → consolidation → unified skill
+- Session rich in discoveries → proposed capture by the agent
 
-**The principle**: context is too expensive to use once. Every cognitive output must be captured, externalized, and made available for future sessions. The system's intelligence grows with every interaction because nothing is lost.
+**The principle**: context is too expensive to use once. Every cognitive output must be captured, externalized, and made available for future sessions. The system's intelligence grows with every interaction because nothing is lost. Each recycling step adds another token to the Ariadne's thread.
 
 ---
 
@@ -158,9 +184,9 @@ Procedures become skills. Insights become ByteRover entries. Project patterns be
 
 The four pillars serve one purpose: to define an agent whose cognition extends beyond its context window into a durable, self-maintaining ecosystem of external structures.
 
-**The agent is not a chatbot with memory. The agent is a cognitive system whose "mind" spans files, skills, knowledge trees, and project contexts — all externalized, all version-controlled, all survivable.**
+**The agent is not a chatbot with memory. The agent is a cognitive system whose "mind" spans files, skills, knowledge trees, and project contexts — all externalized, all version-controlled, all survivable, all threaded by traceable externalization tokens.**
 
-The SOUL is the core contract (~800 tokens). It defines identity, tone, and reflexes. Everything else — knowledge, procedures, patterns, context — is externalized. The SOUL is the system's center of gravity; everything orbits it, but nothing clutters it.
+The core identity contract (~800 tokens) defines identity, tone, and reflexes. Everything else — knowledge, procedures, patterns, context — is externalized. The core contract is the system's center of gravity; everything orbits it, but nothing clutters it.
 
 ---
 
@@ -169,16 +195,18 @@ The SOUL is the core contract (~800 tokens). It defines identity, tone, and refl
 When faced with any architectural choice:
 
 1. **Externalization**: Can this live outside the context window? If yes, it should.
-2. **Durability**: Will this survive a tool deletion? If not, it's in the wrong place.
-3. **Recyclability**: Will this be useful in future sessions? If yes, capture it.
-4. **Autonomy**: Can the system maintain this itself? If yes, automate it.
-5. **Simplicity**: Can we remove instead of add? (This comes last because proper externalization naturally produces simplicity.)
+2. **Thread traceability**: Does this decision produce a durable token on the thread? If not, how will future operators trace the origin of this choice?
+3. **Durability**: Will this survive a tool deletion? If not, it's in the wrong place.
+4. **Recyclability**: Will this be useful in future sessions? If yes, capture it.
+5. **Lazy loading**: Does this need to be in context right now, or can it be loaded on demand? Prefer the latter.
+6. **Autonomy**: Can the system maintain this itself? If yes, automate it.
+7. **Simplicity**: Can we remove instead of add? (This comes last because proper externalization naturally produces simplicity.)
 
 ---
 
 ## Anti-Principles
 
-Patterns we explicitly reject because they violate the externalization data flow:
+Patterns we explicitly reject because they violate the externalization data flow and break the thread:
 
 - **"The model will figure it out."** — It won't. Externalize the rule or drop it.
 - **"Let's store it in the database."** — What lives in plain text survives. What lives in SQL dies with the tool.
@@ -186,6 +214,8 @@ Patterns we explicitly reject because they violate the externalization data flow
 - **"It's only a few more tokens."** — Multiplied by thousands of turns, multiplied by every session.
 - **"The system should adapt automatically."** — The user instructs. The system externalizes. Adaptation without consent is misalignment.
 - **"We'll remember how this works."** — Tribal knowledge is the enemy of externalization.
+- **"Load everything at startup."** — Eager loading crowds the context window. Load lazily or not at all.
+- **"This was decided last session, we don't need to document it."** — If it isn't on the thread, it never happened.
 
 ---
 
@@ -195,13 +225,29 @@ Patterns we explicitly reject because they violate the externalization data flow
 - **Allen, D. (2001).** *Getting Things Done.* The productivity foundation: externalize open loops to free working memory for actual thinking.
 - **Cowan, N. (2001).** The magical number 4 in short-term memory. *Behavioral and Brain Sciences*, 24(1):87-114. The cognitive limit that makes externalization necessary.
 - **Liu, N.F. et al. (2024).** *Lost in the Middle: How Language Models Use Long Contexts.* arXiv:2307.03172. The computational validation: attention degrades with context length — externalization is not optional, it's structural.
+- **Su, W. et al. (2026).** *Skill Retrieval Augmentation for Agentic AI (SRA-Bench).* arXiv:2604.24594. DOI: [10.48550/arXiv.2604.24594](https://doi.org/10.48550/arXiv.2604.24594). Empirically confirms that enumerating skills in context fails to scale; proposes dynamic retrieval + incorporation as the solution. Reveals that the bottleneck is not retrieval but the agent's ability to determine *when* to load a skill.
+- **Offbyonce / Eidetic Labs (2026).** *Stigmem: Stop Preloading Everything — How We Cut AI Agent Context by 50–87% with Lazy Discovery.* [stigmem.dev](https://stigmem.dev) | [GitHub](https://github.com/Eidetic-Labs/stigmem). Proves that replacing full instruction-file preloads with a boot stub + manifest + recall tool reduces context consumption by 50–87% with zero regressions. The principle: load triggers should describe intents, not content.
+- **Anthropic (2025).** *Agent Skills Architecture.* [docs.anthropic.com](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview). Defines the three-level progressive disclosure model for skills: Level 1 (metadata, ~100 tokens, always loaded), Level 2 (instructions, ~5k tokens, loaded on trigger), Level 3 (resources/code, unlimited, accessed on demand via filesystem). This architecture operationalizes the same principle.
+- **Luhmann, N. (1952–1997).** *Zettelkasten.* The original externalized associative thinking system: 90,000 atomic notes forming a thinking partner. The precursor to modern agent memory architectures.
 
 ---
 
-**Version**: 4.0.0  
-**Ratified**: 2026-05-17  
-**Previous versions**: 1.0.0 (2026-05-15, minimalism-centered), 2.0.0, 3.0.0  
-**License**: MIT
+## Version History
 
-> *"The notebook qualifies as such because it is constantly and immediately accessible to Otto, and it is automatically endorsed by him."* — Clark & Chalmers, 1998  
-> *The agent's files are its notebook. Its skills are its procedural memory. Its knowledge tree is its extended self. What lives outside the context window is not less cognitive — it is more durable.*
+| Version | Date | Changes |
+|---|---|---|
+| 5.0.0 | 2026-05-19 | Ariadne's thread concept; complete dataflow pipeline (human → notes → agent → skills → Git); lazy loading as first-class principle; added SRA-Bench, Stigmem, and Anthropic Agent Skills references; removed all personal identifiers; restructured around traceability |
+| 4.0.0 | 2026-05-17 | Four pillars replacing nine; funnel cognition; context recycling; minimalism as consequence |
+| 3.0.0 | — | Skill system, sub-agent architecture |
+| 2.0.0 | — | Cross-session memory, knowledge trees |
+| 1.0.0 | 2026-05-15 | Initial version, minimalism-centered |
+
+---
+
+> *"The notebook qualifies as such because it is constantly and immediately accessible to Otto, and it is automatically endorsed by him."* — Clark & Chalmers, 1998
+>
+> *The agent's files are its notebook. Its skills are its procedural memory. Its Git history is its Ariadne's thread — every externalization is a point of return. What lives outside the context window is not less cognitive — it is more durable, more traceable, and more reversible.*
+
+**Version**: 5.0.0
+**Ratified**: 2026-05-19
+**License**: MIT

@@ -1,94 +1,152 @@
-# Skills Reference
+# Skills Reference — Public Template v5.0
 
-> *Skills are externalized procedural memory. They are hub-maintained or custom-built, installed via CLI, and cast manually. No automatic loading. No skill bloat.*
-
----
-
-## Philosophy
-
-Skills are the agent's **externalized procedural memory**. They live outside the context window and are loaded only when needed. This keeps the SOUL lean (~800 tokens) and the context window free for actual reasoning.
-
-**The 3-uses rule**: a procedure must be executed 3 times before it qualifies for skillification. Premature skill creation is context debt.
-
-**The recycling rule**: when skills overlap, they are consolidated by `skill-recycler`. No duplication. No drift.
+> *Skills are externalized procedural memory. This document is a generic template for configuring your own 2-layer skill system. Adapt it to your domain, stack, and agent identity.*
 
 ---
 
-## Custom Skills (Sam's Own)
+## 1. Core Concept: Two-Layer Skill Architecture
 
-These live in `0-custom-skills/` and are Sam's externalized cognitive patterns:
+Skills are the agent's **externalized procedural memory**. They live outside the context window and are loaded on demand. The system has two loading layers:
+
+| Layer | Loading Mechanism | Purpose | Examples |
+|-------|------------------|---------|----------|
+| **Layer 1 — Core** | Always injected at session start | Meta-system, delegation, research, maintenance | `system-architecture`, `skill-design`, `skill-creator`, `web-research` |
+| **Layer 2 — Auto-Detect** | Dynamically loaded via frontmatter name/description matching | Domain-specific procedures, niche workflows, one-shot tasks | Code analysis, document conversion, data analysis |
+
+**Principle**: Core skills = used in 50%+ of sessions. Everything else lives in Layer 2 and is pulled in by Hermes when the frontmatter matches the current task.
+
+Skills live in `skills/<source>/<name>/SKILL.md` and are version-controlled like all other engine files.
+
+---
+
+## 2. Frontmatter: The `priority:` Field
+
+Every skill has YAML frontmatter. The critical field is `priority:`:
+
+```yaml
+---
+name: my-skill-name
+priority: core         # Layer 1 — always loaded at session start
+# priority: standard   # Layer 2 — auto-detected, medium curation priority
+# priority: niche      # Layer 2 — auto-detected, low curation priority
+# priority: one-shot   # Layer 2 — auto-detected, candidate for recycling
+description: What this skill does when activated.
+---
+```
+
+**Only `priority: core` guarantees injection every session.** All other tiers use Hermes's dynamic frontmatter matching — the agent loads the skill when it detects a semantic match between its task and the skill's name/description.
+
+---
+
+## 3. Recommended Core Skills (Bring Your Own)
+
+Your Layer 1 should cover meta-system operations. Install or create equivalents of:
 
 | Skill | Purpose |
-|---|---|
-| `system-architecture` | Manifeste d'architecture — the SSOT for the entire system design |
-| `system-autonomy` | Orchestrateur central d'autonomie — cron jobs, triggers, thresholds |
-| `distillation-cycle` | Simon's cognitive signature — DÉMÊLER→DISTILLER→DÉCIDER |
-| `skill-design` | Comment bien concevoir un skill — quand créer, quand patcher |
-| `skill-recycler` | Détection de duplication et consolidation de skills |
-| `soul-audit` | Audit périodique du SOUL contre le paradigme de design |
-| `soul-management` | Méthodologie complète de design du SOUL |
-| `learnings-capture` | Capture des apprentissages durables après sessions significatives |
-| `hub-scout` | Recherche proactive de nouveaux skills sur le hub |
-| `hermes-system-maintenance` | Maintenance unifiée du système Hermes (audit + nettoyage) |
-| `search-tool-protocol` | Protocole de sélection d'outil de recherche |
-| `web-research` | Patterns de recherche web efficace |
-| `byterover-memory` | Utilisation avancée de ByteRover comme mémoire persistante |
-| `prism` | Analyse unifiée avec 5 sous-modes |
-| `metacognition` | Auto-questionnement structuré |
-| `data-distillation` | Distillation radicale style Apple |
-| `markitdown` | Conversion de documents vers Markdown |
-| `corporate-communication-review` | Révision de communications professionnelles |
-| `supplement-stack-analysis` | Analyse de stacks de suppléments/nootropiques |
-| `financial-data-pipeline` | Pipeline de données financières |
-| `pci-methodology` | Permanent Capital Index — sélection two-gate |
-| `oracle-ai-agent-config-pattern` | Pattern de configuration pour Oracle HCM |
-| `hermes-billing-cv` | Génération de CV professionnel bilingue |
+|-------|---------|
+| `skill-design` | Methodology for creating and modifying skills |
+| `skill-creator` | Skill creation with automated evals |
+| `skill-recycler` | Detect overlap, consolidate, prune |
+| `system-architecture` | SSOT for your system design |
+| `search-tool-protocol` | Tool selection for web/API search |
+| `web-research` | Efficient web research patterns |
+| `hermes-system-maintenance` | Unified system audit and cleanup |
+
+Install hub skills via:
+```bash
+hermes skills install --yes <skill-identifier>
+```
 
 ---
 
-## Third-Party Skills (Hub-Installed)
+## 4. Creating Your Own Skills
 
-Install via `hermes skills install --yes <skill-identifier>`. These are externalized and community-maintained — zero maintenance burden.
+Use the `skillify` workflow — either via the `skill-creator` skill or directly:
 
-### Méta-Système
-```bash
-hermes skills install --yes skill-creator              # Création/modification de skills avec evals (Anthropic)
-hermes skills install --yes anthropics/skills/skills/brainstorming  # Brainstorming structuré (Anthropic)
+### The 3-Uses Rule
+
+**A procedure must be executed 3 times before it qualifies for skillification.** Premature skill creation is context debt. Track candidates mentally or in a simple file; after the third repetition, skillify.
+
+### The Recycling Rule
+
+When skills overlap, consolidate them. Run `skill-recycler` periodically to detect:
+- Duplicate procedures across skills
+- Drift between related skills
+- Stale one-shot skills that should be pruned
+
+### Skillification Workflow
+
 ```
-
-### Productivité & Design
-```bash
-hermes skills install --yes anthropics/skills/skills/canvas-design   # Design UI/landing pages HTML
-hermes skills install --yes https://github.com/kepano/defuddle       # Nettoyage web token-efficient
+1. Execute procedure 3 times (track naturally, no overhead)
+2. Run skillify: hermes skills create --name <name>
+3. Classify priority: core/standard/niche/one-shot
+4. Load, test, iterate
 ```
-
-### Connaissance (nécessite GITHUB_TOKEN dans .env)
-```bash
-hermes skills install --yes anthropics/knowledge-skills/skills/data-context-engineering/SKILL
-hermes skills install --yes anthropics/knowledge-skills/skills/data-visualization/SKILL
-hermes skills install --yes anthropics/knowledge-skills/skills/explore-data/SKILL
-hermes skills install --yes anthropics/knowledge-skills/skills/documentation/SKILL
-```
-
-### Bundled Skills (fournis avec Hermes, restaurés par `hermes update`)
-Ces skills sont automatiquement disponibles. Pas besoin d'installation. Liste complète dans le [recovery manifest](hermes-skills-recovery-manifest.md).
 
 ---
 
-## What Does NOT Belong in a Skill
+## 5. Basic Hermes Installation Commands
 
-These patterns are **permanent reflexes** encoded in the SOUL — never externalized to a skill:
+```bash
+# Install Hermes Agent (via pip or npm — check current docs)
+pip install hermes-agent          # or equivalent
 
-- **Search priority** (Tavily → Exa → Jina)
-- **Token discipline**
-- **Delegation rules**
-- **Fact-checking**
-- **Scope & confinement**
-- **Externalization triggers** (propose learnings-capture, brv_curate decisions)
+# Create a new skill
+hermes skills create --name my-skill
 
-If a behavioral rule is important enough to be permanent, it belongs in `SOUL.md` — not in a skill.
+# Install skills from hub
+hermes skills install --yes anthropics/skills/skills/skill-creator
+hermes skills install --yes anthropics/skills/skills/brainstorming
+
+# List installed skills
+hermes skills list
+
+# Update skills
+hermes update
+```
+
+Full documentation: [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs)
 
 ---
 
-**Version**: 4.0.0  
-**Last updated**: 2026-05-17
+## 6. What NOT to Skillify
+
+These patterns belong in `SOUL.md` (the behavioral contract), not in a skill:
+
+| Pattern | Why It's Permanent |
+|---------|--------------------|
+| Communication style & tone | Universal reflex, not a procedure |
+| Token discipline (be concise) | Core identity, not situational |
+| Delegation rules | Fundamental operating principle |
+| Externalization reflex | The cornerstone of the architecture |
+| Search tool priority order | Always the same sequence |
+| Fact-checking requirement | Always-on quality gate |
+| Scope & confinement rules | Safety boundary, not situational |
+
+**Rule of thumb**: If a behavioral rule is important enough to be permanent and always-on, it belongs in `SOUL.md`. If it's a reusable procedure (3+ uses), it belongs in a skill.
+
+---
+
+## 7. Skill Lifecycle
+
+```
+CREATE ──→ USE ──→ SKILLIFY ──→ RECYCLE/CONSOLIDATE ──→ PRUNE
+```
+
+| Stage | Action | Trigger |
+|-------|--------|---------|
+| **CREATE** | Write a skill for a new procedure | Anticipated reuse (before 3-uses, it's a note) |
+| **USE** | Load and execute the skill | Task matches frontmatter |
+| **SKILLIFY** | Promote to durable skill | After 3 successful uses |
+| **RECYCLE/CONSOLIDATE** | Merge overlapping skills | skill-recycler detects duplication or drift |
+| **PRUNE** | Archive or delete stale skills | No uses in 30 days, or consolidated into another |
+
+Design your system to resist skill bloat. The goal is not to have the most skills — it is to have the *right* skills: high-signal, no duplication, each earning its place through repeated use.
+
+---
+
+> *"The notebook qualifies as such because it is constantly and immediately accessible to Otto, and it is automatically endorsed by him."* — Clark & Chalmers, 1998
+
+**Version**: 5.0.0
+**Last updated**: 2026-05-19
+**License**: MIT
