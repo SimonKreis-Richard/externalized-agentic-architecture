@@ -204,6 +204,53 @@ When faced with any architectural choice:
 
 ---
 
+## Design Principles: Constraints That Shape the System
+
+Beyond the four pillars, the architecture is shaped by explicit design constraints — principles that guide every decision about whether to add, remove, or change something.
+
+### The Apple Principle — "Simplicity is a constraint, not a consequence"
+
+> *"Simplicity is not a natural outcome of good design. It is a constraint imposed at every stage."*
+
+The README states that "minimalism is what happens when you externalize properly." This is true — **if** you also impose simplicity as a hard constraint. Without the constraint, externalization can produce a sprawling ecosystem of skills, memory entries, knowledge trees, and project files — an externalized mess instead of an internal one.
+
+The Apple Principle is named after the design philosophy that made Apple products distinctive: every feature, every pixel, every animation passes through the filter of *"Is this the simplest possible version of what we need?"* Not *"Can we add this?"* but *"Can we achieve the goal without adding this?"*
+
+**Applied to this architecture:**
+
+| Domain | With Simplicity as Consequence Only | With Simplicity as Constraint |
+|--------|-----------------------------------|------------------------------|
+| **Skills** | Create a skill for every procedure after 3 uses → 200+ skills, hard to find the right one | Create a skill only when the procedure is both (a) used 3+ times AND (b) genuinely non-obvious → 40 focused skills |
+| **Memory** | Capture every insight in MEMORY.md → bloated index, noisy reads | Capture only insights that (a) change behavior (b) are non-obvious (c) survive next month → compact, high-signal |
+| **SOUL** | Add every behavioral rule discovered → 2000-token SOUL that nobody reads | Each rule must pass: "Is this still true if I remove it?" → 800-token SOUL, every line proven essential |
+| **Config** | Every optimization gets a YAML key → 600-line config that becomes its own project | Every YAML key must pay rent: prove it changes behavior in a meaningful way → 50 lines |
+
+**The test**: For any existing element (skill, memory entry, config key, rule), ask: *"If this were removed, would the system break in a meaningful way?"* If the answer is no, the element fails the Apple Principle.
+
+**The paradox**: Simplicity is harder than complexity. It requires more discipline, more judgment, more deletion. The architecture makes it *possible* to achieve simplicity (through proper externalization). The Apple Principle makes it *inevitable* (through relentless constraint).
+
+### The Durability Imperative
+
+> *"If it can survive a tool swap, it should. If it can't, it shouldn't exist."*
+
+Every element in the system is measured against one question: *"What happens if Hermes Agent is deleted right now?"*
+
+- Plain-text files → still there
+- Git history → still there
+- Skills as files → still there
+- Memory system entries → gone (they live in the scaffolding's state)
+- Knowledge tree in the scaffolding → gone
+
+The imperative: move everything that can be plain-text into plain-text. Know exactly what you lose with the scaffolding and what survives.
+
+### The Zero-Overhead Documentation Rule
+
+> *"If it matters, write it down. If it doesn't, delete it."*
+
+Documentation with overhead (separate tools, special formats, extra processes) doesn't last. The only documentation that survives is documentation that costs nothing to write and nothing to maintain — which means it's already part of the system's natural output (commits, file headers, frontmatter metadata).
+
+---
+
 ## Anti-Principles
 
 Patterns we explicitly reject because they violate the externalization data flow and break the thread:
@@ -216,6 +263,7 @@ Patterns we explicitly reject because they violate the externalization data flow
 - **"We'll remember how this works."** — Tribal knowledge is the enemy of externalization.
 - **"Load everything at startup."** — Eager loading crowds the context window. Load lazily or not at all.
 - **"This was decided last session, we don't need to document it."** — If it isn't on the thread, it never happened.
+- **"The Sunk Cost Fallacy" — 3 failures = STOP. Root cause, not patch.** — Three failures on the same task is never a coincidence. The approach is wrong. The framing is wrong. The tool is wrong. Continuing down the same path because you have already invested tokens is the single most expensive cognitive error in an agentic system — it compounds wasted reasoning into wasted sessions. STOP. Analyze root cause. Change approach. Do not patch a fundamentally broken strategy.
 
 ---
 

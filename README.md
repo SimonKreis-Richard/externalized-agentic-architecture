@@ -60,6 +60,7 @@ Previous versions centered minimalism as the primary principle. This was backwar
 | [`concepts/information-flow.md`](concepts/information-flow.md) | Deep dive: the data pipeline, 3-zone model, local-first paradigm. |
 | [`concepts/example-agents.md`](concepts/example-agents.md) | Fictional AGENTS.md example. |
 | [`concepts/fil-dariane.md`](concepts/fil-dariane.md) | Full specification of the traceability principle — provenance, audit trails, and forensic navigation. |
+| [`concepts/distillation-cycle.md`](concepts/distillation-cycle.md) | The cognitive micro-cycle (DÉMÊLER→DISTILLER→DÉCIDER) — complements the four-stage Funnel Cognition model. |
 | [`concepts/architecture-overview.svg`](concepts/architecture-overview.svg) | System diagram: pillars, data flow, and component relationships at a glance. |
 | [`config.yaml.template`](config.yaml.template) | Scaffold configuration template for quick setup. |
 

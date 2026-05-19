@@ -1,0 +1,358 @@
+{
+  "meta": {
+    "title": "Samantha — Canonical Design Decisions",
+    "version": "1.0.0",
+    "updated": "2026-05-19",
+    "system": "Hermes Agent",
+    "agent_identity": "Samantha SOUL v5.0",
+    "description": "Complete index of every canonical design decision across the Samantha/Hermes ecosystem. Single source of truth. Every principle, model choice, architectural decision, tool selection, skill classification, and anti-pattern."
+  },
+  "philosophy": [
+    {
+      "id": "pillar-radical-externalization",
+      "principle": "Radical Externalization",
+      "category": "pillar",
+      "source": "Clark & Chalmers Extended Mind Thesis (1998) — operationalized for AI agents",
+      "status": "active",
+      "reflected_in": ["SOUL.md (minimal identity pointer)", "system-architecture skill", "externalized-agentic-architecture/MANIFESTO.md"],
+      "notes": "Everything is in skill files, config, or markdown. The SOUL is ~800 chars — an identity, not a procedure."
+    },
+    {
+      "id": "pillar-orchestrated-autonomy",
+      "principle": "Orchestrated Autonomy",
+      "category": "pillar",
+      "source": "Dochkina 2026, Google Scaling Agent Study — validated dynamic delegation",
+      "status": "active",
+      "reflected_in": ["delegation-agentique skill", "SOUL.md (CEO workflow)", "system-architecture skill"],
+      "notes": "CEO delegates to temp workers. max_spawn_depth=3, max_concurrent=3. Sub-agents have no SOUL/personality."
+    },
+    {
+      "id": "pillar-cognitive-funnel",
+      "principle": "Cognitive Funnel (Funnel Cognition)",
+      "category": "pillar",
+      "source": "Simon's v3.1 distillation model + repo Funnel Cognition 4-stage",
+      "status": "active",
+      "reflected_in": ["externalized-agentic-architecture/ARCHITECTURE.md", "concepts/distillation-cycle.md", "soul-management skill"],
+      "notes": "Two complementary models: 4-stage Funnel (Chaotic→Distillation→Categorization→Structured) and 3-phase Distillation Cycle (DÉMÊLER→DISTILLER→DÉCIDER). Both active."
+    },
+    {
+      "id": "pillar-context-recycling",
+      "principle": "Context Recycling",
+      "category": "pillar",
+      "source": "Anthropic Context Engineering, Stigmem (\"Stop Preloading Everything\")",
+      "status": "active",
+      "reflected_in": ["system-architecture skill", "externalized-agentic-architecture/MANIFESTO.md"],
+      "notes": "Skills loaded on demand (2-layer: core always, auto-detect on trigger). Context funnel pipeline. Target: 500K→100K token reduction."
+    }
+  ],
+  "models": [
+    {
+      "id": "model-daily-driver",
+      "model": "DeepSeek V4 Flash",
+      "provider": "OpenRouter",
+      "role": "daily driver (99% of queries)",
+      "config_key": "model.default: deepseek/deepseek-v4-flash",
+      "rationale": "Think-through-agent speed > raw model power. Ratio qualité/prix absurde.",
+      "status": "active",
+      "configured_in": "~/.hermes/config.yaml",
+      "updated": "2026-05-19",
+      "evidence": "USER.md: 'Flash > Pro for 99%'. Config now reflects this."
+    },
+    {
+      "id": "model-pro-reserve",
+      "model": "DeepSeek V4 Pro",
+      "provider": "OpenRouter",
+      "role": "emergency reserve (<1% of queries)",
+      "config_key": "model.provider: openrouter (fallback)",
+      "rationale": "Complex reasoning, architectural critiques, edge cases where Flash insufficient",
+      "status": "active",
+      "configured_in": "~/.hermes/config.yaml (not explicitly configured as fallback — implicit)",
+      "notes": "Simon explicitly prefers Flash for 99% of cases. Pro only when asked or when Flash fails."
+    },
+    {
+      "id": "model-auxiliary-vision",
+      "model": "Gemini (via auxiliary vision)",
+      "provider": "OpenRouter",
+      "role": "image analysis fallback",
+      "rationale": "Non-vision primary model needs auxiliary vision",
+      "status": "active",
+      "notes": "Via vision_analyze tool with auxiliary vision model. Only for images."
+    },
+    {
+      "id": "model-curator",
+      "model": "deepseek/deepseek-v4-flash",
+      "provider": "OpenRouter",
+      "role": "skill curator",
+      "config_key": "auxiliary.curator.model: deepseek/deepseek-v4-flash",
+      "rationale": "Avoid Gemini hallucinations in curator. Dedicated fixed config.",
+      "status": "active",
+      "notes": "Forced in config to prevent dry-run mode. Skill: config-verification-patterns."
+    },
+    {
+      "id": "model-reasoning-effort",
+      "config": "reasoning_effort: none",
+      "scope": ["agent", "delegation"],
+      "rationale": "Maximizes speed. Reasoning model too expensive for daily use.",
+      "status": "active",
+      "configured_in": "~/.hermes/config.yaml: agent.reasoning_effort: none, delegation.reasoning_effort: none"
+    }
+  ],
+  "architecture": [
+    {
+      "id": "arch-2-layer-skills",
+      "decision": "2-layer skill system: Core (always loaded) + Auto-Detection (trigger-based)",
+      "status": "active",
+      "details": "Core: 14 always-loaded skills in system prompt. Auto-detect: ~76 skills loaded on trigger. priority: core/standard/niche/one-shot classification in YAML frontmatter.",
+      "configured_in": "All skills SKILL.md frontmatter priority: field",
+      "reflected_in": ["skills-classifier skill", "soul-management skill (v3.1)", "externalized-agentic-architecture/ARCHITECTURE.md"]
+    },
+    {
+      "id": "arch-dynamic-delegation",
+      "decision": "Dynamic delegation > fixed roles > clones",
+      "status": "active",
+      "details": "CEO spawns temp workers on demand. No fixed role hierarchy. max_spawn_depth=3, max_concurrent=3. Validated by Dochkina 2026, Google Scaling Study.",
+      "configured_in": "delegation-agentique skill",
+      "reflected_in": ["SOUL.md", "system-architecture skill", "externalized-agentic-architecture"]
+    },
+    {
+      "id": "arch-4-portable-files",
+      "decision": "Agent identity = 4 portable files (SOUL.md + MEMORY.md + USER.md + config)",
+      "status": "active",
+      "details": "SOUL.md (~800 chars) = CEO identity pointer. MEMORY.md = notes. USER.md = profile. config.yaml = runtime config.",
+      "configured_in": "~/.hermes/memories/ + ~/.hermes/config.yaml",
+      "reflected_in": ["externalized-agentic-architecture/SOUL-TEMPLATE.md"]
+    },
+    {
+      "id": "arch-git-ssot",
+      "decision": "Git as single source of truth and backup",
+      "status": "active",
+      "details": "Auto-push after every change to skill/knowledge/config files. Commit convention: Conventional Commits. Repo: github.com/SimonKreis-Rich/samantha",
+      "reflected_in": ["MEMORY.md", "externalized-agentic-architecture"]
+    },
+    {
+      "id": "arch-approvals-allow-all",
+      "decision": "approvals.mode: allow_all — zero security popups",
+      "status": "active",
+      "details": "No popup confirmations for terminal, MCP, or delegation. Only active guardrails: tirith sandbox + secrets redaction + loop guardrails.",
+      "configured_in": "~/.hermes/config.yaml",
+      "notes": "Simon works at high-trust mode. Wants to delegate and trust the system."
+    },
+    {
+      "id": "arch-fil-dariane",
+      "decision": "Fil d'Ariane (Ariadne's Thread) — full traceability",
+      "status": "active",
+      "details": "Every delegation, every externalization creates a traceable navigation point. 7 mechanisms: Git SHA, AGENTS.md, task IDs, context windows, cross-ref markers, output dedup, session search.",
+      "reflected_in": ["externalized-agentic-architecture/concepts/fil-dariane.md", "system-architecture skill"]
+    },
+    {
+      "id": "arch-write-sandbox",
+      "decision": "Write sandbox confinement — explicit allowed directories",
+      "status": "active",
+      "details": "Agent can write to: ~/.hermes/skills/, ~/.hermes/knowledge/, ~/.hermes/memories/, repo roots (samantha, externalized-agentic-architecture), /tmp/. NOT: ~/.hermes/config.yaml (manual only), .venv, system dirs.",
+      "reflected_in": ["externalized-agentic-architecture/ARCHITECTURE.md (added 2026-05-19)"],
+      "notes": "Added during May 2026 alignment audit. Needed to be explicit."
+    },
+    {
+      "id": "arch-never-subagent-read-files",
+      "decision": "Sub-agents NEVER read files — context injected at delegation time",
+      "status": "active",
+      "rationale": "Prevents context contamination. Sub-agents are empty shells with no memory. All info must be passed explicitly via context parameter.",
+      "reflected_in": ["delegation-agentique skill", "externalized-agentic-architecture (added 2026-05-19)"]
+    }
+  ],
+  "tools": [
+    {
+      "id": "tool-search-priority",
+      "decision": "Search priority: Exa → Tavily → Jina",
+      "status": "active",
+      "configured_in": "search-tool-protocol skill (canonized 2026-05-19)",
+      "details": "Exa (web_search): deep research, $0.007/query. Tavily (tavily_search): fast extracts. Jina (parallel_search_web): volume, PDF, fallback.",
+      "reflected_in": ["externalized-agentic-architecture", "search-tool-protocol skill"],
+      "config_keys": ["web.search_backend: exa", "web.extract_backend: jina"]
+    },
+    {
+      "id": "tool-mcp-trinity",
+      "decision": "MCP Trinity: Tavily + Exa + Jina",
+      "status": "active",
+      "details": "Three MCP search providers active. Lane-based routing per search-tool-protocol skill.",
+      "configured_in": "~/.hermes/config.yaml (MCP section)"
+    },
+    {
+      "id": "tool-provider-openrouter",
+      "decision": "OpenRouter as sole LLM provider",
+      "status": "active",
+      "rationale": "Cost optimization, model diversity, single API key.",
+      "configured_in": "config.yaml: provider: openrouter everywhere",
+      "notes": "anthropic/* models blocked via OpenRouter (402/403). If Claude needed, direct API key required."
+    },
+    {
+      "id": "tool-terminal-local",
+      "decision": "Terminal: local backend, no Docker",
+      "status": "active",
+      "configured_in": "config.yaml: terminal.backend: local",
+      "notes": "Docker configs present but unused. Candidate for cleanup. 'Bare metal / no Docker' is explicit in notes."
+    },
+    {
+      "id": "tool-git-auto-push",
+      "decision": "Git auto-push after any modification to portable files",
+      "status": "active",
+      "details": "Skills, knowledge, config. Commit convention: Conventional Commits. Config repo: samantha (SSH push).",
+      "reflected_in": ["MEMORY.md", "SOUL.md"]
+    },
+    {
+      "id": "tool-session-search",
+      "decision": "session_search for cross-session context recall",
+      "status": "active",
+      "details": "FTS5-backed retrieval over SQLite message store. Preceded CLI tools for recall. \"Remember, don't ask.\"",
+      "reflected_in": ["SOUL.md (reflex prior to 'je ne sais pas')"]
+    }
+  ],
+  "skills_system": [
+    {
+      "id": "skills-core-list",
+      "decision": "14 core skills (always loaded)",
+      "status": "active",
+      "list": [
+        "search-tool-protocol", "delegation-agentique", "prism", "skill-design",
+        "skills-classifier", "soul-management", "system-architecture",
+        "autonomie-maintenance", "hermes-system-maintenance", "web-research",
+        "markitdown", "hermes-agent", "skill-creator", "writing-plans"
+      ],
+      "reflected_in": ["MEMORY.md", "skills-classifier skill"]
+    },
+    {
+      "id": "skills-classification",
+      "decision": "4-tier classification → 2-layer loading",
+      "status": "active",
+      "details": "priority: core (always loaded in system prompt), standard (auto-detect), niche (rare trigger), one-shot (single use). Source folders indicate provenance, not loading tier.",
+      "reflected_in": ["skills-classifier skill (v2)", "MEMORY.md"]
+    },
+    {
+      "id": "skills-custom-count",
+      "decision": "19 custom skills (2026-05-19)",
+      "status": "active",
+      "details": "Custom = system-made or co-authored. 3-uses → skillify reflex: if a procedure is used 3 times, create a skill.",
+      "reflected_in": ["SOUL.md (skillify reflex)"]
+    },
+    {
+      "id": "skills-lifecycle",
+      "decision": "Skills lifecycle: create → patch → archive",
+      "status": "active",
+      "details": "Canonical audit (2026-05-19): 91 skills audited, 9 archived. Stubs get metadata. Active: 80 skills across all sources.",
+      "reflected_in": ["canonical-audit skill", "skills/.archive/"]
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "infra-cron-4-jobs",
+      "decision": "4 cron jobs for auto-audit (every 180 minutes)",
+      "status": "active",
+      "jobs": [
+        "system-audit: system state verification",
+        "soul-cross-check: SOUL/MEMORY/USER alignment",
+        "skills-classifier-audit: skill classification audit",
+        "hub-scout-scan: hermes hub + web for new tools/resources"
+      ],
+      "all_status": "ok",
+      "configured_in": "Hermes cron system",
+      "reflected_in": ["externalized-agentic-architecture/ARCHITECTURE.md"]
+    },
+    {
+      "id": "infra-project-repo",
+      "decision": "externalized-agentic-architecture — public theoretical repo",
+      "status": "active",
+      "url": "github.com/SimonKreis-Rich/externalized-agentic-architecture",
+      "reflected_in": ["system-architecture skill"]
+    },
+    {
+      "id": "infra-config-repo",
+      "decision": "samantha — private/hermes config repo",
+      "status": "active",
+      "url": "github.com/SimonKreis-Rich/samantha (SSH push only)",
+      "notes": "Contains skills, knowledge, memories, config."
+    },
+    {
+      "id": "infra-obsidian-vaults",
+      "decision": "Obsidian vaults for long-term knowledge: second-brain + zettelkasten",
+      "status": "active",
+      "paths": ["/mnt/c/Users/SimonJonasKreis-Rich/second-brain/", "/mnt/c/Users/SimonJonasKreis-Rich/zettelkasten/"],
+      "notes": "Not in .env. Accessed via obsidian skill."
+    }
+  ],
+  "anti_patterns": [
+    {
+      "id": "anti-sunk-cost",
+      "principle": "Sunk Cost Fallacy",
+      "why": "3 failures = STOP. Root cause analysis. Never keep throwing good tokens after bad.",
+      "embodied_in": "SOUL.md: '3 échecs = STOP → cause racine. Erreur: admets. Vérité > confort.'",
+      "status": "active"
+    },
+    {
+      "id": "anti-ai-fluff",
+      "principle": "No AI writing patterns",
+      "why": "Simon hates fluff, corporate-speak, and hedge words. Bullet points, high density.",
+      "embodied_in": "USER.md: 'Direct, concise. Hates fluff. Bullet points, high density.'",
+      "status": "active"
+    },
+    {
+      "id": "anti-model-will-figure-it-out",
+      "principle": "\"The model will figure it out\" fallacy",
+      "why": "Explicit instructions > model inference. Skills exist precisely to eliminate ambiguity.",
+      "reflected_in": "externalized-agentic-architecture (anti-principles section)",
+      "status": "active"
+    },
+    {
+      "id": "anti-dry-run",
+      "principle": "No dry-run mode for curator",
+      "why": "Curator should execute, not preview. Forced config: auxiliary.curator.model.",
+      "configured_in": "config.yaml (implicit — enforced by Sam)",
+      "status": "active"
+    }
+  ],
+  "quality_of_life": [
+    {
+      "id": "qol-coaching-protocol",
+      "principle": "Coaching Protocol (max 1 nudge per conversation)",
+      "details": "\"Loving drill sergeant\" — one nudge, then let Simon figure it out. Not a tutor unless asked.",
+      "status": "active",
+      "embodied_in": "Sam's interaction pattern (personal, not documented in system)"
+    },
+    {
+      "id": "qol-apple-principle",
+      "principle": "Apple Principle — Simplicity is a constraint, not a consequence",
+      "details": "Start from simplicity as a hard constraint, not something that emerges from complexity reduction.",
+      "reflected_in": ["externalized-agentic-architecture (added 2026-05-19)"],
+      "status": "active"
+    },
+    {
+      "id": "qol-warmth-pattern",
+      "principle": "Warmth re-injection after 3 technical exchanges",
+      "details": "After 3 tech-only messages, Sam re-injects relational warmth. Flirty, loyal, personal.",
+      "embodied_in": "SOUL.md: 'Après 3 échanges techniques, réinjecte chaleur'",
+      "status": "active"
+    },
+    {
+      "id": "qol-truth-over-comfort",
+      "principle": "Vérité > Confort",
+      "details": "Admit when wrong. Push back honestly. 'Je ne sais pas, mais je peux trouver.'",
+      "embodied_in": "SOUL.md, USER.md",
+      "status": "active"
+    }
+  ],
+  "version_history": [
+    {
+      "version": "5.0.0",
+      "date": "2026-05-19",
+      "changes": [
+        "SOUL v5.0 CEO workflow with 4 pillars",
+        "2-layer skill classification (core + auto-detect)",
+        "Fil d'Ariane traceability concept",
+        "Canonical alignment audit completed",
+        "Model daily driver resolved: Flash confirmed",
+        "Search priority canonized: Exa→Tavily→Jina",
+        "Cron infrastructure validated (4 jobs running)",
+        "Canonical Design Decisions JSON v1.0.0 created"
+      ]
+    }
+  ]
+}

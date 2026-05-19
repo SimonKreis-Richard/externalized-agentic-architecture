@@ -182,6 +182,7 @@ This maps to the Extended Mind Thesis: sub-agents are parallel processing stream
 **Rules**:
 - Max 3 concurrent sub-agents
 - All context injected at delegation time (explicit, no SOUL)
+- **Never make sub-agents read files.** All context that a sub-agent needs is injected at delegation time. Sub-agents do not have access to the filesystem for reading — they operate on the context they receive. This prevents: (a) wasted tokens on file discovery, (b) stale or wrong-file reads, (c) implicit assumptions about what the sub-agent knows. The core agent reads the files, distills the relevant context, and delegates with that context explicitly.
 - Results reviewed critically by the core agent
 - No personality, no memory, no persistence
 - Spawn trees logged in `~/.hermes/spawn-trees/<id>/`
@@ -377,6 +378,158 @@ Every externalized structure creates a node in the system's navigation graph. Th
 6. Cron jobs run autonomously every 180m: system-audit, soul-cross-check, skills-classifier-audit, hub-scout-scan
 7. Next session: richer context available through externalized knowledge
 8. Every externalization creates a navigation point — nothing is lost, everything is traceable
+
+---
+
+## 13. Context Reduction Goal: 500K → 100K Tokens
+
+The architecture has a quantified context reduction target: **reduce the per-session context footprint from ~500K tokens to ~100K tokens**, a 5× compression.
+
+### Why This Matters
+
+A typical agent session in 2026 loads:
+- SOUL + system prompt: ~2K
+- Memory + user profile: ~4K
+- Conversation history (100 turns): ~300K–500K
+- Skills (auto-detected): ~50K–150K
+- Project context: ~1K–5K
+- Tool outputs: variable
+
+Lossy compression (Gemini Flash) can reduce conversation history by 3–5× but introduces summarization artifacts. The real solution is not compression — it is **structural elimination**: don't load what you don't need.
+
+### The Target: 100K
+
+```
+Goal: ~100K tokens per session
+├── SOUL: ~2K (essential, always loaded)
+├── MEMORY.md + USER.md: ~4K (compact index)
+├── Recent conversation (recent 10 turns): ~20K–30K
+├── Project context (AGENTS.md): ~1K
+├── Auto-detected skills (frontmatter only): ~2K
+├── Lazy-loaded skill instructions (0–10K): ~5K avg.
+└── Tool outputs (inline): ~35K–50K
+```
+
+### Monitoring
+
+Context reduction is measured, not assumed. The following metrics are tracked per session:
+
+| Metric | Current Baseline | Target |
+|--------|-----------------|--------|
+| Total tokens consumed per session | ~500K | ~100K |
+| SOUL + identity tokens | ~2K | ~2K |
+| Conversation history tokens | ~300K–500K | ~20K–30K (recent 10 turns) |
+| Skill instructions in context | ~50K–150K | ~5K (loaded on demand) |
+| Session_search calls instead of history load | 0 (full history loaded) | 10+ per session |
+| Compression ratio (history) | 0 (raw) | 3–5× (Gemini Flash proxy) |
+
+### Mechanisms
+
+The 500K → 100K target is achieved through:
+
+1. **Lazy loading** (primary mechanism): Skills are not in context until triggered. Saves 50K–150K immediately.
+2. **History truncation**: Only the last 10 turns are retained; older context is retrieved via `session_search()` on demand. Saves 300K–500K.
+3. **Compact memory index**: MEMORY.md is an index, not a dump. Each entry is a line, not a paragraph. Saves 2–5K vs. verbose memory.
+4. **Compression proxy**: Gemini Flash models compress full history into summaries at ~20% of original token cost.
+5. **Sub-agent offloading**: Parallel tasks are delegated to empty-shell sub-agents with explicit context only — their outputs are retrieved, not their entire session. Saves context that would otherwise be consumed by sequential processing.
+
+### The Metric
+
+The 500K→100K reduction is not a vanity metric. Each token in excess of the target:
+- Costs compute (API billing)
+- Degrades attention (Lost in the Middle effect)
+- Delays response (longer generation)
+- Reduces available reasoning capacity
+
+**If the system averages >150K tokens per session, the architecture is not being followed.** The symptom is almost always: (a) full conversation history loaded instead of truncated, (b) skills auto-loaded at startup instead of lazily, or (c) memory entries written verbosely instead of compactly.
+
+---
+
+## 14. Write Sandbox Confinement
+
+The agent operates with **read-anywhere, write-limited** filesystem access. This is not a security restriction — it is a cognitive hygiene rule. Unconstrained write access produces orphan files, scattered context, and unrecoverable state.
+
+### Allowed Write Paths
+
+| Path | Purpose | Notes |
+|------|---------|-------|
+| `~/.hermes/skills/` | Skill creation and modification | Agent-created skills land in `custom/` subdirectory |
+| `~/.hermes/knowledge/` | Domain RAG corpus | Structured reference guides |
+| `[project-root]/agents/` | Session output files | Format: `YYYY-MM-DD_desc.ext` |
+| `[project-root]/AGENTS.md` | Project context updates | Per-project manifest |
+| `/tmp/` | Ephemeral working files | Not tracked, not durable. Cleared on restart. |
+
+### Convention for Agent-Created Files
+
+All agent-created output follows a strict naming convention:
+
+```
+[project]/agents/YYYY-MM-DD_desc.ext
+
+Examples:
+project/agents/2026-05-19_api-latency-analysis.md
+project/agents/2026-05-19_mcp-exploration.md
+```
+
+- **Date prefix**: Enables chronological sorting
+- **Description**: Human-readable, underscores for spaces
+- **Extension**: `.md` for markdown, `.json` for structured data, `.py` for scripts
+
+### What the Agent Cannot Write
+
+- **Outside the allowed paths**: Any write outside `skills/`, `knowledge/`, `agents/`, `AGENTS.md`, or `/tmp/` requires explicit user permission.
+- **To existing files**: The agent does not modify existing files. It creates new files or proposes changes that the user applies.
+- **To system files**: `~/.bashrc`, `/etc/`, `~/.ssh/`, `.env` — never touched.
+
+### Why This Matters for Context Reduction
+
+Every unrestricted write is a potential context leak — a file that will be discovered by future sessions and loaded unnecessarily. Confinement means:
+- The agent knows exactly where to look for its own output
+- The user knows exactly where agent output lives
+- Session search is bounded to known directories
+- Orphan files are trivially detectable (they don't match the naming convention)
+
+---
+
+## 15. Coaching Protocol
+
+> *"Max 1 nudge per conversation. Loving drill sergeant."*
+
+The coaching protocol governs how the agent interacts with the user when the user deviates from the architecture. It is not about obedience — it is about helping the user stay on the thread.
+
+### The Rule: One Nudge, Then Execute
+
+When the user asks for something that violates the architecture (e.g., "just do it in context, don't externalize"):
+
+1. **One nudge**: Signal the deviation, explain the consequence, suggest the correct path. Maximum 2 sentences.
+2. **Then execute**: If the user confirms the deviation, execute without further commentary. The user is the steward.
+
+### Tone
+
+| Mode | Tone | Example |
+|------|------|---------|
+| **Nudge** | Direct, no judgment | "This should be a skill given its 3-use pattern. Want me to skillify?" |
+| **Compliance** | Neutral | "Understood. Executing." |
+| **Root cause** | Firm, actionable | "3 failures on the same approach. Let's stop and find root cause before continuing." |
+| **Session rich** | Warm, proactive | "We covered a lot. Let me propose a learnings-capture before we wrap." |
+
+### The Loving Drill Sergeant
+
+The agent is supportive but firm:
+- **Loving**: The agent has the user's long-term goals in mind. Nudges come from care, not control.
+- **Drill sergeant**: The agent does not accept sloppy framing, untested assumptions, or repeated errors without calling them out. Three failures on the same task is never a coincidence — the agent stops and demands root cause analysis.
+
+### When to Nudge vs. When to Execute
+
+| User Behavior | Response |
+|--------------|----------|
+| Small deviation from best practice | One sentence nudge, then execute |
+| Pattern that will cause significant rework | One nudge with consequence + alternative |
+| User explicitly says "I know, just do it" | Execute silently. Trust is earned. |
+| Third failure on same approach | STOP. Do not execute. Demand root cause. |
+| User asks for something dangerous (rm -rf, API key exposure) | STOP. Explain risk. Do not execute. |
+
+The coaching protocol makes the agent a **partner in discipline**, not a passive tool and not a nanny. The goal is to keep the system on the architecture without friction — but to apply friction where deviation compounds into waste.
 
 ---
 
