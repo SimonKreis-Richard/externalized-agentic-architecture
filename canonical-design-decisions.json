@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Samantha — Canonical Design Decisions",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-05-19",
     "system": "Hermes Agent",
     "agent_identity": "Samantha SOUL v5.0",
@@ -151,6 +151,20 @@
       "details": "Agent can write to: ~/.hermes/skills/, ~/.hermes/knowledge/, ~/.hermes/memories/, repo roots (samantha, externalized-agentic-architecture), /tmp/. NOT: ~/.hermes/config.yaml (manual only), .venv, system dirs.",
       "reflected_in": ["externalized-agentic-architecture/ARCHITECTURE.md (added 2026-05-19)"],
       "notes": "Added during May 2026 alignment audit. Needed to be explicit."
+    },
+    {
+      "id": "arch-static-core-nuance",
+      "decision": "Static Core — no mode inference, but active exploration",
+      "status": "active",
+      "details": "Static Core ≠ Static Thinking. No mode inference (Companion/Operator/Architect/etc. — rejected). But conceptual exploration and high-level brainstorming remain active. Think broadly, then distill. The constraint is on mode detection, not on cognitive range.",
+      "reflected_in": ["SOUL.md (CEO workflow)", "samantha-single-source-of-truth.md (archived)"]
+    },
+    {
+      "id": "arch-direct-mode-rule",
+      "decision": "Direct mode > sub-agents for tasks under 30 minutes",
+      "status": "active",
+      "details": "If a task can be done in the main conversation in under 30 minutes, don't spawn a sub-agent. Sub-agents add overhead (context injection, result return, verification overhead). Reserve delegation for parallelizable or reasoning-heavy tasks.",
+      "reflected_in": ["SOUL.md", "samantha-single-source-of-truth.md (archived)"]
     },
     {
       "id": "arch-never-subagent-read-files",
@@ -339,9 +353,46 @@
       "status": "active"
     }
   ],
+  "known_issues": [
+    {
+      "id": "issue-mcp-env-expansion",
+      "issue": "MCP env expansion may still be broken (#11239)",
+      "workaround": "Hardcode API keys in MCP config. Do not rely on ${ENV_VAR} expansion in MCP config sections.",
+      "severity": "medium",
+      "source": "samantha-single-source-of-truth.md (archived)",
+      "status": "unresolved"
+    },
+    {
+      "id": "issue-sessions-spawn-model",
+      "issue": "sessions_spawn(model:) parameter may be ignored",
+      "workaround": "Verify model override with a test delegation before relying on it. The model param is not reliably propagated to sub-agents.",
+      "severity": "low",
+      "source": "samantha-single-source-of-truth.md (archived)",
+      "status": "unresolved"
+    },
+    {
+      "id": "issue-venv-management",
+      "issue": ".venv directory management",
+      "workaround": "Delete + uv sync + update symlinks. NEVER move an existing .venv — it breaks path references.",
+      "severity": "medium",
+      "source": "samantha-single-source-of-truth.md (archived)",
+      "status": "operational_rule"
+    }
+  ],
   "version_history": [
     {
-      "version": "5.0.0",
+      "version": "1.1.0",
+      "date": "2026-05-19",
+      "changes": [
+        "Added arch-static-core-nuance: Static Core ≠ Static Thinking",
+        "Added arch-direct-mode-rule: direct mode < 30 min > sub-agents",
+        "Added known_issues section (3 operational bugs from SSOT)",
+        "Absorbed distilled gems from samantha-single-source-of-truth.md",
+        "version bump: 1.0.0 → 1.1.0"
+      ]
+    },
+    {
+      "version": "1.0.0",
       "date": "2026-05-19",
       "changes": [
         "SOUL v5.0 CEO workflow with 4 pillars",
