@@ -272,6 +272,35 @@
       "reflected_in": ["externalized-agentic-architecture/ARCHITECTURE.md"]
     },
     {
+      "id": "infra-repos",
+      "decision": "Repository map — local paths and remotes",
+      "status": "active",
+      "repos": [
+        {
+          "local": "~/.hermes/",
+          "remote": "github.com/SimonKreis-Richard/samantha",
+          "function": "Hermes config, skills, knowledge, memories — system runtime",
+          "note": "Le seul repo où le nom local (.hermes) ≠ nom remote (samantha)"
+        },
+        {
+          "local": "/mnt/c/Users/SimonJonasKreis-Rich/externalized-agentic-architecture/",
+          "remote": "github.com/SimonKreis-Richard/externalized-agentic-architecture",
+          "function": "Architecture théorique publique — SOUL, manifeste, design decisions"
+        },
+        {
+          "local": "/mnt/c/Users/SimonJonasKreis-Rich/second-brain/",
+          "remote": "github.com/SimonKreis-Richard/second-brain",
+          "function": "Obsidian vault — connaissances personnelles structurées"
+        },
+        {
+          "local": "/mnt/c/Users/SimonJonasKreis-Rich/zettelkasten/",
+          "remote": "github.com/SimonKreis-Richard/zettelkasten",
+          "function": "Obsidian vault — réflexion systématique, manuscrits, philosophie"
+        }
+      ],
+      "push_discipline": "Toujours vérifier le remote avec `git remote -v` avant push. Ne jamais push en aveugle. Si le path local ne correspond pas intuitivement au remote prévu, STOP et vérifier."
+    },
+    {
       "id": "infra-project-repo",
       "decision": "externalized-agentic-architecture — public theoretical repo",
       "status": "active",
