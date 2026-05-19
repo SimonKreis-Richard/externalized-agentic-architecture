@@ -276,6 +276,8 @@ Patterns we explicitly reject because they violate the externalization data flow
 - **Su, W. et al. (2026).** *Skill Retrieval Augmentation for Agentic AI (SRA-Bench).* arXiv:2604.24594. DOI: [10.48550/arXiv.2604.24594](https://doi.org/10.48550/arXiv.2604.24594). Empirically confirms that enumerating skills in context fails to scale; proposes dynamic retrieval + incorporation as the solution. Reveals that the bottleneck is not retrieval but the agent's ability to determine *when* to load a skill.
 - **Offbyonce / Eidetic Labs (2026).** *Stigmem: Stop Preloading Everything — How We Cut AI Agent Context by 50–87% with Lazy Discovery.* [stigmem.dev](https://stigmem.dev) | [GitHub](https://github.com/Eidetic-Labs/stigmem). Proves that replacing full instruction-file preloads with a boot stub + manifest + recall tool reduces context consumption by 50–87% with zero regressions. The principle: load triggers should describe intents, not content.
 - **Anthropic (2025).** *Agent Skills Architecture.* [docs.anthropic.com](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview). Defines the three-level progressive disclosure model for skills: Level 1 (metadata, ~100 tokens, always loaded), Level 2 (instructions, ~5k tokens, loaded on trigger), Level 3 (resources/code, unlimited, accessed on demand via filesystem). This architecture operationalizes the same principle.
+- **Shojaee, P. et al. (2025).** *The Illusion of Thinking: Understanding the Strengths and Limitations of Reasoning Models via the Lens of Problem Complexity.* NeurIPS 2025. arXiv:[2506.06941](https://arxiv.org/abs/2506.06941). Apple ML Research. Proves that reasoning models exhibit three performance regimes (simple: LRMs underperform; medium: LRMs excel; high complexity: both collapse) with a counterintuitive reduction in reasoning effort at critical complexity. Confirms that low reasoning effort captures most gains while high/max triggers diminishing returns and overthinking.
+- **Ghosal, S.S. et al. (2025).** *Mirage of Test-Time Scaling in Reasoning Models.* arXiv:[2506.04210](https://arxiv.org/abs/2506.04210). Shows that early accuracy gains from extended reasoning are largely illusory — stemming from increased output variance rather than genuine reasoning improvement. Proposes parallel thinking as a principled alternative.
 - **Luhmann, N. (1952–1997).** *Zettelkasten.* The original externalized associative thinking system: 90,000 atomic notes forming a thinking partner. The precursor to modern agent memory architectures.
 
 ---
@@ -285,7 +287,7 @@ Patterns we explicitly reject because they violate the externalization data flow
 | Version | Date | Changes |
 |---|---|---|
 | 5.0.0 | 2026-05-19 | Ariadne's thread concept; complete dataflow pipeline (human → notes → agent → skills → Git); lazy loading as first-class principle; added SRA-Bench, Stigmem, and Anthropic Agent Skills references; removed all personal identifiers; restructured around traceability |
-| 4.0.0 | 2026-05-17 | Four pillars replacing nine; funnel cognition; context recycling; minimalism as consequence |
+| 4.1.0 | 2026-05-19 | Added Apple 'The Illusion of Thinking' and Ghosal 'Mirage of Test-Time Scaling' to foundational references; §16 reasoning sweet spot documented |
 | 3.0.0 | — | Skill system, sub-agent architecture |
 | 2.0.0 | — | Cross-session memory, knowledge trees |
 | 1.0.0 | 2026-05-15 | Initial version, minimalism-centered |

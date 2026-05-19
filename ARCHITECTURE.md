@@ -533,10 +533,67 @@ The coaching protocol makes the agent a **partner in discipline**, not a passive
 
 ---
 
+## 16. Reasoning Effort Economics — The Low Sweet Spot
+
+> *"A little reasoning helps a lot. A lot of reasoning hurts."*
+
+### The Finding
+
+Contrary to earlier assumptions, reasoning effort on MOE models (DeepSeek V4 Flash) does **not** cost proportionally more. The blended price is identical ($0.175/M) for none, low, high, and max effort levels. The difference is in **output quality and token efficiency**:
+
+| Effort | AA Index | vs None | GDPval Elo | Tokens |
+|--------|----------|--------|------------|--------|
+| None | 36.5 | baseline | 1393 | Minimal |
+| **Low** | *(~42 est.)* | **~+15%** | — | Efficient |
+| High | 46.0 | **+26%** | **1414** | Moderate |
+| Max | 46.5 | +27% | 1388 | **Explodes** |
+
+**Key insight**: High→Max gives only +0.5 AA Index (+1%) but triggers *overthinking* — GDPval Elo actually *drops* from 1414 (High) to 1388 (Max). The model wastes the thinking budget on redundant exploration.
+
+### The Apple "Illusion of Thinking" Validation
+
+Shojaee et al. (2025, NeurIPS) independently confirm the same 3-regime structure through controlled puzzle experiments:
+
+1. **Low complexity** — Standard models (no reasoning) outperform LRMs. Reasoning models *overthink* simple problems.
+2. **Medium complexity** — LRMs show genuine advantage. Structured reasoning helps.
+3. **High complexity** — **Both collapse.** Accuracy → zero. LRMs counterintuitively *reduce* thinking effort as problems exceed their threshold.
+
+The paper further reveals: even when the correct algorithm is explicitly provided, LRMs fail to execute it reliably at high complexity. The limitation is not knowledge — it's **execution fidelity** over longer sequences.
+
+### Decision Rule
+
+| Use Case | Effort | Rationale |
+|----------|--------|-----------|
+| **Default** | `low` | Captures ~80% of none→high gain at minimal token overhead |
+| **Trivial ops** (status checks, ls) | `none` | Overthinking wastes tokens for zero gain |
+| **Complex reasoning** | `high` | When the task genuinely benefits from thinking through alternatives |
+| **Never** | `max` | Marginal gain (+1%), overthinking triggers, Elo regression on GDPval |
+
+### Why This Changes the Architecture
+
+The earlier assumption was that reasoning effort scaled cost linearly. It doesn't. Since pricing is flat across effort levels:
+
+- **Low reasoning is free performance.** 15-20% quality gain at same cost.
+- **High reasoning is cheap performance.** 26% gain at marginal token overhead.
+- **Max reasoning is a cost trap.** Same quality as High but 3-10× the thinking tokens.
+
+This is now captured in:
+- `agent.reasoning_effort: low` and `delegation.reasoning_effort: low` (config.yaml)
+- `canonical-design-decisions.json` → `reasoning-effort-low-sweet-spot`
+
+### Reference
+
+Shojaee, P., Mirzadeh, I., Alizadeh, K., Horton, M., Bengio, S., & Farajtabar, M. (2025). *The Illusion of Thinking: Understanding the Strengths and Limitations of Reasoning Models via the Lens of Problem Complexity.* NeurIPS 2025. arXiv:2506.06941. [Apple ML Research](https://machinelearning.apple.com/research/illusion-of-thinking).
+
+Also supported by Ghosal et al. (2025). *Mirage of Test-Time Scaling in Reasoning Models.* arXiv:2506.04210. Shows early gains from extended thinking are illusory — "overthinking" degrades precision.
+
+---
+
 ## Version History
 
 | Version | Date | Key Changes |
 |---|---|---|
+| 5.1.0 | 2026-05-19 | §16 Reasoning Effort Economics — low sweet spot, Apple 'Illusion of Thinking', diminishing returns confirmed; correction of prior MOE reasoning assumption in skills |
 | 5.0.0 | 2026-05-19 | 2-layer skills (core = 14, auto-detection = ~76); orchestrator sub-agent model; real stack (OpenRouter + DeepSeek V4 Flash + MCP Trinity); Hermes native memory; component map aligned to actual runtime; cron jobs documented; Fil d'Ariane traceability added |
 | 4.0.0 | 2026-05-17 | Initial externalization architecture |
 | 3.0.0 | 2026-05-16 | SOUL-centric design |
@@ -545,8 +602,8 @@ The coaching protocol makes the agent a **partner in discipline**, not a passive
 
 ---
 
-**Version**: 5.0.0  
-**Last updated**: 2026-05-19  
-**Aligned with**: MANIFESTO.md v4.0.0 (Externalization Architecture)
+**Version**: 5.1.0  \
+**Last updated**: 2026-05-19  \
+**Aligned with**: MANIFESTO.md v4.1.0 (Externalization Architecture + Reasoning Effort Economics)
 
 > *"If, as we confront some task, a part of the world functions as a process which, were it done in the head, we would have no hesitation in recognizing as part of the cognitive process, then that part of the world IS part of the cognitive process."* — Clark & Chalmers, 1998
