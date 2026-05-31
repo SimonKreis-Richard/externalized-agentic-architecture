@@ -30,10 +30,13 @@ Recent work by Su et al. (2026, arXiv:2604.24594) on **Skill Retrieval Augmentat
 
 The consequence is architectural homology: **the same principles that keep a human mind clear and creative — externalize, minimize, eliminate noise — keep an agent's context window efficient and its reasoning sharp.**
 
+> **Memory compaction is disabled — it captures low-importance data and wastes context window capacity.** Identity, procedures, and durable data are externalized to SOUL + JSON + GitHub instead.
+
 | Principle | Biological Basis | Computational Basis |
 |---|---|---|
 | Externalize everything | GTD: working memory is for processing, not storage | Context window is for task reasoning, not identity storage |
 | Minimize injected content | Cowan (2001): capacity ~4 chunks | Every token in the prompt is a token not available for reasoning |
+| No memory providers | Latency (network round-trips), portability (API lock-in), context waste | JSON files: zero-latency, fully portable, version-controlled |
 | Eliminate open loops | Miller (1956): unresolved loops consume attention | Auto-loaded skills, auto-created memory = unresolved context |
 | Stable is predictable | Baddeley & Hitch (1974): structured WM outperforms chaotic | Static prompts are cacheable, deterministic, auditable |
 | Load lazily, not eagerly | Stigmem (2026): boot stub + manifest beats full preload | Lazy instruction discovery reduces context by 50–87% |
@@ -49,10 +52,10 @@ This architecture applies the same principle to AI agents:
 
 | Extended Mind Concept | Agent Implementation |
 |---|---|
-| **Active Externalism**: environment plays an *active* role in cognition | SOUL, MEMORY, skills are read every turn — they *are* the agent's extended mind |
+| **Active Externalism**: environment plays an *active* role in cognition | SOUL (pointer), data/*.json, skills are read every turn — they *are* the agent's extended mind |
 | **Cognitive Coupling**: reliable, ongoing link between agent and external structures | Git-tracked files, skill system, Obsidian vault — all accessible every session |
-| **Functional Parity**: if it functions as memory, it IS memory | A MEMORY.md entry consulted every turn is functionally identical to internal memory — but more durable |
-| **Complementarity**: external + internal = more powerful than either alone | The agent's context window + externalized skills + memory system = a cognitive system larger than any single component |
+| **Functional Parity**: if it functions as memory, it IS memory | A data/*.json entry consulted every turn is functionally identical to internal memory — but more durable |
+| **Complementarity**: external + internal = more powerful than either alone | The agent's context window + externalized skills + data = a cognitive system larger than any single component |
 
 ---
 
@@ -135,13 +138,13 @@ This mirrors the Stigmem "Stop Preloading Everything" finding (2026): replacing 
 
 > *The system maintains itself. The user steers.*
 
-An externalized cognitive system can operate autonomously because its knowledge, procedures, and triggers live outside any single session. Scheduled audits examine skills for staleness, detect dead references, and propose consolidation. Sub-agents are dispatched for parallel research and return structured results. Memory is captured across sessions and indexed for retrieval.
+An externalized cognitive system can operate autonomously because its knowledge, procedures, and triggers live outside any single session. The core agent audits skills for staleness, detects dead references, and proposes consolidation. Sub-agents are dispatched for parallel research and return structured results. Durable data is captured across sessions and indexed for retrieval.
 
 **What this enables**:
-- Scheduled audits (skills, core identity, memory) that run without user initiation
+- Session-based audits (skills, core identity, data) that run during active sessions
 - Proactive skill discovery and curation
-- Automatic pattern capture: 3 uses → skillify → save as skill or memory
-- Self-healing: detect stale memory → propose cleanup → execute with consent
+- Automatic pattern capture: 3 uses → skillify → save as skill or data
+- Self-healing: detect stale data → propose cleanup → execute with consent
 - Parallel delegation: sub-agents research, synthesize, report — each result externalized to the thread
 
 **The boundary**: the user remains the steward. The system proposes; the user decides. Autonomy is orchestration, not abdication.
@@ -170,9 +173,9 @@ The SRA-Bench findings validate this architecture empirically: the bottleneck in
 Procedures become skills. Insights become durable skill entries. Project patterns become project context updates. The system doesn't just externalize — it *recycles* context so that every cognitive effort compounds into durable knowledge.
 
 **The recycling loop**:
-- Session insight → captured → memory or skill
+- Session insight → captured → data/*.json or skill
 - Procedure executed 3 times → skillified → reusable skill
-- Pattern detected in decisions → saved as skill or memory → durable entry
+- Pattern detected in decisions → saved as skill or data → durable entry
 - Skill overlap detected → consolidation → unified skill
 - Session rich in discoveries → proposed capture by the agent
 
@@ -186,7 +189,9 @@ The four pillars serve one purpose: to define an agent whose cognition extends b
 
 **The agent is not a chatbot with memory. The agent is a cognitive system whose "mind" spans files, skills, knowledge trees, and project contexts — all externalized, all version-controlled, all survivable, all threaded by traceable externalization tokens.**
 
-The core identity contract (~800 tokens) defines identity, tone, and reflexes. Everything else — knowledge, procedures, patterns, context — is externalized. The core contract is the system's center of gravity; everything orbits it, but nothing clutters it.
+The core identity contract (~800-1200 tokens) defines identity, tone, and reflexes. Everything else — knowledge, procedures, patterns, context — is externalized. The core contract is the system's center of gravity; everything orbits it, but nothing clutters it.
+
+> **The SOUL is a pointer to the system, not a manual — justified by Cowan (2001) 4-chunk working memory limit.** The context window holds references, not content.
 
 ---
 
@@ -221,7 +226,7 @@ The Apple Principle is named after the design philosophy that made Apple product
 | Domain | With Simplicity as Consequence Only | With Simplicity as Constraint |
 |--------|-----------------------------------|------------------------------|
 | **Skills** | Create a skill for every procedure after 3 uses → 200+ skills, hard to find the right one | Create a skill only when the procedure is both (a) used 3+ times AND (b) genuinely non-obvious → 40 focused skills |
-| **Memory** | Capture every insight in MEMORY.md → bloated index, noisy reads | Capture only insights that (a) change behavior (b) are non-obvious (c) survive next month → compact, high-signal |
+| **Memory** | Capture every insight in data/*.json → bloated index, noisy reads | Capture only insights that (a) change behavior (b) are non-obvious (c) survive next month → compact, high-signal |
 | **SOUL** | Add every behavioral rule discovered → 2000-token SOUL that nobody reads | Each rule must pass: "Is this still true if I remove it?" → 800-token SOUL, every line proven essential |
 | **Config** | Every optimization gets a YAML key → 600-line config that becomes its own project | Every YAML key must pay rent: prove it changes behavior in a meaningful way → 50 lines |
 
@@ -282,6 +287,22 @@ Patterns we explicitly reject because they violate the externalization data flow
 
 ---
 
+## The Pedagogical Dimension: Learning Through Externalization
+
+The externalization architecture is not merely a productivity system. It is a **learning engine.**
+
+Every interaction with the agent is an act of Socratic dialogue — the user must articulate, question, and decide. Every skill written is an act of teaching — the user explains procedures from first principles to an entity with no prior context. Every externalized file is a rubber duck — a surface onto which implicit knowledge is projected and made examinable.
+
+The cognitive science is clear: the generation effect (Slamecka & Graf, 1978) demonstrates that producing information improves retention over passively receiving it. The self-explanation effect (Chi et al., 1989) shows that explaining material during learning produces deeper understanding. The protégé effect (Bargh & Schul, 1980) confirms that preparing to teach changes how people encode information. Bloom's 2-sigma problem (1984) quantifies the advantage of one-on-one tutoring — an advantage that an always-available Socratic agent partially realizes.
+
+The agentic workflow is inherently **inductive**: principles emerge from accumulated practice rather than being stated a priori. The Distillation Cycle (DÉMÊLER → DISTILLER → DÉCIDER) is not just a processing model — it is a learning cycle. Each pass through the cycle compounds understanding. The user who maintains this architecture becomes, through the process of maintaining it, a clearer thinker and a more reflective practitioner.
+
+> *"We do not learn from experience. We learn from reflecting on experience."* — John Dewey
+
+See [`concepts/the-reflective-mirror.md`](concepts/the-reflective-mirror.md) for the full treatment.
+
+---
+
 ## Version History
 
 | Version | Date | Changes |
@@ -298,6 +319,6 @@ Patterns we explicitly reject because they violate the externalization data flow
 >
 > *The agent's files are its notebook. Its skills are its procedural memory. Its Git history is its Ariadne's thread — every externalization is a point of return. What lives outside the context window is not less cognitive — it is more durable, more traceable, and more reversible.*
 
-**Version**: 5.0.0
-**Ratified**: 2026-05-19
+**Version**: 6.0.0
+**Ratified**: 2026-05-30
 **License**: MIT

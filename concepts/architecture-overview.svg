@@ -79,7 +79,7 @@
   <!-- ============================================ -->
   <rect x="50" y="62" width="300" height="70" rx="8" fill="url(#human-grad)" stroke="#f85149" stroke-width="1.5" filter="url(#shadow)"/>
   <text x="200" y="86" text-anchor="middle" fill="#f85149" font-family="'Courier New', monospace" font-size="13" font-weight="bold">🧑 Humain</text>
-  <text x="200" y="102" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="9">Simon — Oracle HCM Consultant</text>
+  <text x="200" y="102" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="9">[USER_NAME] — [DOMAIN]</text>
   <text x="200" y="116" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Pensées · Tâches · Décisions · Révisions</text>
 
   <!-- Obsidian box -->
@@ -112,7 +112,7 @@
   <!-- 2. AGENT (center) — SOUL -->
   <!-- ============================================ -->
   <rect x="380" y="62" width="400" height="130" rx="10" fill="url(#agent-grad)" stroke="#58a6ff" stroke-width="2" filter="url(#shadow)"/>
-  <text x="580" y="84" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="14" font-weight="bold">🤖 Agent Central — Sam</text>
+  <text x="580" y="84" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="14" font-weight="bold">🤖 Agent Central — [AGENT_NAME]</text>
 
   <!-- SOUL sub-box -->
   <rect x="395" y="94" width="370" height="48" rx="6" fill="url(#soul-grad)" stroke="#3fb950" stroke-width="1.5"/>
@@ -122,32 +122,19 @@
 
   <!-- Agent capabilities row -->
   <text x="395" y="152" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔧 Distillation · Synthèse · Délégation · Décision · Externalisation</text>
-  <text x="395" y="166" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Model: deepseek/deepseek-v4-flash · Provider: OpenRouter · MCP: Tavily→Exa→Jina</text>
+  <text x="395" y="166" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Model: MOE (cost-efficient) · MCP: Tavily→Exa→Jina</text>
 
   <!-- ============================================ -->
-  <!-- 3. CORE SKILLS (14, always loaded) -->
+  <!-- 3. CORE SKILLS (3, always loaded) -->
   <!-- ============================================ -->
   <rect x="380" y="200" width="400" height="120" rx="10" fill="url(#skills-grad)" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="6,3" filter="url(#shadow)"/>
-  <text x="580" y="218" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📚 14 Core Skills — Toujours chargés</text>
+  <text x="580" y="218" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📚 3 Core Skills — Toujours chargés</text>
   <text x="580" y="232" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">priority: core · Injected à chaque session</text>
 
-  <!-- Core skills grid (14 items, 2 rows × 7 cols) -->
-  <text x="395" y="248" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">system-architecture</text>
-  <text x="395" y="260" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">soul-management</text>
-  <text x="395" y="272" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">skill-design</text>
-  <text x="395" y="284" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">skills-classifier</text>
-  <text x="395" y="296" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">search-tool-protocol</text>
-  <text x="395" y="308" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">delegation-agentique</text>
-
-  <text x="535" y="248" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">web-research</text>
-  <text x="535" y="260" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">markitdown</text>
-  <text x="535" y="272" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">hermes-system-maintenance</text>
-  <text x="535" y="284" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">autonomie-maintenance</text>
-  <text x="535" y="296" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">hermes-agent</text>
-  <text x="535" y="308" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">skill-creator</text>
-
-  <text x="690" y="248" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">writing-plans</text>
-  <text x="690" y="260" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">prism</text>
+  <!-- Core skills grid (3 items) -->
+  <text x="395" y="260" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">system-architecture</text>
+  <text x="395" y="280" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">agent-config</text>
+  <text x="395" y="300" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">verification</text>
 
   <!-- Agent → Core Skills arrow -->
   <line x1="580" y1="192" x2="580" y2="200" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
@@ -214,39 +201,39 @@
   <text x="580" y="355" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Le contexte est un espace de travail · Tout ce qui peut sortir, sort</text>
 
   <!-- ============================================ -->
-  <!-- 7. CRON JOBS (autonomous maintenance) -->
+  <!-- 7. AUTONOMOUS MAINTENANCE (during sessions) -->
   <!-- ============================================ -->
   <rect x="50" y="200" width="300" height="120" rx="10" fill="#0d1117" stroke="#d29922" stroke-width="1.5"/>
-  <text x="200" y="220" text-anchor="middle" fill="#d29922" font-family="'Courier New', monospace" font-size="11" font-weight="bold">⏰ Cron Jobs — Autonomie</text>
-  <text x="200" y="234" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Toutes les 180 min · Gateway nécessaire</text>
+  <text x="200" y="220" text-anchor="middle" fill="#d29922" font-family="'Courier New', monospace" font-size="11" font-weight="bold">🔧 Autonomie — Pendant les sessions</text>
+  <text x="200" y="234" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Audit, recycle, discover — no external scheduler</text>
 
   <rect x="60" y="244" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="257" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📋 system-audit</text>
+  <text x="70" y="257" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📋 system audit</text>
   <text x="330" y="257" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">config drift, skill bloat</text>
 
   <rect x="60" y="266" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="279" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔍 soul-cross-check</text>
+  <text x="70" y="279" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔍 SOUL cross-check</text>
   <text x="330" y="279" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">contradictions, completeness</text>
 
   <rect x="60" y="288" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="301" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📊 skills-classifier-audit</text>
-  <text x="330" y="301" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">quality, orphans, priorities</text>
+  <text x="70" y="301" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📊 skill curation</text>
+  <text x="330" y="301" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">quality, consolidation</text>
 
   <rect x="60" y="310" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="323" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🌐 hub-scout-scan</text>
-  <text x="330" y="323" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">candidates, gap tracker</text>
+  <text x="70" y="323" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🌐 skill discovery</text>
+  <text x="330" y="323" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">candidates, gap detection</text>
 
   <!-- ============================================ -->
-  <!-- 8. RAG Oracle HCM (knowledge base) -->
+  <!-- 8. RAG Domain Knowledge (knowledge base) -->
   <!-- ============================================ -->
   <rect x="50" y="370" width="300" height="120" rx="10" fill="#0d1117" stroke="#3fb950" stroke-width="1.5"/>
-  <text x="200" y="392" text-anchor="middle" fill="#3fb950" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📖 RAG — Oracle HCM Knowledge</text>
-  <text x="200" y="408" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">knowledge/oracle-hcm/ · 9 guides</text>
+  <text x="200" y="392" text-anchor="middle" fill="#3fb950" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📖 RAG — Domain Knowledge</text>
+  <text x="200" y="408" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">knowledge/[DOMAIN_SKILL]/ · 9 guides</text>
 
-  <text x="60" y="424" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Oracle Cloud HCM Guides</text>
-  <text x="60" y="438" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Payroll · Absence · Benefits</text>
-  <text x="60" y="452" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Core HR · Talent · Recruiting</text>
-  <text x="60" y="466" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Compensation · Security</text>
+  <text x="60" y="424" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Domain Reference Guides</text>
+  <text x="60" y="438" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Topic A · Topic B · Topic C</text>
+  <text x="60" y="452" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Topic D · Topic E · Topic F</text>
+  <text x="60" y="466" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Topic G · Topic H</text>
   <text x="60" y="480" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Requête → contexte RAG → réponse ciblée</text>
 
   <!-- Agent → RAG arrow -->
@@ -257,13 +244,12 @@
   <!-- 9. MEMORY section (below agent) -->
   <!-- ============================================ -->
   <rect x="50" y="500" width="300" height="100" rx="8" fill="#0d1117" stroke="#bc8cff" stroke-width="1.5"/>
-  <text x="200" y="520" text-anchor="middle" fill="#bc8cff" font-family="'Courier New', monospace" font-size="11" font-weight="bold">🧠 Mémoire Durable</text>
-  <text x="200" y="536" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Hermes native · provider: builtin</text>
+  <text x="200" y="520" text-anchor="middle" fill="#bc8cff" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📊 Data & Skills</text>
+  <text x="200" y="536" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Memory: Disabled by Design</text>
 
-  <text x="60" y="554" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📄 MEMORY.md — Faits durables</text>
-  <text x="60" y="568" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">👤 USER.md — Profil utilisateur</text>
+  <text x="60" y="554" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📄 data/*.json — Données structurées</text>
+  <text x="60" y="568" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔧 0-custom-skills/ — Skills curatés (0- prefix)</text>
   <text x="60" y="582" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔍 session_search() — Historique</text>
-  <text x="60" y="596" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📁 data/*.json — Données structurées</text>
 
   <!-- Agent → Memory arrow -->
   <path d="M 380 506 L 350 506" stroke="#bc8cff" stroke-width="1" marker-end="url(#arrow-gray)"/>
@@ -288,7 +274,7 @@
   <rect x="380" y="372" width="400" height="60" rx="8" fill="#0d1117" stroke="#d29922" stroke-width="1" stroke-dasharray="4,3"/>
   <text x="580" y="392" text-anchor="middle" fill="#d29922" font-family="'Courier New', monospace" font-size="10" font-weight="bold">♻️ Recycling Loop — Context as Compound Interest</text>
 
-  <text x="390" y="410" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Insight → learnings-capture → MEMORY.md · Procedure ×3 → skillify → skill</text>
+  <text x="390" y="410" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Insight → learnings-capture → data/*.json · Procedure ×3 → save as skill</text>
   <text x="390" y="424" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Overlap → skill-recycler → consolidation · Rich session → propose capture</text>
 
   <!-- ============================================ -->
@@ -305,7 +291,7 @@
   <line x1="580" y1="488" x2="580" y2="492" stroke="#8b949e" stroke-width="1" marker-end="url(#arrow-gray)"/>
 
   <rect x="395" y="492" width="370" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="405" y="505" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">2. Distillation (Sam)</text>
+  <text x="405" y="505" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">2. Distillation ([AGENT_NAME])</text>
   <text x="755" y="505" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Analyse·synthèse·délégation</text>
 
   <line x1="580" y1="510" x2="580" y2="514" stroke="#8b949e" stroke-width="1" marker-end="url(#arrow-gray)"/>
@@ -332,7 +318,7 @@
   <!-- ============================================ -->
   <rect x="50" y="630" width="1100" height="60" rx="8" fill="url(#git-grad)" stroke="#f85149" stroke-width="2" filter="url(#shadow)"/>
   <text x="600" y="654" text-anchor="middle" fill="#f85149" font-family="'Courier New', monospace" font-size="13" font-weight="bold">📦 Git Repository — Single Source of Truth & Backup</text>
-  <text x="600" y="672" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="9">github.com/SimonKreis-Richard/samantha · SSH push automatique · Tout est versionné</text>
+  <text x="600" y="672" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="9">github.com/[GITHUB_USER]/[REPO_NAME] · SSH push automatique · Tout est versionné</text>
   <text x="600" y="686" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">~/.hermes/ (runtime) + project/ (travail) + skills/ (procédural) + knowledge/ (domaine) + data/ (personnel)</text>
 
   <!-- Connector lines to Git -->
@@ -371,7 +357,7 @@
   <text x="88" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Agent & scaffolding</text>
 
   <rect x="230" y="752" width="12" height="12" rx="2" fill="#0d1117" stroke="#d29922" stroke-width="1.5"/>
-  <text x="248" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Autonomie / cron</text>
+  <text x="248" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Autonomie</text>
 
   <rect x="400" y="752" width="12" height="12" rx="2" fill="#0d1117" stroke="#3fb950" stroke-width="1.5"/>
   <text x="418" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Connaissances / RAG</text>
@@ -401,7 +387,7 @@
   <circle cx="600" cy="842" r="2" fill="#58a6ff"/>
 
   <!-- Connecting lines on left side -->
-  <!-- Human → Cron (maintenance scope indicator) -->
+  <!-- Human → Autonomy (maintenance scope indicator) -->
   <path d="M 50 97 L 30 97 L 30 260 L 50 260" stroke="#8b949e" stroke-width="0.5" stroke-dasharray="2,2" fill="none" opacity="0.3"/>
 
   <!-- ============================================ -->

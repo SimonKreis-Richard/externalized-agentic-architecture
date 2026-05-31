@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "created": "YYYY-MM-DD",
+    "updated": "YYYY-MM-DD",
+    "description": "Domain-specific knowledge base"
+  },
+  "domain": "[DOMAIN_NAME]",
+  "references": [
+    {
+      "title": "[REFERENCE_TITLE]",
+      "url": "[URL]",
+      "type": "[guide|documentation|paper|tool]",
+      "relevance": "[high|medium|low]",
+      "notes": "[NOTES]"
+    }
+  ],
+  "key_concepts": []
+}

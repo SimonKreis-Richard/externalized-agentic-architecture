@@ -11,24 +11,26 @@
 # =============================================================================
 
 # =============================================================================
-# MODEL — OpenRouter provider, DeepSeek model, no reasoning tokens
+# MODEL — OpenRouter provider, MOE model, low reasoning
 # =============================================================================
 # Manifesto Pillar 4 (Total Portability): Single provider = single credential,
 #   instant model switching, no vendor lock-in.
-# Manifesto Pillar 6 (Token Discipline): MoE architecture + reasoning_effort=none
-#   = minimal cost per turn. Every token earned its place.
+# Manifesto Pillar 6 (Token Discipline): MoE architecture + reasoning_effort=low
+#   = optimal cost per turn. Every token earned its place.
 # Architecture §6 (Design Decisions): Full problem→solution→rationale chain
 #   for each choice below.
 # =============================================================================
 
 model:
-  # Primary model: DeepSeek V4 Pro.
+  # Primary model: your-provider/your-moe-model
+  # Use Chinese open-source MOE models for best cost-efficiency.
+  # Reference benchmarks: artificialanalysis.ai, pinchbench.com
   # Rationale: MoE (Mixture of Experts) architecture. Best cost/performance
-  #   ratio in market as of May 2026. Fewer active parameters per query = cheaper
+  #   ratio for sustained agentic use. Fewer active parameters per query = cheaper
   #   tokens without proportional quality loss.
   # Pillars: 1 (Simplicity), 6 (Token Discipline).
-  # See: Architecture §6 — DeepSeek as Primary Model.
-  default: "deepseek/deepseek-v4-pro"
+  # See: Architecture §6 — Model Selection via Benchmarks.
+  # default: "your-provider/your-moe-model"
 
   # Inference provider: OpenRouter.
   # Rationale: Single API gateway to all major model providers. ~5% credit fee,
@@ -51,19 +53,20 @@ model:
 # =============================================================================
 # Manifesto Pillar 2 (Explicit Control): The agent does not guess. It does not
 #   elaborate unsolicited. It answers and waits.
-# Manifesto Pillar 3 (Determinism over Heuristics): reasoning_effort=none makes
-#   behavior predictable — no hidden reasoning tokens inflating cost.
+# Manifesto Pillar 3 (Determinism over Heuristics): reasoning_effort=low makes
+#   behavior predictable — minimal reasoning tokens for optimal quality/cost.
 # =============================================================================
 
 agent:
-  # Reasoning effort: NONE.
-  # Rationale: Empirical studies (2025-2026) demonstrate reasoning tokens
-  #   produce exponential cost increases with negligible quality improvements
-  #   on MoE architectures. The model already routes internally.
-  #   This is the single most impactful cost-reduction setting.
+  # Reasoning effort: LOW (sweet spot).
+  # Rationale: Low reasoning captures ~80% of none→high quality gain at minimal
+  #   overhead. Max reasoning is wasteful — performance scales linearly while
+  #   cost scales exponentially. none is not always better — it misses genuine
+  #   reasoning benefits for non-trivial tasks. This is the single most
+  #   impactful cost-quality balance setting.
   # Pillars: 1 (Simplicity), 6 (Token Discipline).
-  # See: Architecture §6 — reasoning_effort=none.
-  reasoning_effort: "none"
+  # See: Architecture §6 — reasoning_effort=low sweet spot.
+  reasoning_effort: "low"
 
   # Verbose mode: OFF.
   # Rationale: The agent communicates with extreme semantic density as a
@@ -105,23 +108,44 @@ terminal:
   # Pillars: 1 (Simplicity) — don't set what you don't need to change.
 
 # =============================================================================
-# SKILLS — All disabled by default
+# SKILLS — 3 core always loaded + curated custom directory
 # =============================================================================
 # Manifesto Pillar 1 (Radical Simplicity): Skills are a tax on focus.
 #   Each loaded skill costs tokens and cognitive overhead.
-# Manifesto Pillar 2 (Explicit Control): Skills are cast manually, only when
-#   the user decides. No automatic loading. No automatic creation.
+# Manifesto Pillar 2 (Explicit Control): Core skills are always loaded.
+#   Additional skills loaded on demand from curated custom directory.
 # Manifesto Pillar 7 (Active Externalization): Behavioral rules belong in
 #   the SOUL (injected permanently), not in optionally-loaded skills.
-# Architecture §6 — Skills: All Disabled by Default.
-# Architecture §7 (The Minimalist Core): "Auto-load skills" = NOT done.
+# Architecture §6 — Skills: 3 Core Always + Curated Custom (0- prefix).
 # =============================================================================
 
-# No skills enabled by default.
-# When a skill is needed, the user casts it explicitly.
-# Only hub-maintained skills are used. Zero custom skill maintenance.
+# 3 core skills always loaded: system-architecture, agent-config, verification.
+# Custom skills use 0- prefix convention for curated directory.
+# When a skill is needed beyond core, cast it explicitly from the custom directory.
 # Maximum active at any time: 5-8.
 # See: ARCHITECTURE.md — Skill Philosophy.
+
+# =============================================================================
+# MEMORY — Disabled by Design
+# =============================================================================
+# Memory is disabled. Compaction captures low-importance data and wastes
+# context window tokens. External memory providers add latency (network
+# round-trips) and reduce portability (API dependencies, provider lock-in).
+# Critical info is externalized to:
+#   - SOUL.md (pointer architecture, ~800-1200 tokens)
+#   - data/*.json (structured user data, zero-latency, fully portable, version-controlled)
+#   - GitHub (backup and versioning for the entire architecture)
+#
+# This provides manual, granular control over what persists with no external dependencies.
+# memory_enabled: false
+# user_profile_enabled: false
+
+# =============================================================================
+# VARIABLES — {VAR} Notation System
+# =============================================================================
+# Configuration uses {VAR} notation for version-controlled single source of truth.
+# All configurable values are declared as {VAR} in templates and resolved at runtime.
+# Example: model: {DEFAULT_MOE_MODEL}
 
 # =============================================================================
 # SECURITY — Enabled, minimal configuration

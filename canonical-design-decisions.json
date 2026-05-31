@@ -1,11 +1,11 @@
 {
   "meta": {
-    "title": "Samantha — Canonical Design Decisions",
-    "version": "1.2.0",
-    "updated": "2026-05-19",
+    "title": "Externalized Agentic Architecture — Canonical Design Decisions",
+    "version": "2.0.0",
+    "updated": "2026-05-30",
     "system": "Hermes Agent",
-    "agent_identity": "Samantha SOUL v5.0",
-    "description": "Complete index of every canonical design decision across the Samantha/Hermes ecosystem. Single source of truth. Every principle, model choice, architectural decision, tool selection, skill classification, and anti-pattern."
+    "agent_identity": "Externalized Agentic Architecture",
+    "description": "Complete index of every canonical design decision across the Externalized Agentic Architecture ecosystem. Single source of truth. Every principle, model choice, architectural decision, tool selection, skill classification, and anti-pattern."
   },
   "philosophy": [
     {
@@ -30,7 +30,7 @@
       "id": "pillar-cognitive-funnel",
       "principle": "Cognitive Funnel (Funnel Cognition)",
       "category": "pillar",
-      "source": "Simon's v3.1 distillation model + repo Funnel Cognition 4-stage",
+      "source": "[USER]'s distillation model + repo Funnel Cognition 4-stage",
       "status": "active",
       "reflected_in": ["externalized-agentic-architecture/ARCHITECTURE.md", "concepts/distillation-cycle.md", "soul-management skill"],
       "notes": "Two complementary models: 4-stage Funnel (Chaotic→Distillation→Categorization→Structured) and 3-phase Distillation Cycle (DÉMÊLER→DISTILLER→DÉCIDER). Both active."
@@ -48,53 +48,34 @@
   "models": [
     {
       "id": "model-daily-driver",
-      "model": "DeepSeek V4 Flash",
+      "model": "Chinese open-source MOE model",
       "provider": "OpenRouter",
       "role": "daily driver (99% of queries)",
-      "config_key": "model.default: deepseek/deepseek-v4-flash",
-      "rationale": "Think-through-agent speed > raw model power. Ratio qualité/prix absurde.",
+      "config_key": "model.default: your-provider/your-moe-model",
+      "rationale": "Best cost-to-quality ratio for sustained agentic use. The Chinese AI ecosystem is engaged in an aggressive price war, subsidizing inference costs — creating an arbitrage opportunity for consumers. MOE architecture = fewer active parameters per query = cheaper tokens without proportional quality loss. Refer to GDPval-AA, PinchBench, τ²-Bench, Artificial Analysis benchmarks.",
       "status": "active",
       "configured_in": "~/.hermes/config.yaml",
-      "updated": "2026-05-19",
-      "evidence": "USER.md: 'Flash > Pro for 99%'. Config now reflects this."
+      "updated": "2026-05-30",
+      "evidence": "Benchmark-validated selection. MOE architecture = fewer active parameters per query = cheaper tokens without proportional quality loss."
     },
     {
       "id": "model-pro-reserve",
-      "model": "DeepSeek V4 Pro",
+      "model": "Pro/large model",
       "provider": "OpenRouter",
       "role": "emergency reserve (<1% of queries)",
       "config_key": "model.provider: openrouter (fallback)",
-      "rationale": "Complex reasoning, architectural critiques, edge cases where Flash insufficient",
+      "rationale": "Complex reasoning, architectural critiques, edge cases where daily driver is insufficient.",
       "status": "active",
       "configured_in": "~/.hermes/config.yaml (not explicitly configured as fallback — implicit)",
-      "notes": "Simon explicitly prefers Flash for 99% of cases. Pro only when asked or when Flash fails."
-    },
-    {
-      "id": "model-auxiliary-vision",
-      "model": "Gemini (via auxiliary vision)",
-      "provider": "OpenRouter",
-      "role": "image analysis fallback",
-      "rationale": "Non-vision primary model needs auxiliary vision",
-      "status": "active",
-      "notes": "Via vision_analyze tool with auxiliary vision model. Only for images."
-    },
-    {
-      "id": "model-curator",
-      "model": "deepseek/deepseek-v4-flash",
-      "provider": "OpenRouter",
-      "role": "skill curator",
-      "config_key": "auxiliary.curator.model: deepseek/deepseek-v4-flash",
-      "rationale": "Avoid Gemini hallucinations in curator. Dedicated fixed config.",
-      "status": "active",
-      "notes": "Forced in config to prevent dry-run mode. Skill: config-verification-patterns."
+      "notes": "Used only when daily driver fails or for complex tasks requiring maximum capability."
     },
     {
       "id": "model-reasoning-effort",
       "config": "reasoning_effort: low",
       "scope": ["agent", "delegation"],
-      "rationale": "Sweet spot confirmed empirically: low reasoning gives ~80% of gain vs none→high (+26% AA Index at same cost). High shows diminishing returns (+1% vs low). Max triggers overthinking (GDPval Elo: High 1414 > Max 1388). Apple 'The Illusion of Thinking' (NeurIPS 2025) confirms 3-regime model: low/medium complexity benefits from reasoning, high collapses. Decision: default low, none for trivial ops, high for complex reasoning tasks only.",
+      "rationale": "Sweet spot confirmed empirically: low reasoning gives ~80% of gain from none→high. High shows diminishing returns. Max triggers overthinking. Default low, none for trivial ops, high for complex reasoning tasks only.",
       "label": "reasoning-effort-low-sweet-spot",
-      "evidence": "AA Index: none=36.5, high=46.0, max=46.5 (same $0.175/M). GDPval Elo: none=1393, high=1414, max=1388. Apple Shojaee et al. 2025.",
+      "evidence": "Performance scales linearly with reasoning effort; cost scales exponentially. Multiple independent benchmarks confirm low as optimal default.",
       "status": "active",
       "configured_in": "~/.hermes/config.yaml: agent.reasoning_effort: low, delegation.reasoning_effort: low"
     }
@@ -104,7 +85,7 @@
       "id": "arch-2-layer-skills",
       "decision": "2-layer skill system: Core (always loaded) + Auto-Detection (trigger-based)",
       "status": "active",
-      "details": "Core: 14 always-loaded skills in system prompt. Auto-detect: ~76 skills loaded on trigger. priority: core/standard/niche/one-shot classification in YAML frontmatter.",
+      "details": "Core: 3 always-loaded skills (system-architecture, agent-config, verification). Auto-detect: skills loaded on trigger from curated custom directory (0- prefix convention). Priority: core/standard/niche/one-shot classification in YAML frontmatter.",
       "source": "Anthropic Agent Skills L1/L2 model + custom classification",
       "reflected_in": ["ARCHITECTURE.md §5", "skills-classifier skill", "classification.json"]
     },
@@ -113,16 +94,56 @@
       "decision": "Sub-agents as empty shells with explicit context injection",
       "status": "active",
       "details": "No SOUL, no personality, no auto-loaded skills. All context injected at delegation time. max_concurrent=3, max_spawn_depth=3.",
-      "source": "Dochkina 2026 — dynamic delegation > fixed roles",
+      "source": "Dochkina 2026 — dynamic delegation > fixed roles. Orchestrator composes optimal sub-agent per task rather than pre-assigning static capabilities. Aligns with SRA-Bench (Su et al., 2026): pre-loading capabilities wastes context.",
       "reflected_in": ["delegation-agentique skill", "SOUL.md (CEO workflow)", "ARCHITECTURE.md §6"]
     },
     {
-      "id": "arch-cron-autonomy",
-      "decision": "4 cron jobs every 180m for self-maintenance",
+      "id": "arch-pointer-soul",
+      "decision": "Pointer-SOUL architecture — SOUL as pointer to system, not manual",
       "status": "active",
-      "details": "system-audit, soul-cross-check, skills-classifier-audit, hub-scout-scan. All depend on hermes gateway.",
-      "source": "Orchestrated Autonomy pillar",
-      "reflected_in": ["system-autonomy skill", "ARCHITECTURE.md §7"]
+      "details": "SOUL.md is a minimal identity pointer (~800-1200 tokens), not a procedural manual. Justified by Cowan (2001) 4-chunk working memory limit — a long SOUL document would be ineffective as the agent cannot hold it all simultaneously. Externalized architecture (skills, config, GitHub) provides the operational substance.",
+      "source": "Cowan (2001) Working Memory Capacity, Clark & Chalmers Extended Mind (1998)",
+      "reflected_in": ["SOUL.md", "system-architecture skill", "MANIFESTO.md"]
+    },
+    {
+      "id": "arch-memory-disabled",
+      "decision": "Memory disabled by design",
+      "status": "active",
+      "details": "Compaction captures low-importance data and wastes context window tokens. External memory providers add latency (network round-trips on every operation) and reduce portability (API dependencies, provider lock-in, service availability). Critical info is externalized to SOUL.md (pointer architecture), data/*.json (structured user data — zero-latency, fully portable, version-controlled), and GitHub (backup and versioning for the entire architecture). This provides manual, granular control over what persists with no external dependencies.",
+      "source": "Radical Externalization pillar — context is the scarce resource",
+      "reflected_in": ["config.yaml: memory_enabled: false", "MANIFESTO.md"]
+    },
+    {
+      "id": "arch-var-notation",
+      "decision": "{VAR} notation system for version-controlled configuration single source of truth",
+      "status": "active",
+      "details": "All configurable values are declared as {VAR} in templates and resolved at runtime. Enables single-source-of-truth configuration that is version-controlled, auditable, and portable across environments.",
+      "source": "Manifesto Pillar 5 (Single Source of Truth)",
+      "reflected_in": ["config.yaml.template", "ARCHITECTURE.md"]
+    },
+    {
+      "id": "arch-0-prefix",
+      "decision": "0- prefix directory convention for curated custom skills",
+      "status": "active",
+      "details": "Custom skills use a 0- prefix (e.g., 0-my-skill/) to distinguish them from hub-maintained skills. Provides visual and alphabetical separation, signals curated/owned status.",
+      "source": "Skills organization convention",
+      "reflected_in": ["skills/ directory structure", "ARCHITECTURE.md"]
+    },
+    {
+      "id": "arch-benchmarks",
+      "decision": "Model selection via standardized benchmarks",
+      "status": "active",
+      "details": "Model selection and validation driven by GDPval-AA, PinchBench, τ²-Bench, and Artificial Analysis benchmarks. No model loyalty — benchmark performance determines daily driver selection.",
+      "source": "Empirical model evaluation",
+      "reflected_in": ["canonical-design-decisions.json", "ARCHITECTURE.md §6"]
+    },
+    {
+      "id": "arch-reasoning-low-medium",
+      "decision": "Default reasoning_effort: low (sweet spot)",
+      "status": "active",
+      "details": "Performance scales linearly with reasoning effort, cost scales exponentially. Low reasoning captures ~80% of none→high quality gain at minimal overhead. Max reasoning is wasteful. none is not always better — it misses genuine reasoning benefits for non-trivial tasks.",
+      "source": "Empirical testing, Apple 'The Illusion of Thinking' (NeurIPS 2025) — 3-regime model",
+      "reflected_in": ["config.yaml: reasoning_effort: low", "ARCHITECTURE.md §16"]
     },
     {
       "id": "arch-context-reduction-500to100",
@@ -145,16 +166,8 @@
       "decision": "Max 1 nudge per conversation. Loving drill sergeant.",
       "status": "active",
       "details": "One sentence nudge → execute. 3 failures → STOP and root cause. Warm after technical exchanges.",
-      "source": "SOUL v5.0 coaching tone",
+      "source": "Coaching tone pillar",
       "reflected_in": ["ARCHITECTURE.md §15"]
-    },
-    {
-      "id": "arch-reasoning-effort-low",
-      "decision": "Default reasoning_effort: low (sweet spot confirmed)",
-      "status": "active",
-      "details": "None for trivial ops, low for default (captures ~80% gain), high for complex tasks, never max. Pricing flat across all levels for DeepSeek V4 Flash.",
-      "source": "AA Index data + Apple 'The Illusion of Thinking' (NeurIPS 2025)",
-      "reflected_in": ["ARCHITECTURE.md §16", "config.yaml: reasoning_effort: low", "SYSTEM-THREAD.MD"]
     }
   ],
   "tools": [
@@ -173,49 +186,15 @@
       "details": "MCP servers discovered automatically. No manual server config needed for most tools.",
       "source": "Hermes Agent features",
       "reflected_in": ["config.yaml: mcp.dynamic_discovery: true"]
-    },
-    {
-      "id": "tool-openrouter-block-anthropic",
-      "decision": "OpenRouter blocks anthropic/* (402/403 errors)",
-      "status": "active",
-      "details": "Cannot use Anthropic models via OpenRouter. Fallback: direct API or alternative providers.",
-      "source": "MEMORY.md — OpenRouter bloque anthropic/*",
-      "reflected_in": ["MEMORY.md", "ARCHITECTURE.md §9", "all skills referencing model selection"]
     }
   ],
   "skills": [
     {
-      "id": "skill-core-14",
-      "decision": "14 core skills (priority: core), always loaded",
+      "id": "skill-core-3",
+      "decision": "3 core skills (priority: core), always loaded",
       "status": "active",
-      "list": ["system-architecture", "soul-management", "skill-design", "skills-classifier", "search-tool-protocol", "delegation-agentique", "web-research", "markitdown", "hermes-system-maintenance", "autonomie-maintenance", "hermes-agent", "skill-creator", "writing-plans", "prism"],
-      "criteria": "Meta/system/delegation/research/maintenance. Used in 50%+ of sessions."
-    },
-    {
-      "id": "skill-standard-tier",
-      "decision": "Standard tier: ~52 skills, secondary relevance",
-      "status": "active",
-      "examples": ["docker-management", "codebase-inspection", "docx", "xlsx", "planning-with-files"]
-    },
-    {
-      "id": "skill-niche-tier",
-      "decision": "Niche tier: ~13 skills, domain-specific",
-      "status": "active",
-      "examples": ["blood-analyst", "drug-discovery", "fitness-nutrition", "drawio-skill", "kpi-hero"]
-    },
-    {
-      "id": "skill-one-shot-tier",
-      "decision": "One-shot tier: ~10 skills, per-use deletion candidates",
-      "status": "active",
-      "examples": ["omh-ralph", "omh-triage", "omh-deep-research"]
-    },
-    {
-      "id": "skill-curator-policy",
-      "decision": "Curator model forced to deepseek/deepseek-v4-flash",
-      "status": "active",
-      "details": "Overrides default. Prevents Gemini hallucinations in curation. Skip dry-run, always run.",
-      "source": "config-verification-patterns skill",
-      "reflected_in": ["config.yaml: auxiliary.curator.model"]
+      "list": ["system-architecture", "agent-config", "verification"],
+      "criteria": "Architecture, configuration, verification — used in 50%+ of sessions."
     }
   ],
   "observations": [
@@ -238,6 +217,13 @@
       "category": "observation",
       "status": "active",
       "notes": "Low captures ~80% of none→high gain. High→Max gives +1% but triggers overthinking. Sweet spot = low."
+    },
+    {
+      "id": "obs-moe-cost-efficiency",
+      "principle": "MOE architectures dominate cost-to-quality ratio for sustained agentic use",
+      "category": "observation",
+      "status": "active",
+      "notes": "Fewer active parameters per query = cheaper tokens without proportional quality loss. Chinese open-source labs are engaged in an aggressive price war, subsidizing inference costs. This creates an arbitrage opportunity: frontier-quality models at a fraction of Western pricing. Benchmark-driven selection recommended — no model loyalty."
     }
   ],
   "anti_patterns": [
@@ -258,6 +244,12 @@
       "pattern": "Verbose memory entries (paragraphs instead of lines)",
       "status": "active",
       "solution": "Each memory entry = one line, one fact. Compact index."
+    },
+    {
+      "id": "antipattern-model-loyalty",
+      "pattern": "Sticking with one model regardless of benchmarks",
+      "status": "active",
+      "solution": "Benchmark-driven selection. No model loyalty. Re-evaluate periodically via GDPval-AA, PinchBench, Artificial Analysis."
     }
   ]
 }

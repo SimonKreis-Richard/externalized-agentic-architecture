@@ -1,6 +1,6 @@
-# Skills Reference — Public Template v5.0
+# Skills Reference — Public Template v6.0
 
-> *Skills are externalized procedural memory. This document is a generic template for configuring your own 2-layer skill system. Adapt it to your domain, stack, and agent identity.*
+> *Skills are externalized procedural memory. This document is a generic template for configuring your own 2-layer skill system with a curated custom directory. Adapt it to your domain, stack, and agent identity.*
 
 ---
 
@@ -10,12 +10,12 @@ Skills are the agent's **externalized procedural memory**. They live outside the
 
 | Layer | Loading Mechanism | Purpose | Examples |
 |-------|------------------|---------|----------|
-| **Layer 1 — Core** | Always injected at session start | Meta-system, delegation, research, maintenance | `system-architecture`, `skill-design`, `skill-creator`, `web-research` |
+| **Layer 1 — Core** | Always injected at session start | Architecture, configuration, verification | `system-architecture`, `agent-config`, `verification` |
 | **Layer 2 — Auto-Detect** | Dynamically loaded via frontmatter name/description matching | Domain-specific procedures, niche workflows, one-shot tasks | Code analysis, document conversion, data analysis |
 
 **Principle**: Core skills = used in 50%+ of sessions. Everything else lives in Layer 2 and is pulled in by Hermes when the frontmatter matches the current task.
 
-Skills live in `skills/<source>/<name>/SKILL.md` and are version-controlled like all other engine files.
+Skills live in `0-custom-skills/<name>/SKILL.md` (curated) or `skills/<source>/<name>/SKILL.md` (bundled) and are version-controlled like all other engine files.
 
 ---
 
@@ -40,17 +40,13 @@ description: What this skill does when activated.
 
 ## 3. Recommended Core Skills (Bring Your Own)
 
-Your Layer 1 should cover meta-system operations. Install or create equivalents of:
+Your Layer 1 should cover meta-system operations. The 3 core skills:
 
 | Skill | Purpose |
 |-------|---------|
-| `skill-design` | Methodology for creating and modifying skills |
-| `skill-creator` | Skill creation with automated evals |
-| `skill-recycler` | Detect overlap, consolidate, prune |
-| `system-architecture` | SSOT for your system design |
-| `search-tool-protocol` | Tool selection for web/API search |
-| `web-research` | Efficient web research patterns |
-| `hermes-system-maintenance` | Unified system audit and cleanup |
+| `system-architecture` | Architecture manifest, SOUL pointer system, design decisions |
+| `agent-config` | Configuration management, {VAR} conventions, model selection |
+| `verification` | Validation, testing, quality assurance |
 
 Install hub skills via:
 ```bash
@@ -59,7 +55,42 @@ hermes skills install --yes <skill-identifier>
 
 ---
 
-## 4. Creating Your Own Skills
+## 4. Curated Custom Directory with 0- Prefix Convention
+
+### The Problem
+
+Agent frameworks encourage data hoarding on skills with no granular disable mechanism. Skills accumulate, overlap, and become noisy. There is no structural distinction between a carefully curated custom skill and a randomly installed one.
+
+### The Solution
+
+A curated custom directory with `0-` prefix for classification and visibility.
+
+### Convention
+
+```
+0-custom-skills/<name>/SKILL.md
+```
+
+The `0-` prefix ensures:
+- **Visibility**: sorts first in any directory listing — custom skills are impossible to overlook
+- **Intentionality**: forces conscious curation. You don't accidentally accumulate skills here.
+- **Classification**: structural separation from bundled/third-party skills in `skills/<source>/`
+
+### When to Create a Custom Skill
+
+1. A procedure has been executed 3+ times (3-uses rule)
+2. The procedure is genuinely non-obvious (not just a checklist)
+3. The skill passes the Apple Principle: "If this were removed, would the system break?"
+
+### When NOT to Create
+
+- Behavioral rules that belong in SOUL.md (always-on reflexes)
+- One-off procedures that won't recur
+- Things the model should figure out from context
+
+---
+
+## 5. Creating Your Own Skills
 
 Use the `skillify` workflow — either via the `skill-creator` skill or directly:
 
@@ -79,13 +110,14 @@ When skills overlap, consolidate them. Run `skill-recycler` periodically to dete
 ```
 1. Execute procedure 3 times (track naturally, no overhead)
 2. Run skillify: hermes skills create --name <name>
-3. Classify priority: core/standard/niche/one-shot
-4. Load, test, iterate
+3. Move to 0-custom-skills/<name>/SKILL.md
+4. Classify priority: core/standard/niche/one-shot
+5. Load, test, iterate
 ```
 
 ---
 
-## 5. Basic Hermes Installation Commands
+## 6. Basic Hermes Installation Commands
 
 ```bash
 # Install Hermes Agent (via pip or npm — check current docs)
@@ -109,7 +141,7 @@ Full documentation: [hermes-agent.nousresearch.com/docs](https://hermes-agent.no
 
 ---
 
-## 6. What NOT to Skillify
+## 7. What NOT to Skillify
 
 These patterns belong in `SOUL.md` (the behavioral contract), not in a skill:
 
@@ -127,7 +159,7 @@ These patterns belong in `SOUL.md` (the behavioral contract), not in a skill:
 
 ---
 
-## 7. Skill Lifecycle
+## 8. Skill Lifecycle
 
 ```
 CREATE ──→ USE ──→ SKILLIFY ──→ RECYCLE/CONSOLIDATE ──→ PRUNE
@@ -147,6 +179,6 @@ Design your system to resist skill bloat. The goal is not to have the most skill
 
 > *"The notebook qualifies as such because it is constantly and immediately accessible to Otto, and it is automatically endorsed by him."* — Clark & Chalmers, 1998
 
-**Version**: 5.0.0
-**Last updated**: 2026-05-19
+**Version**: 6.0.0
+**Last updated**: 2026-05-30
 **License**: MIT

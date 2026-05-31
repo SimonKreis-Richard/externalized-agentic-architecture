@@ -20,11 +20,11 @@ This framework operationalizes **Clark & Chalmers' Extended Mind Thesis (1998)**
 
 1. **Radical Externalization** — If it can live in a file, it does not live in context. Identity, memory, procedures, project context — all plain text, all version-controlled, all survivable.
 
-2. **Orchestrated Autonomy** — The system maintains itself. Cron jobs audit, recycle, and discover. The user steers. The system proposes; the user decides.
+2. **Orchestrated Autonomy** — The system maintains itself. The core agent audits, recycles, and discovers during sessions. The user steers. The system proposes; the user decides.
 
 3. **Funnel Cognition** — Information enters messy. It leaves structured. Chaotic Input → Distillation → Categorization → Structured Knowledge. Each stage reduces volume, increases signal.
 
-4. **Context Recycling** — Nothing is learned once. Procedures → skills (3 uses rule). Insights → skills + memory system. Patterns → AGENTS.md. Every cognitive effort compounds into durable knowledge.
+4. **Context Recycling** — Nothing is learned once. Procedures → skills (3 uses rule). Insights → project data + skills. Patterns → AGENTS.md. Every cognitive effort compounds into durable knowledge.
 
 ### The Golden Thread — Fil d'Ariane
 
@@ -35,7 +35,7 @@ This framework operationalizes **Clark & Chalmers' Extended Mind Thesis (1998)**
 | Pillar | How Fil d'Ariane Manifests |
 |--------|---------------------------|
 | **Radical Externalization** | Every file carries provenance — who created it, when, and from which interaction. No orphan knowledge. |
-| **Orchestrated Autonomy** | Every automated action logs its rationale. Cron jobs leave breadcrumbs. Autonomy is auditable. |
+| **Orchestrated Autonomy** | Every automated action logs its rationale. The core agent leaves breadcrumbs. Autonomy is auditable. |
 | **Funnel Cognition** | Every structured output preserves a back-link to its raw input. The funnel is reversible for forensic analysis. |
 | **Context Recycling** | Every promoted pattern or skill links to the original conversation or decision that spawned it. |
 
@@ -54,15 +54,17 @@ Previous versions centered minimalism as the primary principle. This was backwar
 | File | Purpose |
 |------|---------|
 | [`MANIFESTO.md`](MANIFESTO.md) | The constitution. Four pillars, foundational references, decision framework. |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Technical implementation. Information flow, topology, memory architecture, component map. |
-| [`SOUL-TEMPLATE.md`](SOUL-TEMPLATE.md) | Canonical SOUL template (~800 tokens). |
-| [`skills-reference.md`](skills-reference.md) | Third-party skill install commands. |
-| [`concepts/information-flow.md`](concepts/information-flow.md) | Deep dive: the data pipeline, 3-zone model, local-first paradigm. |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Technical implementation. Information flow, topology, component map. |
+| [`SOUL-TEMPLATE.md`](SOUL-TEMPLATE.md) | Canonical SOUL template (~800-1200 tokens). Pointer architecture — references skills, data, config. |
+| [`skills-reference.md`](skills-reference.md) | Skill architecture: 2-layer system, 0-prefix curated directory, core skills reference. |
+| [`concepts/information-flow.md`](concepts/information-flow.md) | Deep dive: the data pipeline, 3-zone model, lazy loading, local-first paradigm. |
 | [`concepts/example-agents.md`](concepts/example-agents.md) | Fictional AGENTS.md example. |
 | [`concepts/fil-dariane.md`](concepts/fil-dariane.md) | Full specification of the traceability principle — provenance, audit trails, and forensic navigation. |
 | [`concepts/distillation-cycle.md`](concepts/distillation-cycle.md) | The cognitive micro-cycle (DÉMÊLER→DISTILLER→DÉCIDER) — complements the four-stage Funnel Cognition model. |
+| [`concepts/the-reflective-mirror.md`](concepts/the-reflective-mirror.md) | AI as Socratic partner, rubber duck debugging, learning by teaching, and the pedagogical consequences of externalization. |
 | [`concepts/architecture-overview.svg`](concepts/architecture-overview.svg) | System diagram: pillars, data flow, and component relationships at a glance. |
-| [`config.yaml.template`](config.yaml.template) | Scaffold configuration template for quick setup. |
+| [`config.yaml.template`](config.yaml.template) | Scaffold configuration template with {VAR} notation for version-controlled variables. |
+| [`templates/`](templates/) | Ready-to-use templates: SOUL.md, config.yaml, vars.md, data structures, 6 universal skills. Fork and customize. |
 
 ---
 
@@ -82,21 +84,46 @@ Previous versions centered minimalism as the primary principle. This was backwar
 - **Hermes Agent users** — this architecture is built on Hermes
 - **Anyone** who wants their AI to survive a tool change, machine wipe, or platform migration
 
+## Quick Start
+
+1. **Fork this repo** or copy the `templates/` directory
+2. **Fill in the placeholders** — every `[BRACKET]` needs your value
+3. **Edit `templates/SOUL.md`** — define your agent's identity
+4. **Edit `templates/config.yaml`** — set your model, provider, API keys
+5. **Edit `templates/vars.md`** — centralize your paths and variables
+6. **Copy skills** from `templates/skills/` to your curated skills directory
+7. **Create your data files** from `templates/data/` examples
+8. **Read `templates/skills/README.md`** for the skills quickstart guide
+
+The templates are designed to be self-documenting — every placeholder has a comment explaining what to fill in.
+
 ---
 
 ## How It Works
 
-1. **One SOUL.** `SOUL.md` (~800 tokens) defines identity, tone, and reflexes. Everything else is externalized.
+1. **One SOUL.** `SOUL.md` (~800-1200 tokens) is a pointer to the system — identity, tone, and reflexes. Justified by Cowan's 4-chunk working memory limit. Everything else is externalized.
 
 2. **Everything is plain text.** Markdown, JSON, Git. Nothing proprietary. Nothing vendor-locked.
 
 3. **Sub-agents are parallel processors.** Empty shells, explicit context, return results. They extend cognition, not personality.
 
-4. **The system self-maintains.** Cron jobs audit, recycle, scout. Autonomy is orchestrated, not abdicated.
+4. **The system self-maintains.** The core agent audits, recycles, and discovers during sessions. Autonomy is orchestrated, not abdicated.
 
-5. **Context recycles.** Procedures → skills. Insights → skills + memory system. Patterns → AGENTS.md. Nothing is lost.
+5. **Context recycles.** Procedures → skills. Insights → project data + skills. Patterns → AGENTS.md. Nothing is lost.
 
 6. **Every action leaves a thread.** The fil d'Ariane guarantees traceability — from raw input through every transformation to final output. Forensic replay, audit trails, and provenance queries are first-class capabilities.
+
+---
+
+## Key Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| **Pointer-SOUL** | `SOUL.md` is a pointer to the system (~800-1200 tokens), not a manual. It points to skills, data, and configuration — it does not contain them. Justified by Cowan (2001) 4-chunk working memory limit: the core context should hold references, not content. |
+| **Memory Disabled** | Memory compaction captures low-importance data and wastes context window tokens. External memory providers add latency and reduce portability. Every token injected is a token not available for reasoning. Identity, procedures, and durable data are externalized to SOUL + JSON + GitHub instead — zero latency, full portability. |
+| **{VAR} Notation** | Version-controlled configuration variables as single source of truth. Variables use `{VAR}` notation in templates and documentation, resolved at runtime from `config.yaml` or `data/*.json`. |
+| **0- Prefix Convention** | Curated custom skill directory (`0-custom-skills/`) ensures visibility and forces intentional curation. The `0-` prefix guarantees sorting first, making custom skills impossible to overlook. |
+| **Model Selection** | Use benchmarks (GDPval-AA, PinchBench, τ²-Bench, Artificial Analysis) not provider marketing. Model choice is a configuration variable, not an architectural commitment. |
 
 ---
 
@@ -109,6 +136,7 @@ Previous versions centered minimalism as the primary principle. This was backwar
 | **Graduated autonomy** | The system starts fully supervised. Autonomy is granted level by level as audit trails prove reliability. |
 | **Locality of reference** | Related knowledge lives in adjacent files. No cross-repository hunts for connected context. |
 | **Stateless runtime** | The agent process itself carries zero long-lived state. All state is in files. Restart without memory loss. |
+| **Benchmark-driven selection** | Model and tool choices are validated against independent benchmarks (GDPval-AA, PinchBench, τ²-Bench, Artificial Analysis), not provider marketing. |
 
 ---
 
@@ -148,6 +176,6 @@ cp config.yaml.template config.yaml
 
 ---
 
-**Version**: 5.0.0  
-**Last updated**: 2026-05-19  
+**Version**: 6.0.0  
+**Last updated**: 2026-05-30  
 **License**: MIT

@@ -10,17 +10,17 @@ Consider a real session trace — every step leaves a node in the **fil d'Ariane
 
 ```
 ┌─ Session Start ──────────────────────────────────────────────┐
-│ Simon thinks → writes in Obsidian → Sam reads note           │
-│   → Sam breaks down task → delegates research to sub-agents  │
+│ [USER_NAME] thinks → writes in Obsidian → [AGENT_NAME] reads note      │
+│   → [AGENT_NAME] breaks down task → delegates research to sub-agents   │
 │   → sub-agents search web → return findings                  │
-│   → Sam synthesizes → writes result to project/agents/       │
+│   → [AGENT_NAME] synthesizes → writes result to project/agents/        │
 │   → pattern detected → skillify → reusable skill             │
 │   → project context updated → AGENTS.md enriched             │
 │   → session trace appended to /traces/                       │
 └─ Each arrow = a node in the trace ───────────────────────────┘
 ```
 
-Every step is **input → process → externalize**. The brain (Sam) processes. The environment stores. The loop continues. The context window is the processing workspace — everything that can be externalized, is externalized.
+Every step is **input → process → externalize**. The brain ([AGENT_NAME]) processes. The environment stores. The loop continues. The context window is the processing workspace — everything that can be externalized, is externalized. Configuration variables use `{VAR}` notation — version-controlled, resolved at runtime from `config.yaml` or `data/*.json`.
 
 This is Clark & Chalmers' **active externalism** in practice: the environment plays an *active, constitutive role* in cognition. The files, skills, and knowledge trees are not passive storage — they are *part of the cognitive system*, consulted every session, automatically endorsed.
 
@@ -42,7 +42,7 @@ Raw, unfiltered, unstructured.
 
 No filtering at this stage. Everything is captured.
 
-### Stage 2: Distillation (Sam, the Core Agent)
+### Stage 2: Distillation ([AGENT_NAME], the Core Agent)
 The agent processes raw input.  
 *Node type: `processing`*
 - Breaks down complex instructions
@@ -60,11 +60,11 @@ Each output is routed to its proper external home.
 | Output Type | Destination | Rule |
 |---|---|---|
 | Procedure (3rd use) | Skill | `skillify` → `0-custom-skills/` |
-| Durable fact | `MEMORY.md` or skill | User-approved, compact, stable |
+| Durable fact | `data/*.json` or project data | User-approved, structured, queryable |
 | Project context | `AGENTS.md` | Lives with the project |
-| Session output | `[project]/agents/YYYY-MM-DD_desc.ext` | Timestamped, auditable |
-| Pattern or insight | memory or skill capture | Hierarchical knowledge tree |
-| Decision or push | memory or skill capture | Pattern capture |
+| Session output | Project-based externalization (dossiers projets) | Timestamped, auditable |
+| Pattern or insight | Project data or skill capture | Hierarchical knowledge tree |
+| Decision or push | Project data or skill capture | Pattern capture |
 | Transient/tactical | Conversation only | Evaporates after session |
 
 Every routing action emits a trace node recording what was stored, where, and why.
@@ -73,9 +73,8 @@ Every routing action emits a trace node recording what was stored, where, and wh
 Durable, queryable, version-controlled.  
 *Node type: `storage`*
 - Skills (`0-custom-skills/` + `skills/`)
-- cross-session memory
-- `MEMORY.md` + `USER.md`
-- `data/*.json`
+- `data/*.json` (structured user data)
+- `SOUL.md` (pointer)
 - Project `AGENTS.md` files
 - Git history
 
@@ -89,12 +88,12 @@ Each stage emits a **trace node** that is appended to the session's fil d'Ariane
 
 ```json
 [
-  {"t": "2026-05-19T10:00:01Z", "type": "input",     "desc": "Simon wrote note in Obsidian: 'explore MCP protocol'"},
-  {"t": "2026-05-19T10:00:03Z", "type": "processing","desc": "Sam decomposed task into 3 research subtopics"},
+  {"t": "2026-05-19T10:00:01Z", "type": "input",     "desc": "[USER_NAME] wrote note in Obsidian: 'explore MCP protocol'"},
+  {"t": "2026-05-19T10:00:03Z", "type": "processing","desc": "[AGENT_NAME] decomposed task into 3 research subtopics"},
   {"t": "2026-05-19T10:00:05Z", "type": "routing",   "desc": "Delegated subtopic 1 to sub-agent alpha"},
   {"t": "2026-05-19T10:00:07Z", "type": "routing",   "desc": "Delegated subtopic 2 to sub-agent beta"},
   {"t": "2026-05-19T10:00:09Z", "type": "input",     "desc": "Sub-agent alpha returned 4 search results"},
-  {"t": "2026-05-19T10:00:11Z", "type": "processing","desc": "Sam synthesized results → wrote summary"},
+  {"t": "2026-05-19T10:00:11Z", "type": "processing","desc": "[AGENT_NAME] synthesized results → wrote summary"},
   {"t": "2026-05-19T10:00:13Z", "type": "routing",   "desc": "Wrote summary to project/agents/2026-05-19_mcp-exploration.md"},
   {"t": "2026-05-19T10:00:15Z", "type": "storage",   "desc": "Detected pattern → skillify → saved to 0-custom-skills/"},
   {"t": "2026-05-19T10:00:17Z", "type": "storage",   "desc": "Updated AGENTS.md with new context"}
@@ -119,7 +118,7 @@ Skills and memory are **not loaded at startup**. Loading everything on session i
 - Slow session start
 
 Instead, the system loads only:
-1. **Core context**: `SOUL.md`, `USER.md`, `MEMORY.md` — always loaded (small, durable)
+1. **Core context**: `SOUL.md`, `data/*.json` (if small) — always loaded (small, durable)
 2. **Project context**: `AGENTS.md` of the current project
 3. **On-demand skills**: loaded by `run_skill` tool or `session_search` matching
 4. **Session trace**: written continuously, read on restart for continuity
@@ -145,11 +144,11 @@ Lazy loading makes the system scalable: tens or hundreds of skills can exist wit
 Context is too expensive to use once. The system recycles:
 
 ```
-Session insight ──→ learnings-capture ──→ MEMORY.md or skill
+Session insight ──→ learnings-capture ──→ data/*.json or skill
 Procedure ×3 ──────→ skillify ───────────→ reusable skill  
-Decision pattern ──→ save as skill or memory ─────────→ durable skill entry
+Decision pattern ──→ save as skill or data ─────────→ durable entry
 Skill overlap ─────→ skill-recycler ─────→ consolidation
-Rich session ──────→ Sam proposes capture → user approves
+Rich session ──────→ [AGENT_NAME] proposes capture → user approves
 ```
 
 Each recycling action is a node in the fil d'Ariane, recording what was recycled and where.
@@ -187,18 +186,18 @@ Markdown + JSON, nothing else.
 
 | Extended Mind Concept | Implementation |
 |---|---|
-| **Active Externalism** | SOUL.md, MEMORY.md, skills are read every turn — they *are* the extended mind |
-| **Cognitive Coupling** | Git-tracked files, skills + memory system, Obsidian vault — accessible every session |
-| **Functional Parity** | A MEMORY.md entry consulted every turn = functionally identical to internal memory |
-| **Complementarity** | Context window + externalized skills + memory system = cognitive system larger than any single component |
+| **Active Externalism** | SOUL.md (pointer), data/*.json, skills are read every turn — they *are* the extended mind |
+| **Cognitive Coupling** | Git-tracked files, skills + data, Obsidian vault — accessible every session |
+| **Functional Parity** | A data/*.json entry consulted every turn = functionally identical to internal memory — but more durable |
+| **Complementarity** | Context window + externalized skills + data = cognitive system larger than any single component |
 | **Otto's Notebook** | The agent's files ARE its notebook. Constantly accessible. Automatically endorsed. |
 | **Fil d'Ariane** | Every session step leaves a trace node — the full reasoning path is reconstructable after the fact |
 | **Lazy Loading** | Skills are loaded on demand, not at startup — keeping the context window lean and the knowledge base deep |
 
 ---
 
-**Version**: 5.0.0  
-**Last updated**: 2026-05-19  
-**Aligned with**: MANIFESTO.md v5.0.0
+**Version**: 6.0.0  
+**Last updated**: 2026-05-30  
+**Aligned with**: MANIFESTO.md v6.0.0
 
 > *"The notebook qualifies as such because it is constantly and immediately accessible to Otto, and it is automatically endorsed by him."* — Clark & Chalmers, 1998

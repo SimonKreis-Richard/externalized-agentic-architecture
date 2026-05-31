@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "created": "YYYY-MM-DD",
+    "updated": "YYYY-MM-DD",
+    "description": "User profile — structured data externalized from memory"
+  },
+  "identity": {
+    "name": "[USER_NAME]",
+    "role": "[USER_ROLE]",
+    "organization": "[ORGANIZATION]",
+    "location": "[LOCATION]",
+    "languages": ["[LANG_1]", "[LANG_2]"],
+    "timezone": "[TIMEZONE]"
+  },
+  "preferences": {
+    "communication_style": "[e.g., concise, detailed, technical]",
+    "response_language": "[e.g., FR/EN/franglais]",
+    "detail_level": "[e.g., executive summary, deep-dive]"
+  }
+}

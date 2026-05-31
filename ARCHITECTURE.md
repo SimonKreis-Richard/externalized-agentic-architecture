@@ -1,4 +1,4 @@
-# Architecture — The Externalized Cognitive System v5.0
+# Architecture — The Externalized Cognitive System v6.0.0
 
 > *This document describes HOW the externalization data flow is implemented. For WHY, see [MANIFESTO.md](MANIFESTO.md).*
 
@@ -13,8 +13,8 @@ Input → Process → Externalize
 ```
 
 - **Input**: User instruction, web research, file context, session_search results, sub-agent returns
-- **Process**: Sam (core agent) breaks down, delegates, synthesizes, decides
-- **Externalize**: Output lands in a durable structure — file, skill, MEMORY.md, AGENTS.md, data/
+- **Process**: The core agent breaks down, delegates, synthesizes, decides
+- **Externalize**: Output lands in a durable structure — file, skill, AGENTS.md, data/
 
 The context window is the *processing workspace*. External structures are the *extended mind*. The goal is to minimize what stays in the workspace by maximizing what moves to durable structures.
 
@@ -28,16 +28,13 @@ Every piece of information has a *proper home* based on its nature and lifespan:
 
 | Information Type | Home | Lifespan | Access Pattern |
 |---|---|---|---|
-| **Identity, tone, reflexes** | `SOUL.md` | Permanent (versioned) | Injected every turn |
-| **Durable facts** | `MEMORY.md` | Permanent | `memory()` tool — queried as needed |
-| **Procedural knowledge** | Skills (core + auto-detection) | Permanent | Loaded on demand via skill_view |
-| **User profile** | `USER.md` | Permanent | `memory()` tool — injected |
+| **Identity, tone, reflexes** | `SOUL.md` | Permanent (versioned) | SOUL as pointer to system |
+| **Structured user data** | `data/*.json` | Permanent | Queried as needed |
+| **Procedural knowledge** | Skills (curated custom, 0- prefix) | Permanent | Loaded on demand |
 | **Project context** | `AGENTS.md` (per project) | Project lifetime | Injected at session start |
 | **Session output** | `[project]/agents/` | Project lifetime | Created, then referenced |
-| **Cross-session knowledge** | session_search + memory | Permanent | `session_search()` for history queries |
-| **Learned patterns** | Skills (via skillify) | Permanent | 3 uses → captured, frontmatter priority |
-| **Domain knowledge** | `knowledge/oracle-hcm/` (RAG) | Permanent | Queried as reference |
-| **Personal data** | `data/*.json` | Permanent | Queried as needed |
+| **Cross-session knowledge** | session_search | Permanent | `session_search()` for history queries |
+| **Domain knowledge** | `knowledge/` (RAG) | Permanent | Queried as reference |
 | **API keys, secrets** | `.env` | Permanent | Environment variables |
 
 **The rule**: nothing lives in the context window that has a proper home elsewhere.
@@ -54,7 +51,7 @@ Every piece of information has a *proper home* based on its nature and lifespan:
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    DISTILLATION (Sam)                        │
+│                    DISTILLATION (core agent)                 │
 │  Break down, find patterns, identify what's durable vs.      │
 │  ephemeral, delegate parallel work to sub-agents             │
 └───────────────────────────┬─────────────────────────────────┘
@@ -62,19 +59,20 @@ Every piece of information has a *proper home* based on its nature and lifespan:
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    CATEGORIZATION                            │
-│  Procedure? → skillify (3 uses rule)                         │
-│  Durable fact? → memory() tool → MEMORY.md                   │
+│  Procedure? → save as skill                                  │
+│  Durable fact? → data/*.json or SOUL.md                     │
 │  Project context? → AGENTS.md                                │
 │  Session output? → [project]/agents/                         │
-│  Pattern/insight? → save as skill or memory                  │
+│  Pattern/insight? → save as skill or project data            │
 │  Transient/tactical? → stays in conversation only            │
 └───────────────────────────┬─────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    STRUCTURED KNOWLEDGE                      │
-│  Skills (2 layers), MEMORY.md, AGENTS.md, data/*.json        │
-│  All version-controlled. All portable. All survivable.       │
+│  SOUL (pointer), curated skills (0- prefix), project data    │
+│  (data/*.json), AGENTS.md. All version-controlled.           │
+│  All portable. All survivable.                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -85,97 +83,104 @@ This is a **funnel**, not a bucket. Each stage reduces volume and increases sign
 ## 4. Two-Layer Architecture: Scaffolding vs. Engine
 
 ### Scaffolding (Disposable)
-The tool hosting the agent — Hermes Agent. Provides model access, MCP tool execution, session management, cron scheduling, skill loading, sub-agent orchestration. It can be deleted and reinstalled without losing anything essential. It's a runtime, not a home.
+The tool hosting the agent. Provides model access, MCP tool execution, session management, skill loading, sub-agent orchestration. It can be deleted and reinstalled without losing anything essential. It's a runtime, not a home.
 
 ### Engine (Persistent)
 The plain-text files that define the agent's extended mind:
-- `SOUL.md` — identity and behavioral contract
-- `MEMORY.md` — durable facts (managed via `memory()` tool)
-- `USER.md` — user profile and preferences
-- Skills (2 layers) — externalized procedural memory
-- `knowledge/oracle-hcm/` — domain RAG corpus (9 guides)
-- `data/*.json` — structured personal data
+- `SOUL.md` — identity pointer (not a manual)
+- Skills (2 layers) — externalized procedural memory (curated custom directory, 0- prefix)
+- `data/*.json` — structured user data
 - `AGENTS.md` — per-project context
-- `.gap-tracker.md` — skills capability gaps
-- `.recycler-log.md` — skill consolidation history
 
 **Design rule**: everything that matters is a plain-text file. Nothing that defines the agent lives inside the scaffolding. The engine survives any tool migration.
 
 ---
 
-## 5. Skills: Two-Layer Loading Architecture
+## 5. Pointer-SOUL Architecture
+
+The SOUL.md is not a manual — it is a **pointer to the system**. This is justified by working memory research: Cowan (2001) demonstrated human working memory holds ~4 chunks. An SOUL that tries to encode the entire system exceeds this limit and becomes noise.
+
+**What the SOUL contains** (~800-1200 tokens, justified by Cowan's 4-chunk limit):
+- Identity declaration (1 chunk)
+- Communication contract (1 chunk)
+- Externalization reflex (1 chunk)
+- Key pointers to system components (1 chunk)
+
+**What the SOUL does NOT contain**:
+- Procedures (→ skills)
+- Configuration (→ config.yaml via {VAR})
+- Domain knowledge (→ data/*.json)
+- History (→ GitHub version control)
+
+The SOUL points to the system. The system is the knowledge. This separation ensures the SOUL stays within working memory limits while the full knowledge base remains accessible on demand.
+
+---
+
+## 6. Skills: Two-Layer Loading Architecture
 
 Skills are the agent's **externalized procedural memory**. Loading is tiered by `priority:` in frontmatter YAML:
 
-### Layer 1 — Core (14 skills, always loaded)
+### Layer 1 — Core (3 skills, always loaded)
 
 These are injected at every session start. They form the meta-system:
 
 | Skill | Role | Priority |
 |---|---|---|
-| `system-architecture` | SSOT architecture manifest | core |
-| `soul-management` | SOUL design & versioning | core |
-| `skill-design` | Skill creation methodology | core |
-| `skills-classifier` | Audit + priority classification | core |
-| `search-tool-protocol` | Tool selection protocol | core |
-| `delegation-agentique` | Dynamic delegation model | core |
-| `web-research` | Web research patterns | core |
-| `markitdown` | Document conversion | core |
-| `hermes-system-maintenance` | System audit & cleanup | core |
-| `autonomie-maintenance` | Autonomy orchestration | core |
-| `hermes-agent` | Hermes agent skill (self-ref) | core |
-| `skill-creator` | Skill creation with evals | core |
-| `writing-plans` | Writing planning | core |
-| `prism` | Unified analysis (5 sub-modes) | core |
+| `system-architecture` | Architecture manifest, SOUL pointer system | core |
+| `agent-config` | Configuration management, {VAR} conventions | core |
+| `verification` | Validation, testing, quality assurance | core |
 
-**Rule**: core = meta/système/délégation/recherche/maintenance. Transverse utilities used in 50%+ of sessions.
+**Rule**: core = architecture/config/verification. Transverse utilities used in 50%+ of sessions.
 
-### Layer 2 — Standard / Niche / One-Shot (~76 skills, auto-detection)
+This is justified by context window management literature: fewer core skills means less baseline context consumption, freeing capacity for on-demand skill loading. Three skills at ~500 tokens each consume ~1.5K tokens — negligible against the 100K target.
 
-Loaded dynamically by Hermes via frontmatter name/description matching. The sub-tiers (standard/niche/one-shot) govern curation priority, not loading mechanism:
+### Layer 2 — Custom Curated Skills (0- prefix, auto-detection)
 
-| Tier | Count | Examples |
-|---|---|---|
-| **Standard** | ~52 | `docker-management`, `codebase-inspection`, `docx`, `xlsx`, `planning-with-files` |
-| **Niche** | ~13 | `blood-analyst`, `drug-discovery`, `fitness-nutrition`, `drawio-skill`, `kpi-hero` |
-| **One-Shot** | ~10 | `omh-ralph`, `omh-triage`, `omh-deep-research` (oh-my-hermes family) |
+Loaded dynamically by the agent framework via frontmatter name/description matching. Organized in a **curated custom directory using 0- prefix convention** for classification and visibility.
 
-**Total**: ~90 skills across 6 sources.
+**0- prefix convention**:
+- Skills are organized in a curated custom directory using 0- prefix convention for classification and visibility
+- Problem: agent frameworks have data hoarding on skills with no granular disable — bundled skills accumulate without user control
+- Solution: manually curated custom directory. Only skills that are actively used are maintained. The 0- prefix ensures curated skills appear first in directory listings
 
-### Skill Source Directory Structure
+**Skill Source Directory Structure**:
 
 ```
 skills/<source>/<name>/SKILL.md
 ```
 
-| Source | Directory | Skills |
-|---|---|---|
-| `anthropic` | `skills/anthropic/` | 4 (excel-author, comps-analysis, dcf-model, 3-statement-model) |
-| `bundled` | `skills/bundled/` | ~35 (plan, writing-plans, skill-creator, docx, xlsx, pdf, pptx, arxiv, etc.) |
-| `community` | `skills/community/<repo>/` | ~20 (oh-my-hermes/10, super-hermes/5, planning-with-files, avoid-ai-writing, etc.) |
-| `custom` | `skills/custom/` | 19 (system-architecture, delegation-agentique, prism, oracle-hcm-rag, etc.) |
-| `hub` | `skills/hub/` | 6 (docker-management, scrapling, neuroskill-bci, fitness-nutrition, drug-discovery, one-three-one-rule) |
-| `lobehub` | `skills/lobehub/` | 4 (ai-agent-generator, ai-prompts-assistant, blood-analyst, kpi-hero) |
+```
+skills/
+└── curated/                          # Manually curated custom skills (0- prefix)
+    ├── 0-custom-skills/              # User-created and actively maintained skills
+    └── ...
+```
 
-**Disabled skills**: ~60 bundled skills disabled in `config.yaml` to avoid bloat.
-
-**Classification tool**: `skills/custom/skills-classifier/classifier.py` — run in audit mode to generate reports at `skills-tools/classification-report.md`.
+**Total**: curated set of actively maintained skills. Quality over quantity.
 
 ---
 
-## 6. Sub-Agent Model: Orchestrator Pattern
+## 7. Sub-Agent Model: Orchestrator Pattern
 
 Sub-agents are **empty shells**: base config only, no SOUL, no personality, no auto-loaded skills. All context is injected at call time. They execute and return results. They do not talk to the user.
 
 This maps to the Extended Mind Thesis: sub-agents are parallel processing streams that extend the core agent's cognitive capacity. They process, then externalize their results back to the core. They are not independent agents — they are cognitive extensions.
+
+### Why Dynamic Delegation > Fixed Roles
+
+The orchestrator pattern is not just a convenience — it is empirically superior to fixed-role assignment. Dochkina (2026) demonstrated that dynamic delegation, where the orchestrator assigns tasks based on the specific requirements of each request, outperforms static role assignment in both task completion rate and resource efficiency.
+
+The mechanism is straightforward: a fixed-role system pre-assigns capabilities ("Agent A handles research, Agent B handles code"), which creates rigidity. When a task spans multiple domains or requires unexpected capabilities, the fixed system either forces the wrong agent to attempt it or requires complex handoff protocols. Dynamic delegation avoids this by letting the orchestrator analyze each task and compose the optimal sub-agent configuration at delegation time — injecting only the context and tools needed, nothing more.
+
+This also aligns with the SRA-Bench findings (Su et al., 2026): pre-loading capabilities into agents wastes context. Dynamic injection of task-specific context is more efficient than static capability assignment.
 
 **Configuration** (from config.yaml):
 - `max_concurrent_children: 3`
 - `max_spawn_depth: 3`
 - `orchestrator_enabled: true`
 - `subagent_auto_approve: true`
-- `inherit_mcp_toolsets: true` — sub-agents inherit MCP tools (Tavily, Exa, Jina)
-- `model: deepseek/deepseek-v4-flash` — same model as core
+- `inherit_mcp_toolsets: true` — sub-agents inherit MCP tools
+- `model: same MOE model as core` — model-agnostic — use the same model as the core agent
 - All context injected at delegation time → no persistence, no memory
 - Results reviewed critically by the core agent
 
@@ -185,78 +190,79 @@ This maps to the Extended Mind Thesis: sub-agents are parallel processing stream
 - **Never make sub-agents read files.** All context that a sub-agent needs is injected at delegation time. Sub-agents do not have access to the filesystem for reading — they operate on the context they receive. This prevents: (a) wasted tokens on file discovery, (b) stale or wrong-file reads, (c) implicit assumptions about what the sub-agent knows. The core agent reads the files, distills the relevant context, and delegates with that context explicitly.
 - Results reviewed critically by the core agent
 - No personality, no memory, no persistence
-- Spawn trees logged in `~/.hermes/spawn-trees/<id>/`
 
 ---
 
-## 7. The Recycling Loop: Context as Compound Interest
+## 8. The Recycling Loop: Context as Compound Interest
 
 The system doesn't just externalize — it recycles. Every cognitive effort compounds:
 
 ```
-Session insight ──→ learnings-capture ──→ MEMORY.md or skill
-Procedure ×3 ──────→ skillify ───────────→ reusable skill
-Decision pattern ──→ save as skill or memory ───→ durable skill entry
-Skill overlap ─────→ skill-recycler ─────→ consolidation
+Session insight ──→ save as learnings data
+Procedure ×3 ──────→ save as reusable skill
+Decision pattern ──→ save as skill or project data
+Skill overlap ─────→ consolidation
 Rich session ──────→ propose capture ─────→ user approves
 ```
 
-This is automated through **Hermes cron** (4 jobs, all every 180m):
+Recycling is triggered by the core agent during sessions — no external scheduler required.
 
-| Cron Job | Skill Used | Scope |
+---
+
+## 9. Memory Architecture: Disabled by Design
+
+Memory is intentionally **disabled**. This is a deliberate architectural choice, not a limitation.
+
+### Why Memory Is Disabled
+
+Memory compaction (as implemented by most agent frameworks) suffers from five critical problems:
+
+1. **Context window waste**: Memory compaction captures low-importance data alongside high-importance data. The compaction algorithm cannot reliably distinguish signal from noise, so it loads everything — wasting precious context window tokens on irrelevant entries.
+
+2. **Hidden state**: The `memory()` tool creates hidden state that is not version-controlled. You cannot diff it, review its history, or roll it back. Changes to memory are invisible until they surface in a session.
+
+3. **Latency**: External memory providers (vector databases, cloud-hosted stores, semantic search APIs) add network round-trips to every memory operation. A local JSON file has zero latency — it is read from disk in microseconds. For a system that queries structured data on every session, this difference compounds.
+
+4. **Portability**: Memory providers are external services with APIs that change, pricing models that evolve, and availability that is not guaranteed. A JSON file is plain text — it works on any machine, any OS, any tool, forever. It survives provider shutdowns, API deprecations, and platform migrations. It is Git-native by default.
+
+5. **Simpler alternatives exist**: Critical information externalizes cleanly into SOUL (for identity and reflexes — manual, granular control) and JSON files (for structured user data — queryable, version-controlled, zero-latency, fully portable). GitHub provides backup and versioning for the entire architecture.
+
+### What Replaces Memory
+
+| Purpose | Mechanism | Why Better |
 |---|---|---|
-| `system-audit` | `hermes-system-maintenance` | Full system cross-scan: config drift, profile SOUL alignment, skill bloat, JSON staleness, dotfiles completeness, OpenRouter cost monitoring |
-| `soul-cross-check` | `soul-audit` | 5 checks: token count, paradigm coherence, contradictions, completeness, skill alignment |
-| `skills-classifier-audit` | `skills-classifier` | Source folder correctness, quality, orphans, priority alignment |
-| `hub-scout-scan` | `hub-scout` | 7 domains (Oracle HCM, Finance, Health, Productivity, Data, Architecture, Comms) — score candidates, update gap tracker |
+| Identity & reflexes | SOUL.md (pointer) | Always visible, version-controlled |
+| Structured user data | `data/*.json` | Queryable, version-controlled, granular |
+| Procedural knowledge | Skills (0- prefix curated) | Loaded on demand, not in context |
+| Project context | AGENTS.md (per project) | Project-scoped, clear lifecycle |
 
-**Plus SOUL triggers**:
-- After 3 technical exchanges → re-inject warmth
-- After rich session → propose learnings-capture
-- After decision/push → save as skill or memory
+### GitHub as Backup and Versioning
 
-**Critical dependency**: cron jobs only run when `hermes gateway` is up. Without the gateway, the recycling loop is a dormant schedule — zero actual autonomy.
+All architecture files are backed by Git/GitHub. This provides:
+- **Version history**: every change is tracked with full diff capability
+- **Backup**: remote repository survives local failures
+- **Rollback**: any architectural change can be reverted
+- **Collaboration**: the architecture is shareable and forkable
 
----
-
-## 8. Memory Architecture (Hermes Native)
-
-Replaced ByteRover with Hermes's native memory system. No external memory server.
-
-| Memory Type | Mechanism | Persistence | Purpose |
-|---|---|---|---|
-| **Durable Facts** | `memory()` tool → `MEMORY.md` | Permanent | Environment, conventions, quirks |
-| **User Profile** | `memory()` tool → `USER.md` | Permanent | Identity, preferences, style |
-| **Conversation History** | `session_search()` | Cross-session (searchable) | Recall past context |
-| **Procedural Knowledge** | Skills (2 layers) | Permanent | Reusable workflows |
-| **Domain RAG** | `knowledge/oracle-hcm/` | Permanent | Reference docs (9 guides) |
-| **Personal Data** | `data/*.json` | Permanent | Structured domain knowledge |
-
-**Config**:
-- `memory_enabled: true`
-- `user_profile_enabled: true`
-- `memory_char_limit: 2200`
-- `user_char_limit: 1400`
-- `provider: builtin`
-
-**Rules**: No automatic memory creation. The user decides what enters durable memory. Memory is an index — detail lives in skills, knowledge, or subdirectories. Target: compact, high-signal, no logs.
+Memory creates the illusion of persistence while actually creating maintenance debt. Explicit file-based externalization is more work upfront but eliminates entire categories of silent failures.
 
 ---
 
-## 9. Technology Stack
+## 10. Technology Stack
 
 Every choice follows the "externalize → survive" principle:
 
 | Decision | Rationale |
 |---|---|
-| **OpenRouter as sole provider** | Single API gateway. Model-agnostic. No vendor lock-in. **Blocks anthropic/\*** (402/403 errors). |
-| **DeepSeek V4 Flash as daily driver** | MoE architecture. Absurd cost-to-quality ratio for sustained agentic use. |
-| **Pro models (<1% of calls)** | Only for edge cases (e.g., `minimax/minimax-m2.7` as fallback). |
+| **Chinese open-source MOE models** | Best cost-to-quality ratio for sustained agentic use. The Chinese AI ecosystem (DeepSeek, Xiaomi, Qwen, Moonshot, MiniMax, StepFun, Zhipu) is engaged in an aggressive price war, subsidizing inference costs to gain market share. This creates an arbitrage opportunity: consumers access frontier-quality models at a fraction of Western pricing. Combined with MoE architecture (fewer active parameters per query = cheaper tokens without proportional quality loss), these models dominate the intelligence-per-dollar frontier. Refer to benchmarks: [GDPval-AA](https://artificialanalysis.ai/evaluations/gdpval-aa), [PinchBench](https://pinchbench.com), τ²-Bench, [Artificial Analysis cost curves](https://artificialanalysis.ai/?cost=intelligence-vs-cost) for model selection. No model loyalty — benchmark performance determines selection. |
+| **Pro/large models (<1% of calls)** | Reserved for edge cases requiring maximum reasoning capacity. |
 | **Plain text everywhere** | Survives any tool. Git-native. LLM-readable. |
 | **JSON for structured data** | Portable, queryable, deduplicated by design. |
-| **Git as SSoT and backup** | SSH push to `github.com/SimonKreis-Richard/samantha`. Auto-push after modif. |
-| **Hermes Agent as scaffolding** | Provides model access, MCP, cron, skills, sub-agents, memory. Disposable runtime. |
+| **GitHub as SSoT and backup** | Version-controlled remote repository. Auto-push after modification. All architecture files tracked. |
+| **Agent framework as scaffolding** | Provides model access, MCP, skills, sub-agents. Disposable runtime. |
 | **MCP Trinity: Tavily → Exa → Jina** | Priority-ordered. One tool per function. No overlap. |
+
+**Auxiliary models (optional)**: Use task-appropriate models for vision, web extraction, etc. — reference [Artificial Analysis intelligence-vs-cost curves](https://artificialanalysis.ai/?cost=intelligence-vs-cost) for optimal selection.
 
 ### MCP Trinity — Search Pipeline
 
@@ -267,74 +273,37 @@ Priority 3: Jina    → Read URL, parallel read, screenshot, classify, deduplica
                       search arXiv/SSRN/BibTeX, expand query, sort by relevance
 ```
 
-**Hermes MCP plugins**:
-- `tavily`: `tavily-mcp@latest` (via npx)
-- `exa`: `exa-mcp-server` (via npx)
-- `jina-ai`: `mcp-remote https://mcp.jina.ai/v1` (via npx)
-
-**Jina also handles**: screenshots, classification, deduplication (images + strings), arXiv search, SSRN search, query expansion, relevance reranking, PDF extraction, page datetime guessing.
-
-### Auxiliary Models (all via OpenRouter)
-
-| Role | Model |
-|---|---|
-| Vision | `google/gemini-3.1-flash-lite` |
-| Web extraction | `google/gemini-3.1-flash-lite` |
-| Compression | `deepseek/deepseek-v4-flash` |
-| Skills hub | `deepseek/deepseek-v4-flash` |
-| Session search | `google/gemini-3.1-flash-lite` |
-| Curator | `deepseek/deepseek-v4-flash` |
-| Delegation | `deepseek/deepseek-v4-flash` |
-
 ### Skill Loading Configuration
 
 ```
 skills:
   loading: lazy          # Skills loaded on demand, not at startup
-  external_dirs: /home/simon/.hermes/skills/custom  # Custom skills directory
-  template_vars: true    # Allow {{variables}} in skills
-  guard_agent_created: true  # Protect agent-created content
+  external_dirs: <curated-custom-directory>  # Curated skills with 0- prefix
+  template_vars: true    # Allow {VAR} notation in skills
 ```
 
 ---
 
-## 10. Component Map (Runtime Structure)
+## 11. Component Map (Runtime Structure)
 
 ```
-~/.hermes/                              # Hermes runtime (git-tracked)
-├── SOUL.md                             # Core identity (~1132 chars, v4.1)
-├── config.yaml                         # Full Hermes configuration (576 lines)
+~/.agent/                               # Agent runtime (git-tracked)
+├── SOUL.md                             # Core identity pointer (~800-1200 tokens)
+├── config.yaml                         # Full configuration
 ├── .env                                # API keys (gitignored)
-├── memories/
-│   ├── MEMORY.md                       # Durable facts (index, compact)
-│   └── USER.md                         # User profile
 ├── skills/
-│   ├── anthropic/                      # 4 skills (author: Anthropic)
-│   ├── bundled/                        # ~35 skills (Hermes bundled)
-│   ├── community/<repo>/               # ~20 skills (community-maintained)
-│   ├── custom/                         # 19 skills (Simon + Sam)
-│   ├── hub/                            # 6 skills (hub-installed)
-│   └── lobehub/                        # 4 skills (lobehub origin)
-├── skills-tools/
-│   ├── classification.json             # Classifier output (JSON)
-│   └── classification-report.md        # Classifier output (Markdown)
-├── knowledge/
-│   └── oracle-hcm/                     # Domain RAG corpus (9 guides)
-├── cron/
-│   ├── jobs.json                       # 4 cron jobs configuration
-│   └── output/<id>/                    # Cron execution reports
+│   └── curated/                        # Manually curated custom skills (0- prefix)
+│       └── 0-custom-skills/            # User-created and actively maintained
+├── data/
+│   └── *.json                          # Structured user data (version-controlled)
 ├── spawn-trees/<id>/                   # Sub-agent spawn tree logs
 ├── sessions/                           # Session history (retention: 30 days)
 ├── kanban.db                           # Kanban system state
-├── state.db                            # Hermes state
-├── .gap-tracker.md                     # Missing capabilities (hub-scout)
-├── .recycler-log.md                    # Skill consolidation history
+├── state.db                            # State
 ├── logs/
 │   ├── agent.log                       # Agent operation log
 │   ├── gateway.log                     # Gateway log
-│   ├── errors.log                      # Error log
-│   └── curator/                        # Curator run logs
-└── .curator_backups/                   # Automated skill backups (keep: 5)
+│   └── errors.log                      # Error log
 
 project/                                # Example project
 ├── AGENTS.md                           # Project context (auto-loaded)
@@ -345,22 +314,19 @@ project/                                # Example project
 
 ---
 
-## 11. Fil d'Ariane — Every Externalization Creates a Traceable Navigation Point
+## 12. Fil d'Ariane — Every Externalization Creates a Traceable Navigation Point
 
 Every externalized structure creates a node in the system's navigation graph. This "red thread" ensures no cognitive output is lost — it can always be traced back to its origin.
 
 | Externalization | Creates Navigation Point | Traceable How? |
 |---|---|---|
 | **Session output** → `agents/` | Timestamped file (`YYYY-MM-DD_desc.ext`) | Searchable by date + description |
-| **Durable fact** → `memory()` | Entry in `MEMORY.md` (keyed by § separator) | Readable via `memory()` tool |
-| **Procedure** → skillify | `skills/<source>/<name>/SKILL.md` with version | Git history + frontmatter version |
+| **Durable fact** → `data/*.json` | Entry in structured JSON file | Readable, queryable, version-controlled |
+| **Procedure** → skill | `skills/<source>/<name>/SKILL.md` with version | Git history + frontmatter version |
 | **Project context** → `AGENTS.md` | Per-project context file | Loaded at session start per workdir |
 | **Research** → web search | Search result + extracted content | Tavily/Exa/Jina tool calls logged |
 | **Sub-agent execution** → spawn tree | `spawn-trees/<id>/` with index + outputs | JSONL timeline of all sub-agent calls |
-| **Cron audit** → report | `cron/output/<id>/` with timestamped `.md` | Readable output, linked in cron jobs.json |
-| **Classification** → report | `skills-tools/classification-report.md` | Regenerable via classifier.py --audit |
-| **Skill consolidation** → log | `.recycler-log.md` | Chronological, versioned |
-| **Capability gaps** → tracker | `.gap-tracker.md` | Updated every hub-scout run |
+| **Classification** → report | Curated skill directory | Regenerable via audit |
 | **Session history** → search | `session_search()` tool | Full-text search over past sessions |
 | **Config** → YAML | `config.yaml` | Git-tracked, diffable |
 
@@ -368,20 +334,19 @@ Every externalized structure creates a node in the system's navigation graph. Th
 
 ---
 
-## 12. Information Flow Sequence
+## 13. Information Flow Sequence
 
-1. User instruction enters → Sam reads SOUL + MEMORY + AGENTS.md
-2. Sam breaks down task → identifies what needs research, what needs execution
-3. Sam delegates parallel work to empty-shell sub-agents with explicit context (max 3)
-4. Sub-agents return results → Sam reviews critically, synthesizes
-5. Sam externalizes: writes output to `agents/`, updates AGENTS.md if needed, saves as skill or memory, proposes skillify
-6. Cron jobs run autonomously every 180m: system-audit, soul-cross-check, skills-classifier-audit, hub-scout-scan
-7. Next session: richer context available through externalized knowledge
-8. Every externalization creates a navigation point — nothing is lost, everything is traceable
+1. User instruction enters → the core agent reads SOUL + AGENTS.md
+2. The core agent breaks down task → identifies what needs research, what needs execution
+3. The core agent delegates parallel work to empty-shell sub-agents with explicit context (max 3)
+4. Sub-agents return results → the core agent reviews critically, synthesizes
+5. The core agent externalizes: writes output to `agents/`, updates AGENTS.md if needed, saves as skill or project data
+6. Next session: richer context available through externalized knowledge
+7. Every externalization creates a navigation point — nothing is lost, everything is traceable
 
 ---
 
-## 13. Context Reduction Goal: 500K → 100K Tokens
+## 14. Context Reduction Goal: 500K → 100K Tokens
 
 The architecture has a quantified context reduction target: **reduce the per-session context footprint from ~500K tokens to ~100K tokens**, a 5× compression.
 
@@ -389,20 +354,20 @@ The architecture has a quantified context reduction target: **reduce the per-ses
 
 A typical agent session in 2026 loads:
 - SOUL + system prompt: ~2K
-- Memory + user profile: ~4K
+- SOUL pointer + data files: ~2K
 - Conversation history (100 turns): ~300K–500K
 - Skills (auto-detected): ~50K–150K
 - Project context: ~1K–5K
 - Tool outputs: variable
 
-Lossy compression (Gemini Flash) can reduce conversation history by 3–5× but introduces summarization artifacts. The real solution is not compression — it is **structural elimination**: don't load what you don't need.
+Lossy compression can reduce conversation history by 3–5× but introduces summarization artifacts. The real solution is not compression — it is **structural elimination**: don't load what you don't need.
 
 ### The Target: 100K
 
 ```
 Goal: ~100K tokens per session
 ├── SOUL: ~2K (essential, always loaded)
-├── MEMORY.md + USER.md: ~4K (compact index)
+├── SOUL pointer + data/*.json: ~2K (compact, on-demand)
 ├── Recent conversation (recent 10 turns): ~20K–30K
 ├── Project context (AGENTS.md): ~1K
 ├── Auto-detected skills (frontmatter only): ~2K
@@ -421,7 +386,7 @@ Context reduction is measured, not assumed. The following metrics are tracked pe
 | Conversation history tokens | ~300K–500K | ~20K–30K (recent 10 turns) |
 | Skill instructions in context | ~50K–150K | ~5K (loaded on demand) |
 | Session_search calls instead of history load | 0 (full history loaded) | 10+ per session |
-| Compression ratio (history) | 0 (raw) | 3–5× (Gemini Flash proxy) |
+| Compression ratio (history) | 0 (raw) | 3–5× |
 
 ### Mechanisms
 
@@ -429,8 +394,8 @@ The 500K → 100K target is achieved through:
 
 1. **Lazy loading** (primary mechanism): Skills are not in context until triggered. Saves 50K–150K immediately.
 2. **History truncation**: Only the last 10 turns are retained; older context is retrieved via `session_search()` on demand. Saves 300K–500K.
-3. **Compact memory index**: MEMORY.md is an index, not a dump. Each entry is a line, not a paragraph. Saves 2–5K vs. verbose memory.
-4. **Compression proxy**: Gemini Flash models compress full history into summaries at ~20% of original token cost.
+3. **Compact SOUL**: SOUL as pointer, not manual. Saves tokens on every turn.
+4. **Compression proxy**: Models compress full history into summaries at ~20% of original token cost.
 5. **Sub-agent offloading**: Parallel tasks are delegated to empty-shell sub-agents with explicit context only — their outputs are retrieved, not their entire session. Saves context that would otherwise be consumed by sequential processing.
 
 ### The Metric
@@ -441,11 +406,11 @@ The 500K→100K reduction is not a vanity metric. Each token in excess of the ta
 - Delays response (longer generation)
 - Reduces available reasoning capacity
 
-**If the system averages >150K tokens per session, the architecture is not being followed.** The symptom is almost always: (a) full conversation history loaded instead of truncated, (b) skills auto-loaded at startup instead of lazily, or (c) memory entries written verbosely instead of compactly.
+**If the system averages >150K tokens per session, the architecture is not being followed.** The symptom is almost always: (a) full conversation history loaded instead of truncated, (b) skills auto-loaded at startup instead of lazily, or (c) unnecessary data in context.
 
 ---
 
-## 14. Write Sandbox Confinement
+## 15. Write Sandbox Confinement
 
 The agent operates with **read-anywhere, write-limited** filesystem access. This is not a security restriction — it is a cognitive hygiene rule. Unconstrained write access produces orphan files, scattered context, and unrecoverable state.
 
@@ -453,8 +418,7 @@ The agent operates with **read-anywhere, write-limited** filesystem access. This
 
 | Path | Purpose | Notes |
 |------|---------|-------|
-| `~/.hermes/skills/` | Skill creation and modification | Agent-created skills land in `custom/` subdirectory |
-| `~/.hermes/knowledge/` | Domain RAG corpus | Structured reference guides |
+| `~/.agent/skills/` | Skill creation and modification | Agent-created skills land in curated directory |
 | `[project-root]/agents/` | Session output files | Format: `YYYY-MM-DD_desc.ext` |
 | `[project-root]/AGENTS.md` | Project context updates | Per-project manifest |
 | `/tmp/` | Ephemeral working files | Not tracked, not durable. Cleared on restart. |
@@ -477,7 +441,7 @@ project/agents/2026-05-19_mcp-exploration.md
 
 ### What the Agent Cannot Write
 
-- **Outside the allowed paths**: Any write outside `skills/`, `knowledge/`, `agents/`, `AGENTS.md`, or `/tmp/` requires explicit user permission.
+- **Outside the allowed paths**: Any write outside `skills/`, `agents/`, `AGENTS.md`, or `/tmp/` requires explicit user permission.
 - **To existing files**: The agent does not modify existing files. It creates new files or proposes changes that the user applies.
 - **To system files**: `~/.bashrc`, `/etc/`, `~/.ssh/`, `.env` — never touched.
 
@@ -491,7 +455,28 @@ Every unrestricted write is a potential context leak — a file that will be dis
 
 ---
 
-## 15. Coaching Protocol
+## 16. {VAR} Notation System — Version-Controlled Configuration
+
+Configuration uses `{VAR}` notation for variables, providing a single source of truth:
+
+```
+# In config files and skills:
+model: {DEFAULT_MOE_MODEL}
+provider: {DEFAULT_PROVIDER}
+research_priority: {SEARCH_TOOL_PRIORITY}
+```
+
+**Principle**: All configurable values are declared as `{VAR}` in templates and resolved at runtime from a single config file. This ensures:
+- Version-controlled single source of truth
+- No duplicated configuration across files
+- Easy migration between environments
+- Clear documentation of what's configurable
+
+Variables are defined in `config.yaml` and resolved when skills or templates are loaded.
+
+---
+
+## 17. Coaching Protocol
 
 > *"Max 1 nudge per conversation. Loving drill sergeant."*
 
@@ -508,7 +493,7 @@ When the user asks for something that violates the architecture (e.g., "just do 
 
 | Mode | Tone | Example |
 |------|------|---------|
-| **Nudge** | Direct, no judgment | "This should be a skill given its 3-use pattern. Want me to skillify?" |
+| **Nudge** | Direct, no judgment | "This should be a skill given its 3-use pattern. Want me to save it as a skill?" |
 | **Compliance** | Neutral | "Understood. Executing." |
 | **Root cause** | Firm, actionable | "3 failures on the same approach. Let's stop and find root cause before continuing." |
 | **Session rich** | Warm, proactive | "We covered a lot. Let me propose a learnings-capture before we wrap." |
@@ -533,32 +518,29 @@ The coaching protocol makes the agent a **partner in discipline**, not a passive
 
 ---
 
-## 16. Reasoning Effort Economics — The Low Sweet Spot
+## 18. Reasoning Effort Economics — The Low Sweet Spot
 
 > *"A little reasoning helps a lot. A lot of reasoning hurts."*
 
 ### The Finding
 
-Contrary to earlier assumptions, reasoning effort on MOE models (DeepSeek V4 Flash) does **not** cost proportionally more. The blended price is identical ($0.175/M) for none, low, high, and max effort levels. The difference is in **output quality and token efficiency**:
+Reasoning effort on MOE models does **not** cost proportionally more. The blended price is typically flat across none, low, high, and max effort levels. The difference is in **output quality and token efficiency**:
 
-| Effort | AA Index | vs None | GDPval Elo | Tokens |
-|--------|----------|--------|------------|--------|
-| None | 36.5 | baseline | 1393 | Minimal |
-| **Low** | *(~42 est.)* | **~+15%** | — | Efficient |
-| High | 46.0 | **+26%** | **1414** | Moderate |
-| Max | 46.5 | +27% | 1388 | **Explodes** |
+| Effort | Quality Index | vs None | Tokens |
+|--------|--------------|---------|--------|
+| None | baseline | — | Minimal |
+| **Low** | **~+15%** | **Best value** | Efficient |
+| High | +26% | Good for complex tasks | Moderate |
+| Max | +27% | Marginal gain, overthinking risk | **Explodes** |
 
-**Key insight**: High→Max gives only +0.5 AA Index (+1%) but triggers *overthinking* — GDPval Elo actually *drops* from 1414 (High) to 1388 (Max). The model wastes the thinking budget on redundant exploration.
+**Key insight**: High→Max gives only +1% quality but triggers *overthinking* — the model wastes the thinking budget on redundant exploration. Performance scales linearly from none to high, but cost (in tokens) scales exponentially from high to max.
 
-### The Apple "Illusion of Thinking" Validation
+### Why "none" Is Not Always Better
 
-Shojaee et al. (2025, NeurIPS) independently confirm the same 3-regime structure through controlled puzzle experiments:
-
-1. **Low complexity** — Standard models (no reasoning) outperform LRMs. Reasoning models *overthink* simple problems.
-2. **Medium complexity** — LRMs show genuine advantage. Structured reasoning helps.
-3. **High complexity** — **Both collapse.** Accuracy → zero. LRMs counterintuitively *reduce* thinking effort as problems exceed their threshold.
-
-The paper further reveals: even when the correct algorithm is explicitly provided, LRMs fail to execute it reliably at high complexity. The limitation is not knowledge — it's **execution fidelity** over longer sequences.
+Setting reasoning to `none` is not always optimal. The relationship is nuanced:
+- **Low reasoning captures ~80% of the none→high gain** at minimal token overhead
+- For non-trivial tasks, `low` consistently outperforms `none` with negligible cost difference
+- The sweet spot depends on task complexity: simple ops → `none`, most work → `low`, complex reasoning → `high`
 
 ### Decision Rule
 
@@ -567,25 +549,28 @@ The paper further reveals: even when the correct algorithm is explicitly provide
 | **Default** | `low` | Captures ~80% of none→high gain at minimal token overhead |
 | **Trivial ops** (status checks, ls) | `none` | Overthinking wastes tokens for zero gain |
 | **Complex reasoning** | `high` | When the task genuinely benefits from thinking through alternatives |
-| **Never** | `max` | Marginal gain (+1%), overthinking triggers, Elo regression on GDPval |
+| **Never** | `max` | Marginal gain (+1%), overthinking triggers, token cost explodes |
 
-### Why This Changes the Architecture
-
-The earlier assumption was that reasoning effort scaled cost linearly. It doesn't. Since pricing is flat across effort levels:
+### Why This Matters
 
 - **Low reasoning is free performance.** 15-20% quality gain at same cost.
 - **High reasoning is cheap performance.** 26% gain at marginal token overhead.
-- **Max reasoning is a cost trap.** Same quality as High but 3-10× the thinking tokens.
+- **Max reasoning is wasteful.** Same quality as High but 3-10× the thinking tokens.
 
-This is now captured in:
-- `agent.reasoning_effort: low` and `delegation.reasoning_effort: low` (config.yaml)
-- `canonical-design-decisions.json` → `reasoning-effort-low-sweet-spot`
+---
 
-### Reference
+## 19. Model Selection Benchmarks
 
-Shojaee, P., Mirzadeh, I., Alizadeh, K., Horton, M., Bengio, S., & Farajtabar, M. (2025). *The Illusion of Thinking: Understanding the Strengths and Limitations of Reasoning Models via the Lens of Problem Complexity.* NeurIPS 2025. arXiv:2506.06941. [Apple ML Research](https://machinelearning.apple.com/research/illusion-of-thinking).
+When selecting models, reference these benchmarks for empirical data:
 
-Also supported by Ghosal et al. (2025). *Mirage of Test-Time Scaling in Reasoning Models.* arXiv:2506.04210. Shows early gains from extended thinking are illusory — "overthinking" degrades precision.
+| Benchmark | URL | What It Measures |
+|---|---|---|
+| **GDPval-AA** | [artificialanalysis.ai/evaluations/gdpval-aa](https://artificialanalysis.ai/evaluations/gdpval-aa) | Quality-adjusted performance per cost |
+| **PinchBench** | [pinchbench.com](https://pinchbench.com/?view=graphs&score=average) | Agent capability benchmarks |
+| **τ²-Bench** | τ²-Bench | Task completion and reasoning benchmarks |
+| **Artificial Analysis** | [artificialanalysis.ai](https://artificialanalysis.ai/?cost=intelligence-vs-cost) | Intelligence-per-dollar curves |
+
+**Recommendation**: Chinese open-source MOE models offer the best cost-efficiency for agentic workloads. Use these benchmarks to validate selection rather than relying on provider marketing claims.
 
 ---
 
@@ -593,8 +578,9 @@ Also supported by Ghosal et al. (2025). *Mirage of Test-Time Scaling in Reasonin
 
 | Version | Date | Key Changes |
 |---|---|---|
-| 5.1.0 | 2026-05-19 | §16 Reasoning Effort Economics — low sweet spot, Apple 'Illusion of Thinking', diminishing returns confirmed; correction of prior MOE reasoning assumption in skills |
-| 5.0.0 | 2026-05-19 | 2-layer skills (core = 14, auto-detection = ~76); orchestrator sub-agent model; real stack (OpenRouter + DeepSeek V4 Flash + MCP Trinity); Hermes native memory; component map aligned to actual runtime; cron jobs documented; Fil d'Ariane traceability added |
+| 6.0.0 | 2026-05-30 | Anonymized design guide; Pointer-SOUL architecture; memory disabled by design; 3 core skills; {VAR} notation; 0- prefix convention; benchmark references; cron removed; specific model names removed |
+| 5.1.0 | 2026-05-19 | §16 Reasoning Effort Economics — low sweet spot, Apple 'Illusion of Thinking', diminishing returns confirmed |
+| 5.0.0 | 2026-05-19 | 2-layer skills; orchestrator sub-agent model; component map aligned to actual runtime |
 | 4.0.0 | 2026-05-17 | Initial externalization architecture |
 | 3.0.0 | 2026-05-16 | SOUL-centric design |
 | 2.0.0 | 2026-05-15 | Minimalist architecture |
@@ -602,8 +588,8 @@ Also supported by Ghosal et al. (2025). *Mirage of Test-Time Scaling in Reasonin
 
 ---
 
-**Version**: 5.1.0  \
-**Last updated**: 2026-05-19  \
-**Aligned with**: MANIFESTO.md v4.1.0 (Externalization Architecture + Reasoning Effort Economics)
+**Version**: 6.0.0  \
+**Last updated**: 2026-05-30  \
+**Aligned with**: MANIFESTO.md (Externalization Architecture)
 
 > *"If, as we confront some task, a part of the world functions as a process which, were it done in the head, we would have no hesitation in recognizing as part of the cognitive process, then that part of the world IS part of the cognitive process."* — Clark & Chalmers, 1998
