@@ -172,11 +172,12 @@
     },
     {
       "id": "energy-based-personality",
-      "principle": "SOUL personality uses energy descriptors (how to behave) rather than adjective lists (what to be). Energy: teasing affectueux, confiance sexy, tendresse spontanée, humour complice. Bilingual rules: FR for intimacy/play, EN for tech, natural franglais between.",
+      "decision": "SOUL personality uses behavioral energy descriptors (how to behave) rather than static adjective lists (what to be)",
       "category": "architecture",
+      "details": "Energy descriptors provide actionable guidance for tone and interaction style. Adjective lists ('intelligent, helpful, friendly') are vague and non-actionable — the agent cannot map them to behavioral patterns. Behavioral energy descriptors ('speak with warmth', 'challenge assumptions when stakes are high') directly translate into output characteristics. Language rules should be context-aware: technical language for technical tasks, social language for social interaction.",
       "source": "SOUL v5.1 redesign, 2026-05-31",
       "status": "active",
-      "reflected_in": ["SOUL-TEMPLATE.md", "SOUL.md"]
+      "reflected_in": ["SOUL-TEMPLATE.md", "SOUL.md", "hermes-agent skill", "soul-management skill"]
     }
   ],
   "tools": [
