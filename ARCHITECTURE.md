@@ -126,8 +126,8 @@ These are injected at every session start. They form the meta-system:
 
 | Skill | Role | Priority |
 |---|---|---|
-| `system-architecture` | Architecture manifest, SOUL pointer system | core |
-| `agent-config` | Configuration management, {VAR} conventions | core |
+| `hermes-agent` | Agent configuration, runtime setup, {VAR} conventions | core |
+| `soul-management` | SOUL pointer system, identity architecture, behavioral contracts | core |
 | `verification` | Validation, testing, quality assurance | core |
 
 **Rule**: core = architecture/config/verification. Transverse utilities used in 50%+ of sessions.
@@ -556,6 +556,15 @@ Setting reasoning to `none` is not always optimal. The relationship is nuanced:
 - **Low reasoning is free performance.** 15-20% quality gain at same cost.
 - **High reasoning is cheap performance.** 26% gain at marginal token overhead.
 - **Max reasoning is wasteful.** Same quality as High but 3-10× the thinking tokens.
+
+### Practice Update (v6.1.0, 2026-05-31)
+
+**Deployed configuration uses `medium` reasoning effort as the operational sweet spot**, not `low` as the theoretical analysis above suggests. This is an empirical correction: while the theoretical table recommends `low` as the best value-per-token, real-world mixed workloads perform better at `medium` — it captures the quality gains of `high` without the overthinking penalty, at acceptable token cost.
+
+- **Low** is optimal for cost-sensitive bulk tasks (batch processing, repetitive operations)
+- **Medium** is the deployed default for mixed workloads (the sweet spot)
+- **High** is reserved for genuinely complex reasoning tasks
+- **No dynamic/adaptive reasoning adjustment exists in Hermes Agent** — the reasoning effort setting is strictly static per session. There is no mechanism to auto-adjust reasoning effort based on task complexity within a session. The operator chooses the level at session start or via config, and it stays fixed.
 
 ---
 

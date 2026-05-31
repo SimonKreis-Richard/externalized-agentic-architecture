@@ -105,7 +105,7 @@ terminal:
 #   Additional skills loaded on demand from curated custom directory.
 # =============================================================================
 
-# 3 core skills always loaded: system-architecture, agent-config, verification.
+# 3 core skills always loaded: hermes-agent, soul-management, verification.
 # Custom skills use 0- prefix convention for curated directory.
 # When a skill is needed beyond core, cast it explicitly from the custom directory.
 # Maximum active at any time: 5-8.

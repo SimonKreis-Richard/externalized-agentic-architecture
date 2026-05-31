@@ -66,7 +66,9 @@ agent:
   #   impactful cost-quality balance setting.
   # Pillars: 1 (Simplicity), 6 (Token Discipline).
   # See: Architecture §6 — reasoning_effort=low sweet spot.
-  reasoning_effort: "low"
+  # Practice note (v6.1.0): medium balances intelligence and cost for mixed workloads.
+  # Low for cost-sensitive bulk tasks. High for complex reasoning. Static only — no dynamic mode.
+  reasoning_effort: "medium"
 
   # Verbose mode: OFF.
   # Rationale: The agent communicates with extreme semantic density as a
@@ -119,7 +121,7 @@ terminal:
 # Architecture §6 — Skills: 3 Core Always + Curated Custom (0- prefix).
 # =============================================================================
 
-# 3 core skills always loaded: system-architecture, agent-config, verification.
+# 3 core skills always loaded: hermes-agent, soul-management, verification.
 # Custom skills use 0- prefix convention for curated directory.
 # When a skill is needed beyond core, cast it explicitly from the custom directory.
 # Maximum active at any time: 5-8.

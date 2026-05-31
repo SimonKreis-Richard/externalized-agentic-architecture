@@ -10,7 +10,7 @@ Skills are the agent's **externalized procedural memory**. They live outside the
 
 | Layer | Loading Mechanism | Purpose | Examples |
 |-------|------------------|---------|----------|
-| **Layer 1 — Core** | Always injected at session start | Architecture, configuration, verification | `system-architecture`, `agent-config`, `verification` |
+| **Layer 1 — Core** | Always injected at session start | Agent configuration, soul/identity management, verification | `hermes-agent`, `soul-management`, `verification` |
 | **Layer 2 — Auto-Detect** | Dynamically loaded via frontmatter name/description matching | Domain-specific procedures, niche workflows, one-shot tasks | Code analysis, document conversion, data analysis |
 
 **Principle**: Core skills = used in 50%+ of sessions. Everything else lives in Layer 2 and is pulled in by Hermes when the frontmatter matches the current task.
@@ -44,8 +44,8 @@ Your Layer 1 should cover meta-system operations. The 3 core skills:
 
 | Skill | Purpose |
 |-------|---------|
-| `system-architecture` | Architecture manifest, SOUL pointer system, design decisions |
-| `agent-config` | Configuration management, {VAR} conventions, model selection |
+| `hermes-agent` | Agent configuration, runtime setup, deployment patterns, {VAR} conventions |
+| `soul-management` | SOUL pointer system, identity architecture, design decisions, behavioral contracts |
 | `verification` | Validation, testing, quality assurance |
 
 Install hub skills via:
@@ -53,6 +53,25 @@ Install hub skills via:
 hermes skills install --yes <skill-identifier>
 ```
 
+---
+
+## 3b. Full Curated Skills Inventory (42 skills, 7 categories)
+
+The curated skill ecosystem consists of **42 skills** organized across **7 categories**. These represent the complete set of actively maintained skills — not every skill that could exist, but every skill that has earned its place through repeated use.
+
+| Category | Count | Skills |
+|----------|-------|--------|
+| **Agentic** | 3 | `delegation-orchestration`, `task-decomposition`, `context-management` |
+| **Coding** | 6 | `code-review`, `debugging-workflow`, `refactoring-patterns`, `test-generation`, `dependency-management`, `code-analysis` |
+| **Hermes** | 9 | `hermes-agent`, `soul-management`, `verification`, `skill-creator`, `skill-recycler`, `session-management`, `memory-bridge`, `spawn-tree-management`, `kanban-workflow` |
+| **Office** | 7 | `document-conversion`, `email-drafting`, `spreadsheet-analysis`, `presentation-creation`, `calendar-management`, `meeting-notes`, `template-generation` |
+| **Personal** | 5 | `habit-tracking`, `fitness-logging`, `meal-planning`, `budget-tracking`, `journaling` |
+| **Professional** | 6 | `project-management`, `stakeholder-communication`, `report-writing`, `meeting-facilitation`, `process-documentation`, `onboarding-guides` |
+| **Research** | 6 | `web-research`, `data-analysis`, `literature-review`, `fact-checking`, `citation-management`, `knowledge-synthesis` |
+
+**Core skills** (Layer 1, always loaded) are the 3 Hermes-category skills: `hermes-agent`, `soul-management`, `verification`. The remaining 39 skills load on demand via frontmatter matching (Layer 2).
+
+**Design principle**: Quality over quantity. Each of these 42 skills exists because it has been used 3+ times (3-uses rule) and passes the Apple Principle ("If this were removed, would the system break?"). Skills that fail either test are pruned during recycler audits.
 ---
 
 ## 4. Curated Custom Directory with 0- Prefix Convention

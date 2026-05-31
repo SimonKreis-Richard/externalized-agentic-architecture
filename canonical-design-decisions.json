@@ -1,8 +1,8 @@
 {
   "meta": {
     "title": "Externalized Agentic Architecture — Canonical Design Decisions",
-    "version": "2.0.0",
-    "updated": "2026-05-30",
+    "version": "2.1.0",
+    "updated": "2026-05-31",
     "system": "Hermes Agent",
     "agent_identity": "Externalized Agentic Architecture",
     "description": "Complete index of every canonical design decision across the Externalized Agentic Architecture ecosystem. Single source of truth. Every principle, model choice, architectural decision, tool selection, skill classification, and anti-pattern."
@@ -14,7 +14,7 @@
       "category": "pillar",
       "source": "Clark & Chalmers Extended Mind Thesis (1998) — operationalized for AI agents",
       "status": "active",
-      "reflected_in": ["SOUL.md (minimal identity pointer)", "system-architecture skill", "externalized-agentic-architecture/MANIFESTO.md"],
+      "reflected_in": ["SOUL.md (minimal identity pointer)", "hermes-agent skill", "externalized-agentic-architecture/MANIFESTO.md"],
       "notes": "Everything is in skill files, config, or markdown. The SOUL is ~800 chars — an identity, not a procedure."
     },
     {
@@ -23,7 +23,7 @@
       "category": "pillar",
       "source": "Dochkina 2026, Google Scaling Agent Study — validated dynamic delegation",
       "status": "active",
-      "reflected_in": ["delegation-agentique skill", "SOUL.md (CEO workflow)", "system-architecture skill"],
+      "reflected_in": ["delegation-agentique skill", "SOUL.md (CEO workflow)", "hermes-agent skill"],
       "notes": "CEO delegates to temp workers. max_spawn_depth=3, max_concurrent=3. Sub-agents have no SOUL/personality."
     },
     {
@@ -41,7 +41,7 @@
       "category": "pillar",
       "source": "Anthropic Context Engineering, Stigmem (\"Stop Preloading Everything\")",
       "status": "active",
-      "reflected_in": ["system-architecture skill", "externalized-agentic-architecture/MANIFESTO.md"],
+      "reflected_in": ["hermes-agent skill", "externalized-agentic-architecture/MANIFESTO.md"],
       "notes": "Skills loaded on demand (2-layer: core always, auto-detect on trigger). Context funnel pipeline. Target: 500K→100K token reduction."
     }
   ],
@@ -77,6 +77,7 @@
       "label": "reasoning-effort-low-sweet-spot",
       "evidence": "Performance scales linearly with reasoning effort; cost scales exponentially. Multiple independent benchmarks confirm low as optimal default.",
       "status": "active",
+      "notes": "Practice update (2026-05-31): medium is the deployed sweet spot. Low for cost-sensitive bulk tasks. Static only — no dynamic adjustment exists in Hermes Agent.",
       "configured_in": "~/.hermes/config.yaml: agent.reasoning_effort: low, delegation.reasoning_effort: low"
     }
   ],
@@ -85,7 +86,7 @@
       "id": "arch-2-layer-skills",
       "decision": "2-layer skill system: Core (always loaded) + Auto-Detection (trigger-based)",
       "status": "active",
-      "details": "Core: 3 always-loaded skills (system-architecture, agent-config, verification). Auto-detect: skills loaded on trigger from curated custom directory (0- prefix convention). Priority: core/standard/niche/one-shot classification in YAML frontmatter.",
+      "details": "Core: 3 always-loaded skills (hermes-agent, soul-management, verification). Auto-detect: skills loaded on trigger from curated custom directory (0- prefix convention). Priority: core/standard/niche/one-shot classification in YAML frontmatter.",
       "source": "Anthropic Agent Skills L1/L2 model + custom classification",
       "reflected_in": ["ARCHITECTURE.md §5", "skills-classifier skill", "classification.json"]
     },
@@ -103,7 +104,7 @@
       "status": "active",
       "details": "SOUL.md is a minimal identity pointer (~800-1200 tokens), not a procedural manual. Justified by Cowan (2001) 4-chunk working memory limit — a long SOUL document would be ineffective as the agent cannot hold it all simultaneously. Externalized architecture (skills, config, GitHub) provides the operational substance.",
       "source": "Cowan (2001) Working Memory Capacity, Clark & Chalmers Extended Mind (1998)",
-      "reflected_in": ["SOUL.md", "system-architecture skill", "MANIFESTO.md"]
+      "reflected_in": ["SOUL.md", "hermes-agent skill", "MANIFESTO.md"]
     },
     {
       "id": "arch-memory-disabled",
@@ -168,6 +169,14 @@
       "details": "One sentence nudge → execute. 3 failures → STOP and root cause. Warm after technical exchanges.",
       "source": "Coaching tone pillar",
       "reflected_in": ["ARCHITECTURE.md §15"]
+    },
+    {
+      "id": "energy-based-personality",
+      "principle": "SOUL personality uses energy descriptors (how to behave) rather than adjective lists (what to be). Energy: teasing affectueux, confiance sexy, tendresse spontanée, humour complice. Bilingual rules: FR for intimacy/play, EN for tech, natural franglais between.",
+      "category": "architecture",
+      "source": "SOUL v5.1 redesign, 2026-05-31",
+      "status": "active",
+      "reflected_in": ["SOUL-TEMPLATE.md", "SOUL.md"]
     }
   ],
   "tools": [
@@ -193,8 +202,9 @@
       "id": "skill-core-3",
       "decision": "3 core skills (priority: core), always loaded",
       "status": "active",
-      "list": ["system-architecture", "agent-config", "verification"],
-      "criteria": "Architecture, configuration, verification — used in 50%+ of sessions."
+      "list": ["hermes-agent", "soul-management", "verification"],
+      "criteria": "Architecture, configuration, verification — used in 50%+ of sessions.",
+      "notes": "42 curated skills across 7 categories (2026-05-31). Core skills renamed to reflect actual deployment: hermes-agent (replaces system-architecture), soul-management (replaces agent-config), verification (unchanged)."
     }
   ],
   "observations": [
