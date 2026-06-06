@@ -20,7 +20,7 @@ Consider a real session trace — every step leaves a node in the **fil d'Ariane
 └─ Each arrow = a node in the trace ───────────────────────────┘
 ```
 
-Every step is **input → process → externalize**. The brain ([AGENT_NAME]) processes. The environment stores. The loop continues. The context window is the processing workspace — everything that can be externalized, is externalized. Configuration variables use `{VAR}` notation — version-controlled, resolved at runtime from `config.yaml` or `data/*.json`.
+Every step is **input → process → externalize**. The brain ([AGENT_NAME]) processes. The environment stores. The loop continues. The context window is the processing workspace — everything that can be externalized, is externalized. Configuration variables use `{VAR}` notation — version-controlled, resolved at runtime from `configuration file` or `data/*.json`.
 
 This is Clark & Chalmers' **active externalism** in practice: the environment plays an *active, constitutive role* in cognition. The files, skills, and knowledge trees are not passive storage — they are *part of the cognitive system*, consulted every session, automatically endorsed.
 

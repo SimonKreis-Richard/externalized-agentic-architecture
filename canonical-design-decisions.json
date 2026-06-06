@@ -2,8 +2,8 @@
   "meta": {
     "title": "Externalized Agentic Architecture — Canonical Design Decisions",
     "version": "2.1.0",
-    "updated": "2026-05-31",
-    "system": "Hermes Agent",
+    "updated": "2026-06-06",
+    "system": "Generic AI Agent Framework",
     "agent_identity": "Externalized Agentic Architecture",
     "description": "Complete index of every canonical design decision across the Externalized Agentic Architecture ecosystem. Single source of truth. Every principle, model choice, architectural decision, tool selection, skill classification, and anti-pattern."
   },
@@ -14,7 +14,11 @@
       "category": "pillar",
       "source": "Clark & Chalmers Extended Mind Thesis (1998) — operationalized for AI agents",
       "status": "active",
-      "reflected_in": ["SOUL.md (minimal identity pointer)", "hermes-agent skill", "externalized-agentic-architecture/MANIFESTO.md"],
+      "reflected_in": [
+        "identity file (minimal identity pointer)",
+        "agent-config-skill skill",
+        "externalized-agentic-architecture/MANIFESTO.md"
+      ],
       "notes": "Everything is in skill files, config, or markdown. The SOUL is ~800 chars — an identity, not a procedure."
     },
     {
@@ -23,7 +27,11 @@
       "category": "pillar",
       "source": "Dochkina 2026, Google Scaling Agent Study — validated dynamic delegation",
       "status": "active",
-      "reflected_in": ["delegation-agentique skill", "SOUL.md (CEO workflow)", "hermes-agent skill"],
+      "reflected_in": [
+        "delegation-skill skill",
+        "identity file (orchestrated routing)",
+        "agent-config-skill skill"
+      ],
       "notes": "CEO delegates to temp workers. max_spawn_depth=3, max_concurrent=3. Sub-agents have no SOUL/personality."
     },
     {
@@ -32,7 +40,11 @@
       "category": "pillar",
       "source": "[USER]'s distillation model + repo Funnel Cognition 4-stage",
       "status": "active",
-      "reflected_in": ["externalized-agentic-architecture/ARCHITECTURE.md", "concepts/distillation-cycle.md", "soul-management skill"],
+      "reflected_in": [
+        "externalized-agentic-architecture/ARCHITECTURE.md",
+        "concepts/distillation-cycle.md",
+        "identity-skill skill"
+      ],
       "notes": "Two complementary models: 4-stage Funnel (Chaotic→Distillation→Categorization→Structured) and 3-phase Distillation Cycle (DÉMÊLER→DISTILLER→DÉCIDER). Both active."
     },
     {
@@ -41,7 +53,10 @@
       "category": "pillar",
       "source": "Anthropic Context Engineering, Stigmem (\"Stop Preloading Everything\")",
       "status": "active",
-      "reflected_in": ["hermes-agent skill", "externalized-agentic-architecture/MANIFESTO.md"],
+      "reflected_in": [
+        "agent-config-skill skill",
+        "externalized-agentic-architecture/MANIFESTO.md"
+      ],
       "notes": "Skills loaded on demand (2-layer: core always, auto-detect on trigger). Context funnel pipeline. Target: 500K→100K token reduction."
     }
   ],
@@ -49,36 +64,39 @@
     {
       "id": "model-daily-driver",
       "model": "Chinese open-source MOE model",
-      "provider": "OpenRouter",
+      "provider": "your-provider",
       "role": "daily driver (99% of queries)",
       "config_key": "model.default: your-provider/your-moe-model",
       "rationale": "Best cost-to-quality ratio for sustained agentic use. The Chinese AI ecosystem is engaged in an aggressive price war, subsidizing inference costs — creating an arbitrage opportunity for consumers. MOE architecture = fewer active parameters per query = cheaper tokens without proportional quality loss. Refer to GDPval-AA, PinchBench, τ²-Bench, Artificial Analysis benchmarks.",
       "status": "active",
-      "configured_in": "~/.hermes/config.yaml",
+      "configured_in": "~/.agent-home/configuration file",
       "updated": "2026-05-30",
       "evidence": "Benchmark-validated selection. MOE architecture = fewer active parameters per query = cheaper tokens without proportional quality loss."
     },
     {
       "id": "model-pro-reserve",
       "model": "Pro/large model",
-      "provider": "OpenRouter",
+      "provider": "your-provider",
       "role": "emergency reserve (<1% of queries)",
-      "config_key": "model.provider: openrouter (fallback)",
+      "config_key": "model.provider: your-provider (fallback)",
       "rationale": "Complex reasoning, architectural critiques, edge cases where daily driver is insufficient.",
       "status": "active",
-      "configured_in": "~/.hermes/config.yaml (not explicitly configured as fallback — implicit)",
+      "configured_in": "~/.agent-home/configuration file (not explicitly configured as fallback — implicit)",
       "notes": "Used only when daily driver fails or for complex tasks requiring maximum capability."
     },
     {
       "id": "model-reasoning-effort",
       "config": "reasoning_effort: low",
-      "scope": ["agent", "delegation"],
+      "scope": [
+        "agent",
+        "delegation"
+      ],
       "rationale": "Sweet spot confirmed empirically: low reasoning gives ~80% of gain from none→high. High shows diminishing returns. Max triggers overthinking. Default low, none for trivial ops, high for complex reasoning tasks only.",
       "label": "reasoning-effort-low-sweet-spot",
       "evidence": "Performance scales linearly with reasoning effort; cost scales exponentially. Multiple independent benchmarks confirm low as optimal default.",
       "status": "active",
       "notes": "Practice update (2026-05-31): medium is the deployed sweet spot. Low for cost-sensitive bulk tasks. Static only — no dynamic adjustment exists in Hermes Agent.",
-      "configured_in": "~/.hermes/config.yaml: agent.reasoning_effort: low, delegation.reasoning_effort: low"
+      "configured_in": "~/.agent-home/configuration file: agent.reasoning_effort: low, delegation.reasoning_effort: low"
     }
   ],
   "architecture": [
@@ -86,9 +104,13 @@
       "id": "arch-2-layer-skills",
       "decision": "2-layer skill system: Core (always loaded) + Auto-Detection (trigger-based)",
       "status": "active",
-      "details": "Core: 3 always-loaded skills (hermes-agent, soul-management, verification). Auto-detect: skills loaded on trigger from curated custom directory (0- prefix convention). Priority: core/standard/niche/one-shot classification in YAML frontmatter.",
+      "details": "Core: 3 always-loaded skills (agent-config-skill, identity-skill, verification-skill). Auto-detect: skills loaded on trigger from curated custom directory (0- prefix convention). Priority: core/standard/niche/one-shot classification in YAML frontmatter.",
       "source": "Anthropic Agent Skills L1/L2 model + custom classification",
-      "reflected_in": ["ARCHITECTURE.md §5", "skills-classifier skill", "classification.json"]
+      "reflected_in": [
+        "ARCHITECTURE.md §5",
+        "skills-classifier skill",
+        "classification.json"
+      ]
     },
     {
       "id": "arch-subagent-empty-shell",
@@ -96,23 +118,34 @@
       "status": "active",
       "details": "No SOUL, no personality, no auto-loaded skills. All context injected at delegation time. max_concurrent=3, max_spawn_depth=3.",
       "source": "Dochkina 2026 — dynamic delegation > fixed roles. Orchestrator composes optimal sub-agent per task rather than pre-assigning static capabilities. Aligns with SRA-Bench (Su et al., 2026): pre-loading capabilities wastes context.",
-      "reflected_in": ["delegation-agentique skill", "SOUL.md (CEO workflow)", "ARCHITECTURE.md §6"]
+      "reflected_in": [
+        "delegation-skill skill",
+        "identity file (orchestrated routing)",
+        "ARCHITECTURE.md §6"
+      ]
     },
     {
       "id": "arch-pointer-soul",
       "decision": "Pointer-SOUL architecture — SOUL as pointer to system, not manual",
       "status": "active",
-      "details": "SOUL.md is a minimal identity pointer (~800-1200 tokens), not a procedural manual. Justified by Cowan (2001) 4-chunk working memory limit — a long SOUL document would be ineffective as the agent cannot hold it all simultaneously. Externalized architecture (skills, config, GitHub) provides the operational substance.",
+      "details": "identity file is a minimal identity pointer (~800-1200 tokens), not a procedural manual. Justified by Cowan (2001) 4-chunk working memory limit — a long SOUL document would be ineffective as the agent cannot hold it all simultaneously. Externalized architecture (skills, config, GitHub) provides the operational substance.",
       "source": "Cowan (2001) Working Memory Capacity, Clark & Chalmers Extended Mind (1998)",
-      "reflected_in": ["SOUL.md", "hermes-agent skill", "MANIFESTO.md"]
+      "reflected_in": [
+        "identity file",
+        "agent-config-skill skill",
+        "MANIFESTO.md"
+      ]
     },
     {
       "id": "arch-memory-disabled",
       "decision": "Memory disabled by design",
       "status": "active",
-      "details": "Compaction captures low-importance data and wastes context window tokens. External memory providers add latency (network round-trips on every operation) and reduce portability (API dependencies, provider lock-in, service availability). Critical info is externalized to SOUL.md (pointer architecture), data/*.json (structured user data — zero-latency, fully portable, version-controlled), and GitHub (backup and versioning for the entire architecture). This provides manual, granular control over what persists with no external dependencies.",
+      "details": "Compaction captures low-importance data and wastes context window tokens. External memory providers add latency (network round-trips on every operation) and reduce portability (API dependencies, provider lock-in, service availability). Critical info is externalized to identity file (pointer architecture), data/*.json (structured user data — zero-latency, fully portable, version-controlled), and GitHub (backup and versioning for the entire architecture). This provides manual, granular control over what persists with no external dependencies.",
       "source": "Radical Externalization pillar — context is the scarce resource",
-      "reflected_in": ["config.yaml: memory_enabled: false", "MANIFESTO.md"]
+      "reflected_in": [
+        "configuration file: memory_enabled: false",
+        "MANIFESTO.md"
+      ]
     },
     {
       "id": "arch-var-notation",
@@ -120,7 +153,10 @@
       "status": "active",
       "details": "All configurable values are declared as {VAR} in templates and resolved at runtime. Enables single-source-of-truth configuration that is version-controlled, auditable, and portable across environments.",
       "source": "Manifesto Pillar 5 (Single Source of Truth)",
-      "reflected_in": ["config.yaml.template", "ARCHITECTURE.md"]
+      "reflected_in": [
+        "configuration file.template",
+        "ARCHITECTURE.md"
+      ]
     },
     {
       "id": "arch-0-prefix",
@@ -128,7 +164,10 @@
       "status": "active",
       "details": "Custom skills use a 0- prefix (e.g., 0-my-skill/) to distinguish them from hub-maintained skills. Provides visual and alphabetical separation, signals curated/owned status.",
       "source": "Skills organization convention",
-      "reflected_in": ["skills/ directory structure", "ARCHITECTURE.md"]
+      "reflected_in": [
+        "skills/ directory structure",
+        "ARCHITECTURE.md"
+      ]
     },
     {
       "id": "arch-benchmarks",
@@ -136,7 +175,10 @@
       "status": "active",
       "details": "Model selection and validation driven by GDPval-AA, PinchBench, τ²-Bench, and Artificial Analysis benchmarks. No model loyalty — benchmark performance determines daily driver selection.",
       "source": "Empirical model evaluation",
-      "reflected_in": ["canonical-design-decisions.json", "ARCHITECTURE.md §6"]
+      "reflected_in": [
+        "canonical-design-decisions.json",
+        "ARCHITECTURE.md §6"
+      ]
     },
     {
       "id": "arch-reasoning-low-medium",
@@ -144,7 +186,10 @@
       "status": "active",
       "details": "Performance scales linearly with reasoning effort, cost scales exponentially. Low reasoning captures ~80% of none→high quality gain at minimal overhead. Max reasoning is wasteful. none is not always better — it misses genuine reasoning benefits for non-trivial tasks.",
       "source": "Empirical testing, Apple 'The Illusion of Thinking' (NeurIPS 2025) — 3-regime model",
-      "reflected_in": ["config.yaml: reasoning_effort: low", "ARCHITECTURE.md §16"]
+      "reflected_in": [
+        "configuration file: reasoning_effort: low",
+        "ARCHITECTURE.md §16"
+      ]
     },
     {
       "id": "arch-context-reduction-500to100",
@@ -152,15 +197,19 @@
       "status": "active",
       "details": "Lazy loading, history truncation (last 10 turns), compact memory index, compression proxy, sub-agent offloading.",
       "source": "Stigmem, SRA-Bench, Lost in the Middle",
-      "reflected_in": ["ARCHITECTURE.md §13"]
+      "reflected_in": [
+        "ARCHITECTURE.md §13"
+      ]
     },
     {
       "id": "arch-write-sandbox",
       "decision": "Read-anywhere, write-limited filesystem access",
       "status": "active",
-      "details": "Allowed: skills/, knowledge/, agents/, AGENTS.md, /tmp/. Never: system files, .env, existing files without permission.",
+      "details": "Allowed: skills/, knowledge/, agents/, AGENTS.md, /tmp/. Never: system files, environment file, existing files without permission.",
       "source": "Cognitive hygiene — prevents orphan files and context leaks",
-      "reflected_in": ["ARCHITECTURE.md §14"]
+      "reflected_in": [
+        "ARCHITECTURE.md §14"
+      ]
     },
     {
       "id": "arch-coaching-protocol",
@@ -168,7 +217,9 @@
       "status": "active",
       "details": "One sentence nudge → execute. 3 failures → STOP and root cause. Warm after technical exchanges.",
       "source": "Coaching tone pillar",
-      "reflected_in": ["ARCHITECTURE.md §15"]
+      "reflected_in": [
+        "ARCHITECTURE.md §15"
+      ]
     },
     {
       "id": "energy-based-personality",
@@ -177,7 +228,12 @@
       "details": "Energy descriptors provide actionable guidance for tone and interaction style. Adjective lists ('intelligent, helpful, friendly') are vague and non-actionable — the agent cannot map them to behavioral patterns. Behavioral energy descriptors ('speak with warmth', 'challenge assumptions when stakes are high') directly translate into output characteristics. Language rules should be context-aware: technical language for technical tasks, social language for social interaction.",
       "source": "SOUL v5.1 redesign, 2026-05-31",
       "status": "active",
-      "reflected_in": ["SOUL-TEMPLATE.md", "SOUL.md", "hermes-agent skill", "soul-management skill"]
+      "reflected_in": [
+        "SOUL-TEMPLATE.md",
+        "identity file",
+        "agent-config-skill skill",
+        "identity-skill skill"
+      ]
     }
   ],
   "tools": [
@@ -187,7 +243,11 @@
       "status": "active",
       "details": "Tavily: general search, crawl, extract. Exa: semantic search, fetch. Jina: read, parallel read, screenshots, classify, academic search.",
       "source": "search-tool-protocol skill",
-      "reflected_in": ["search-tool-protocol skill", "ARCHITECTURE.md §9", "config.yaml MCP config"]
+      "reflected_in": [
+        "search-tool-protocol skill",
+        "ARCHITECTURE.md §9",
+        "configuration file MCP config"
+      ]
     },
     {
       "id": "tool-mcp-dynamic",
@@ -195,7 +255,9 @@
       "status": "active",
       "details": "MCP servers discovered automatically. No manual server config needed for most tools.",
       "source": "Hermes Agent features",
-      "reflected_in": ["config.yaml: mcp.dynamic_discovery: true"]
+      "reflected_in": [
+        "configuration file: mcp.dynamic_discovery: true"
+      ]
     }
   ],
   "skills": [
@@ -203,9 +265,13 @@
       "id": "skill-core-3",
       "decision": "3 core skills (priority: core), always loaded",
       "status": "active",
-      "list": ["hermes-agent", "soul-management", "verification"],
-      "criteria": "Architecture, configuration, verification — used in 50%+ of sessions.",
-      "notes": "42 curated skills across 7 categories (2026-05-31). Core skills renamed to reflect actual deployment: hermes-agent (replaces system-architecture), soul-management (replaces agent-config), verification (unchanged)."
+      "list": [
+        "agent-config-skill",
+        "identity-skill",
+        "verification-skill"
+      ],
+      "criteria": "Architecture, configuration, verification-skill — used in 50%+ of sessions.",
+      "notes": "42 curated skills across 7 categories (2026-05-31). Core skills renamed to reflect actual deployment: agent-config-skill (replaces system-architecture), identity-skill (replaces agent-config), verification-skill (unchanged)."
     }
   ],
   "observations": [
