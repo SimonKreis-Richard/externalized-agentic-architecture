@@ -1,403 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 720" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
   <defs>
-    <!-- Background grid pattern -->
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a2332" stroke-width="0.5"/>
-    </pattern>
-    <pattern id="grid-subtle" width="160" height="160" patternUnits="userSpaceOnUse">
-      <path d="M 160 0 L 0 0 0 160" fill="none" stroke="#1e2a3a" stroke-width="1"/>
-    </pattern>
-
-    <!-- Glow filters -->
-    <filter id="glow-cyan">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-    </filter>
-    <filter id="glow-orange">
-      <feGaussianBlur stdDeviation="2" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-    </filter>
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
-    </filter>
-
-    <!-- Arrow markers -->
-    <marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#58a6ff"/>
-    </marker>
-    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#8b949e"/>
-    </marker>
-    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#d29922"/>
-    </marker>
-
-    <!-- Gradients -->
-    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#0d1117"/>
-      <stop offset="100%" style="stop-color:#0d1117"/>
-    </linearGradient>
-    <linearGradient id="agent-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a2744"/>
-      <stop offset="100%" style="stop-color:#0d1a30"/>
-    </linearGradient>
-    <linearGradient id="soul-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1c2a1e"/>
-      <stop offset="100%" style="stop-color:#0f1a11"/>
-    </linearGradient>
-    <linearGradient id="human-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#2d1a1e"/>
-      <stop offset="100%" style="stop-color:#1a0f12"/>
-    </linearGradient>
-    <linearGradient id="skills-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a2438"/>
-      <stop offset="100%" style="stop-color:#0d1828"/>
-    </linearGradient>
-    <linearGradient id="git-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#2a1a1e"/>
-      <stop offset="100%" style="stop-color:#1a0f14"/>
-    </linearGradient>
-    <linearGradient id="flow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#58a6ff;stop-opacity:0"/>
-      <stop offset="50%" style="stop-color:#58a6ff;stop-opacity:0.15"/>
-      <stop offset="100%" style="stop-color:#58a6ff;stop-opacity:0"/>
-    </linearGradient>
+    <marker id="ah-green" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#3fb950"/></marker>
+    <marker id="ah-blue" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#58a6ff"/></marker>
+    <marker id="ah-teal" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#39c5cf"/></marker>
+    <marker id="ah-mut" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#8b949e"/></marker>
   </defs>
 
-  <!-- Background -->
-  <rect width="1200" height="900" fill="url(#bg-grad)"/>
-  <rect width="1200" height="900" fill="url(#grid)"/>
-  <rect width="1200" height="900" fill="url(#grid-subtle)"/>
-
-  <!-- Title bar -->
-  <text x="600" y="30" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="16" font-weight="bold">Minimal Agentic Architecture — v5.0.0</text>
-  <text x="600" y="46" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="10">Externalized Cognitive System · Input → Process → Externalize</text>
-  <line x1="100" y1="52" x2="1100" y2="52" stroke="#1e2a3a" stroke-width="1"/>
-
-  <!-- ============================================ -->
-  <!-- 1. HUMAN (top) -->
-  <!-- ============================================ -->
-  <rect x="50" y="62" width="300" height="70" rx="8" fill="url(#human-grad)" stroke="#f85149" stroke-width="1.5" filter="url(#shadow)"/>
-  <text x="200" y="86" text-anchor="middle" fill="#f85149" font-family="'Courier New', monospace" font-size="13" font-weight="bold">🧑 Humain</text>
-  <text x="200" y="102" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="9">[USER_NAME] — [DOMAIN]</text>
-  <text x="200" y="116" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Pensées · Tâches · Décisions · Révisions</text>
-
-  <!-- Obsidian box -->
-  <rect x="50" y="140" width="300" height="40" rx="6" fill="url(#bg-grad)" stroke="#8b949e" stroke-width="1" stroke-dasharray="4,3"/>
-  <text x="200" y="164" text-anchor="middle" fill="#d2a8ff" font-family="'Courier New', monospace" font-size="10">📝 Obsidian Vault</text>
-  <text x="200" y="176" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Notes + Contexte externe</text>
-
-  <!-- Human → Obsidian arrow -->
-  <line x1="200" y1="132" x2="200" y2="140" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-gray)"/>
-
-  <!-- Human → Agent arrows (direct + via Obsidian) -->
-  <path d="M 350 97 L 420 97" stroke="#58a6ff" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)"/>
-  <text x="385" y="93" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="7">Instruction</text>
-
-  <!-- Obsidian → Agent -->
-  <path d="M 350 160 L 420 160" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" fill="none" marker-end="url(#arrow-gray)"/>
-  <text x="385" y="156" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Contexte</text>
-
-  <!-- ============================================ -->
-  <!-- FIL D'ARIENE — Red Thread (continuous line) -->
-  <!-- ============================================ -->
-  <line x1="1150" y1="62" x2="1150" y2="870" stroke="#f85149" stroke-width="2" stroke-opacity="0.6" stroke-dasharray="8,4"/>
-  <text x="1150" y="58" text-anchor="middle" fill="#f85149" font-family="'Courier New', monospace" font-size="8" font-weight="bold">FIL</text>
-  <text x="1150" y="878" text-anchor="middle" fill="#f85149" font-family="'Courier New', monospace" font-size="8" font-weight="bold">D'ARIANE</text>
-  <text x="1162" y="72" fill="#f85149" font-family="'Courier New', monospace" font-size="6" opacity="0.5">commits</text>
-  <text x="1162" y="82" fill="#f85149" font-family="'Courier New', monospace" font-size="6" opacity="0.5">traces</text>
-  <text x="1162" y="92" fill="#f85149" font-family="'Courier New', monospace" font-size="6" opacity="0.5">sessions</text>
-
-  <!-- ============================================ -->
-  <!-- 2. AGENT (center) — SOUL -->
-  <!-- ============================================ -->
-  <rect x="380" y="62" width="400" height="130" rx="10" fill="url(#agent-grad)" stroke="#58a6ff" stroke-width="2" filter="url(#shadow)"/>
-  <text x="580" y="84" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="14" font-weight="bold">🤖 Agent Central — [AGENT_NAME]</text>
-
-  <!-- SOUL sub-box -->
-  <rect x="395" y="94" width="370" height="48" rx="6" fill="url(#soul-grad)" stroke="#3fb950" stroke-width="1.5"/>
-  <text x="580" y="112" text-anchor="middle" fill="#3fb950" font-family="'Courier New', monospace" font-size="10" font-weight="bold">SOUL.md (~800 chars)</text>
-  <text x="395" y="126" fill="#7ee787" font-family="'Courier New', monospace" font-size="7">Identité · Ton · Réflexes externalisation · Délégation · Autonomie · Recherche</text>
-  <text x="765" y="126" text-anchor="end" fill="#7ee787" font-family="'Courier New', monospace" font-size="7">Injected every turn</text>
-
-  <!-- Agent capabilities row -->
-  <text x="395" y="152" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔧 Distillation · Synthèse · Délégation · Décision · Externalisation</text>
-  <text x="395" y="166" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Model: MOE (cost-efficient) · MCP: Tavily→Exa→Jina</text>
-
-  <!-- ============================================ -->
-  <!-- 3. CORE SKILLS (3, always loaded) -->
-  <!-- ============================================ -->
-  <rect x="380" y="200" width="400" height="120" rx="10" fill="url(#skills-grad)" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="6,3" filter="url(#shadow)"/>
-  <text x="580" y="218" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📚 3 Core Skills — Toujours chargés</text>
-  <text x="580" y="232" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">priority: core · Injected à chaque session</text>
-
-  <!-- Core skills grid (3 items) -->
-  <text x="395" y="260" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">system-architecture</text>
-  <text x="395" y="280" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">agent-config</text>
-  <text x="395" y="300" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">verification</text>
-
-  <!-- Agent → Core Skills arrow -->
-  <line x1="580" y1="192" x2="580" y2="200" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
-
-  <!-- ============================================ -->
-  <!-- 4. AUTO-DETECT SKILLS (~76, cloud around) -->
-  <!-- ============================================ -->
-  <!-- Cloud-like grouping using circles -->
-  <circle cx="820" cy="80" r="22" fill="none" stroke="#8b949e" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
-  <circle cx="850" cy="100" r="22" fill="none" stroke="#8b949e" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
-  <circle cx="830" cy="130" r="22" fill="none" stroke="#8b949e" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
-  <circle cx="870" cy="140" r="22" fill="none" stroke="#8b949e" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
-  <circle cx="840" cy="165" r="22" fill="none" stroke="#8b949e" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
-
-  <rect x="790" y="62" width="130" height="140" rx="12" fill="#0d1117" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.9"/>
-  <text x="855" y="80" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="9" font-weight="bold">☁️ ~76 Skills</text>
-  <text x="855" y="93" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Auto-Detect</text>
-
-  <text x="800" y="108" fill="#ffa657" font-family="'Courier New', monospace" font-size="7">◆ Standard (52)</text>
-  <text x="800" y="120" fill="#d29922" font-family="'Courier New', monospace" font-size="7">◆ Niche (13)</text>
-  <text x="800" y="132" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">◆ One-Shot (10)</text>
-
-  <text x="800" y="150" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">docker-management</text>
-  <text x="800" y="162" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">codebase-inspection</text>
-  <text x="800" y="174" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">docx · xlsx · pdf · pptx</text>
-  <text x="800" y="186" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">blood-analyst · kpi-hero</text>
-  <text x="800" y="198" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">omh-deep-research · ...</text>
-
-  <text x="855" y="196" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="6">6 sources: custom, bundled,</text>
-  <text x="855" y="206" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="6">community, hub, anthropic, lobehub</text>
-
-  <!-- Agent → Auto-detect skills arrow -->
-  <path d="M 780 127 L 790 127" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-gray)"/>
-  <text x="782" y="123" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="6">frontmatter match</text>
-
-  <!-- ============================================ -->
-  <!-- 5. SUB-AGENTS (empty shells, right side) -->
-  <!-- ============================================ -->
-  <rect x="790" y="270" width="130" height="120" rx="10" fill="#0d1117" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,3"/>
-  <text x="855" y="290" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="9" font-weight="bold">🔀 Sous-Agents</text>
-  <text x="855" y="303" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Coquilles vides</text>
-
-  <rect x="800" y="310" width="110" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="855" y="323" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">sous-agent-1</text>
-
-  <rect x="800" y="332" width="110" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="855" y="345" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">sous-agent-2</text>
-
-  <rect x="800" y="354" width="110" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="855" y="367" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">sous-agent-3</text>
-
-  <text x="855" y="384" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="6">Max 3 concurrents</text>
-  <text x="855" y="392" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="6">Contexte explicite seulement</text>
-
-  <!-- Agent → Sub-agents arrow (parallel delegation) -->
-  <line x1="780" y1="330" x2="790" y2="330" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
-  <text x="782" y="326" text-anchor="end" fill="#58a6ff" font-family="'Courier New', monospace" font-size="6">delegate_task</text>
-
-  <!-- ============================================ -->
-  <!-- 6. DATA FLOW — Input → Process → Externalize -->
-  <!-- ============================================ -->
-  <rect x="380" y="328" width="400" height="36" rx="6" fill="url(#flow-grad)" stroke="#58a6ff" stroke-width="0.8" stroke-opacity="0.3"/>
-  <text x="580" y="342" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="9" font-weight="bold">⊳ Input → Process → Externalize ⊲</text>
-  <text x="580" y="355" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Le contexte est un espace de travail · Tout ce qui peut sortir, sort</text>
-
-  <!-- ============================================ -->
-  <!-- 7. AUTONOMOUS MAINTENANCE (during sessions) -->
-  <!-- ============================================ -->
-  <rect x="50" y="200" width="300" height="120" rx="10" fill="#0d1117" stroke="#d29922" stroke-width="1.5"/>
-  <text x="200" y="220" text-anchor="middle" fill="#d29922" font-family="'Courier New', monospace" font-size="11" font-weight="bold">🔧 Autonomie — Pendant les sessions</text>
-  <text x="200" y="234" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Audit, recycle, discover — no external scheduler</text>
-
-  <rect x="60" y="244" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="257" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📋 system audit</text>
-  <text x="330" y="257" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">config drift, skill bloat</text>
-
-  <rect x="60" y="266" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="279" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔍 SOUL cross-check</text>
-  <text x="330" y="279" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">contradictions, completeness</text>
-
-  <rect x="60" y="288" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="301" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📊 skill curation</text>
-  <text x="330" y="301" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">quality, consolidation</text>
-
-  <rect x="60" y="310" width="280" height="18" rx="4" fill="#1a2332" stroke="#d29922" stroke-width="0.5"/>
-  <text x="70" y="323" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🌐 skill discovery</text>
-  <text x="330" y="323" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">candidates, gap detection</text>
-
-  <!-- ============================================ -->
-  <!-- 8. RAG Domain Knowledge (knowledge base) -->
-  <!-- ============================================ -->
-  <rect x="50" y="370" width="300" height="120" rx="10" fill="#0d1117" stroke="#3fb950" stroke-width="1.5"/>
-  <text x="200" y="392" text-anchor="middle" fill="#3fb950" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📖 RAG — Domain Knowledge</text>
-  <text x="200" y="408" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">knowledge/[DOMAIN_SKILL]/ · 9 guides</text>
-
-  <text x="60" y="424" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Domain Reference Guides</text>
-  <text x="60" y="438" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Topic A · Topic B · Topic C</text>
-  <text x="60" y="452" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Topic D · Topic E · Topic F</text>
-  <text x="60" y="466" fill="#7ee787" font-family="'Courier New', monospace" font-size="8">▸ Topic G · Topic H</text>
-  <text x="60" y="480" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Requête → contexte RAG → réponse ciblée</text>
-
-  <!-- Agent → RAG arrow -->
-  <path d="M 380 440 L 350 440" stroke="#3fb950" stroke-width="1" marker-end="url(#arrow-gray)"/>
-  <text x="362" y="436" text-anchor="end" fill="#3fb950" font-family="'Courier New', monospace" font-size="6">RAG query</text>
-
-  <!-- ============================================ -->
-  <!-- 9. MEMORY section (below agent) -->
-  <!-- ============================================ -->
-  <rect x="50" y="500" width="300" height="100" rx="8" fill="#0d1117" stroke="#bc8cff" stroke-width="1.5"/>
-  <text x="200" y="520" text-anchor="middle" fill="#bc8cff" font-family="'Courier New', monospace" font-size="11" font-weight="bold">📊 Data & Skills</text>
-  <text x="200" y="536" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Memory: Disabled by Design</text>
-
-  <text x="60" y="554" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">📄 data/*.json — Données structurées</text>
-  <text x="60" y="568" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔧 0-custom-skills/ — Skills curatés (0- prefix)</text>
-  <text x="60" y="582" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">🔍 session_search() — Historique</text>
-
-  <!-- Agent → Memory arrow -->
-  <path d="M 380 506 L 350 506" stroke="#bc8cff" stroke-width="1" marker-end="url(#arrow-gray)"/>
-  <text x="362" y="502" text-anchor="end" fill="#bc8cff" font-family="'Courier New', monospace" font-size="6">memory() tool</text>
-
-  <!-- Agent → Session output (agents/) -->
-  <path d="M 780 420 L 790 420" stroke="#58a6ff" stroke-width="1" marker-end="url(#arrow-cyan)"/>
-
-  <!-- ============================================ -->
-  <!-- 10. SESSION OUTPUT -->
-  <!-- ============================================ -->
-  <rect x="790" y="400" width="130" height="80" rx="8" fill="#0d1117" stroke="#ff7b72" stroke-width="1"/>
-  <text x="855" y="420" text-anchor="middle" fill="#ff7b72" font-family="'Courier New', monospace" font-size="9" font-weight="bold">📁 Session Output</text>
-  <text x="800" y="438" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">project/agents/</text>
-  <text x="800" y="452" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">YYYY-MM-DD_desc.ext</text>
-  <text x="800" y="466" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Horodaté · Traçable</text>
-  <text x="800" y="476" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Projet → AGENTS.md</text>
-
-  <!-- ============================================ -->
-  <!-- 11. RECYCLING LOOP -->
-  <!-- ============================================ -->
-  <rect x="380" y="372" width="400" height="60" rx="8" fill="#0d1117" stroke="#d29922" stroke-width="1" stroke-dasharray="4,3"/>
-  <text x="580" y="392" text-anchor="middle" fill="#d29922" font-family="'Courier New', monospace" font-size="10" font-weight="bold">♻️ Recycling Loop — Context as Compound Interest</text>
-
-  <text x="390" y="410" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Insight → learnings-capture → data/*.json · Procedure ×3 → save as skill</text>
-  <text x="390" y="424" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Overlap → skill-recycler → consolidation · Rich session → propose capture</text>
-
-  <!-- ============================================ -->
-  <!-- 12. THE FUNNEL (visual) -->
-  <!-- ============================================ -->
-  <rect x="380" y="440" width="400" height="120" rx="8" fill="#0d1117" stroke="#ffa657" stroke-width="1.5"/>
-  <text x="580" y="460" text-anchor="middle" fill="#ffa657" font-family="'Courier New', monospace" font-size="10" font-weight="bold">🔻 The Funnel — Distillation Engine</text>
-
-  <!-- Funnel stages -->
-  <rect x="395" y="470" width="370" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="405" y="483" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">1. Chaotic Input</text>
-  <text x="755" y="483" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Pensées·web·sous-agents·fichiers</text>
-
-  <line x1="580" y1="488" x2="580" y2="492" stroke="#8b949e" stroke-width="1" marker-end="url(#arrow-gray)"/>
-
-  <rect x="395" y="492" width="370" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="405" y="505" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">2. Distillation ([AGENT_NAME])</text>
-  <text x="755" y="505" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Analyse·synthèse·délégation</text>
-
-  <line x1="580" y1="510" x2="580" y2="514" stroke="#8b949e" stroke-width="1" marker-end="url(#arrow-gray)"/>
-
-  <rect x="395" y="514" width="370" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="405" y="527" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">3. Categorization</text>
-  <text x="755" y="527" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Procédure·fait·contexte·pattern</text>
-
-  <line x1="580" y1="532" x2="580" y2="536" stroke="#8b949e" stroke-width="1" marker-end="url(#arrow-gray)"/>
-
-  <rect x="395" y="536" width="370" height="18" rx="4" fill="#1a2332" stroke="#8b949e" stroke-width="0.5"/>
-  <text x="405" y="549" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">4. Structured Knowledge</text>
-  <text x="755" y="549" text-anchor="end" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Skills·memory·data·AGENTS.md</text>
-
-  <!-- ============================================ -->
-  <!-- 13. EXTERNALIZED MIND (bottom center) -->
-  <!-- ============================================ -->
-  <rect x="380" y="568" width="400" height="50" rx="8" fill="#0d1117" stroke="#58a6ff" stroke-width="1" stroke-opacity="0.4"/>
-  <text x="580" y="588" text-anchor="middle" fill="#58a6ff" font-family="'Courier New', monospace" font-size="9" font-weight="bold">🧠 Extended Mind (Clark & Chalmers, 1998)</text>
-  <text x="580" y="604" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Fichiers textes = mémoire étendue · Survit à tout outil · Portable</text>
-
-  <!-- ============================================ -->
-  <!-- 14. GIT REPO (bottom bar) -->
-  <!-- ============================================ -->
-  <rect x="50" y="630" width="1100" height="60" rx="8" fill="url(#git-grad)" stroke="#f85149" stroke-width="2" filter="url(#shadow)"/>
-  <text x="600" y="654" text-anchor="middle" fill="#f85149" font-family="'Courier New', monospace" font-size="13" font-weight="bold">📦 Git Repository — Single Source of Truth & Backup</text>
-  <text x="600" y="672" text-anchor="middle" fill="#e6edf3" font-family="'Courier New', monospace" font-size="9">github.com/[GITHUB_USER]/[REPO_NAME] · SSH push automatique · Tout est versionné</text>
-  <text x="600" y="686" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">~/.hermes/ (runtime) + project/ (travail) + skills/ (procédural) + knowledge/ (domaine) + data/ (personnel)</text>
-
-  <!-- Connector lines to Git -->
-  <line x1="200" y1="600" x2="200" y2="630" stroke="#f85149" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="3,2"/>
-  <line x1="580" y1="618" x2="580" y2="630" stroke="#f85149" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="3,2"/>
-  <line x1="855" y1="480" x2="855" y2="630" stroke="#f85149" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="3,2"/>
-
-  <!-- ============================================ -->
-  <!-- 15. DATA FLOW ARROWS (bottom area connections) -->
-  <!-- ============================================ -->
-  <!-- Memory → Externalized Mind -->
-  <line x1="350" y1="550" x2="380" y2="593" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-gray)"/>
-
-  <!-- Session output → Git -->
-  <line x1="855" y1="480" x2="855" y2="630" stroke="#f85149" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="3,2"/>
-
-  <!-- RAG → Externalized Mind -->
-  <line x1="350" y1="430" x2="380" y2="593" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" opacity="0.3" marker-end="url(#arrow-gray)"/>
-
-  <!-- ============================================ -->
-  <!-- LEGEND -->
-  <!-- ============================================ -->
-  <rect x="50" y="700" width="1100" height="90" rx="6" fill="#0d1117" stroke="#1e2a3a" stroke-width="1"/>
-  <text x="70" y="720" fill="#8b949e" font-family="'Courier New', monospace" font-size="9" font-weight="bold">Légende</text>
-
-  <line x1="70" y1="738" x2="110" y2="738" stroke="#58a6ff" stroke-width="1.5"/>
-  <text x="115" y="742" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Data flow (instruction, délégation, output)</text>
-
-  <line x1="330" y1="738" x2="370" y2="738" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2"/>
-  <text x="375" y="742" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Contexte / chargement dynamique</text>
-
-  <line x1="600" y1="738" x2="640" y2="738" stroke="#f85149" stroke-width="1"/>
-  <text x="645" y="742" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Fil d'Ariane / Git traceability</text>
-
-  <rect x="70" y="752" width="12" height="12" rx="2" fill="#1a2744" stroke="#58a6ff" stroke-width="1.5"/>
-  <text x="88" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Agent & scaffolding</text>
-
-  <rect x="230" y="752" width="12" height="12" rx="2" fill="#0d1117" stroke="#d29922" stroke-width="1.5"/>
-  <text x="248" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Autonomie</text>
-
-  <rect x="400" y="752" width="12" height="12" rx="2" fill="#0d1117" stroke="#3fb950" stroke-width="1.5"/>
-  <text x="418" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Connaissances / RAG</text>
-
-  <rect x="570" y="752" width="12" height="12" rx="2" fill="#0d1117" stroke="#bc8cff" stroke-width="1.5"/>
-  <text x="588" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Mémoire durable</text>
-
-  <rect x="740" y="752" width="12" height="12" rx="2" fill="#0d1117" stroke="#ff7b72" stroke-width="1.5"/>
-  <text x="758" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Output session</text>
-
-  <rect x="910" y="752" width="12" height="12" rx="2" fill="#1a1a1a" stroke="#f85149" stroke-width="2"/>
-  <text x="928" y="762" fill="#8b949e" font-family="'Courier New', monospace" font-size="8">Git version control</text>
-
-  <!-- Architecture pillars -->
-  <text x="70" y="782" fill="#58a6ff" font-family="'Courier New', monospace" font-size="8" font-weight="bold">4 Piliers:</text>
-  <text x="180" y="782" fill="#e6edf3" font-family="'Courier New', monospace" font-size="8">Externalisation · Autonomie · Funnel · Recyclage</text>
-
-  <!-- Fil d'Ariane quote at bottom -->
-  <line x1="100" y1="798" x2="1100" y2="798" stroke="#1e2a3a" stroke-width="1"/>
-  <text x="600" y="816" text-anchor="middle" fill="#f85149" font-family="'Courier New', monospace" font-size="8" font-style="italic" opacity="0.7">« Le système n'est pas une boîte noire. C'est un labyrinthe dont chaque couloir est un commit, chaque sortie est un fichier, et le fil qui relie tout est l'historique des externalisations. »</text>
-
-  <!-- Version -->
-  <text x="600" y="835" text-anchor="middle" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Architecture Overview v5.0.0 · Vue d'ensemble du système externalisé · 2026-05-19</text>
-
-  <!-- Bottom decorative line -->
-  <line x1="100" y1="842" x2="1100" y2="842" stroke="#1e2a3a" stroke-width="0.5"/>
-  <circle cx="600" cy="842" r="2" fill="#58a6ff"/>
-
-  <!-- Connecting lines on left side -->
-  <!-- Human → Autonomy (maintenance scope indicator) -->
-  <path d="M 50 97 L 30 97 L 30 260 L 50 260" stroke="#8b949e" stroke-width="0.5" stroke-dasharray="2,2" fill="none" opacity="0.3"/>
-
-  <!-- ============================================ -->
-  <!-- AGENTS.md pointer -->
-  <!-- ============================================ -->
-  <rect x="790" y="488" width="130" height="70" rx="6" fill="#0d1117" stroke="#d2a8ff" stroke-width="1"/>
-  <text x="855" y="506" text-anchor="middle" fill="#d2a8ff" font-family="'Courier New', monospace" font-size="8" font-weight="bold">AGENTS.md</text>
-  <text x="800" y="522" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Contexte projet</text>
-  <text x="800" y="536" fill="#e6edf3" font-family="'Courier New', monospace" font-size="7">Chargé au démarrage</text>
-  <text x="800" y="550" fill="#8b949e" font-family="'Courier New', monospace" font-size="7">Per project</text>
-
-  <line x1="790" y1="522" x2="780" y2="522" stroke="#d2a8ff" stroke-width="0.8" marker-end="url(#arrow-gray)"/>
+  <rect x="0" y="0" width="1000" height="720" fill="#0d1117"/>
+
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" fill="#3fb950" font-size="23" font-weight="700">The Bounded Agent — Architecture</text>
+  <text x="500" y="63" text-anchor="middle" fill="#8b949e" font-size="13">Curate what enters the attention budget at each step</text>
+
+  <!-- Ariadne's Thread spine -->
+  <line x1="40" y1="92" x2="40" y2="600" stroke="#39c5cf" stroke-width="2" stroke-dasharray="3 5" opacity="0.8"/>
+  <text x="28" y="350" text-anchor="middle" fill="#39c5cf" font-size="12" font-weight="600" transform="rotate(-90 28 350)">Ariadne's Thread · every step leaves a trace</text>
+
+  <!-- Human -->
+  <rect x="360" y="86" width="280" height="50" rx="9" fill="#1c2128" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="500" y="108" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="600">Human</text>
+  <text x="500" y="125" text-anchor="middle" fill="#8b949e" font-size="11">steers · articulates · decides</text>
+
+  <!-- Reflective mirror arrow -->
+  <line x1="500" y1="136" x2="500" y2="174" stroke="#bc8cff" stroke-width="2" marker-end="url(#ah-blue)" marker-start="url(#ah-blue)"/>
+  <text x="516" y="151" fill="#bc8cff" font-size="11" font-weight="600">Reflective Mirror</text>
+  <text x="516" y="165" fill="#8b949e" font-size="10">articulate ⇄ challenge</text>
+
+  <!-- Context window -->
+  <rect x="210" y="178" width="560" height="212" rx="11" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+  <text x="490" y="201" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="700">CONTEXT WINDOW — the finite attention budget</text>
+
+  <rect x="226" y="214" width="160" height="88" rx="7" fill="#1c2128" stroke="#58a6ff" stroke-width="1.2"/>
+  <text x="306" y="240" text-anchor="middle" fill="#e6edf3" font-size="12.5" font-weight="600">Core identity</text>
+  <text x="306" y="259" text-anchor="middle" fill="#8b949e" font-size="10.5">always loaded · tiny</text>
+  <text x="306" y="288" text-anchor="middle" fill="#58a6ff" font-size="10">Pointer Identity</text>
+
+  <rect x="402" y="214" width="160" height="88" rx="7" fill="#1c2128" stroke="#d29922" stroke-width="1.2"/>
+  <text x="482" y="240" text-anchor="middle" fill="#e6edf3" font-size="12.5" font-weight="600">Loaded skill</text>
+  <text x="482" y="259" text-anchor="middle" fill="#8b949e" font-size="10.5">on demand</text>
+  <text x="482" y="288" text-anchor="middle" fill="#d29922" font-size="10">Progressive Disclosure</text>
+
+  <rect x="578" y="214" width="176" height="88" rx="7" fill="#1c2128" stroke="#bc8cff" stroke-width="1.2"/>
+  <text x="666" y="240" text-anchor="middle" fill="#e6edf3" font-size="12.5" font-weight="600">Working memory</text>
+  <text x="666" y="259" text-anchor="middle" fill="#8b949e" font-size="10.5">capped</text>
+  <text x="666" y="288" text-anchor="middle" fill="#bc8cff" font-size="10">Externalized Memory</text>
+
+  <rect x="226" y="314" width="528" height="60" rx="7" fill="#10151c" stroke="#30363d" stroke-width="1"/>
+  <text x="490" y="340" text-anchor="middle" fill="#e6edf3" font-size="12" font-weight="600">Active reasoning · scratch</text>
+  <text x="490" y="358" text-anchor="middle" fill="#8b949e" font-size="10.5">everything that isn't being reasoned about lives outside</text>
+
+  <!-- Sub-agents -->
+  <rect x="802" y="210" width="178" height="124" rx="9" fill="#1c2128" stroke="#39c5cf" stroke-width="1.5"/>
+  <text x="891" y="236" text-anchor="middle" fill="#e6edf3" font-size="13" font-weight="600">Sub-agents</text>
+  <text x="891" y="254" text-anchor="middle" fill="#8b949e" font-size="10.5">clean context windows</text>
+  <text x="891" y="320" text-anchor="middle" fill="#39c5cf" font-size="10">Orchestrated Routing ·</text>
+  <text x="891" y="332" text-anchor="middle" fill="#39c5cf" font-size="10">Dynamic Delegation</text>
+  <line x1="770" y1="244" x2="800" y2="244" stroke="#8b949e" stroke-width="1.6" marker-end="url(#ah-mut)"/>
+  <text x="785" y="237" text-anchor="middle" fill="#8b949e" font-size="9.5">delegate</text>
+  <line x1="800" y1="284" x2="770" y2="284" stroke="#39c5cf" stroke-width="1.6" marker-end="url(#ah-teal)"/>
+  <text x="785" y="300" text-anchor="middle" fill="#39c5cf" font-size="9.5">distilled summary</text>
+
+  <!-- Load / externalize arrows -->
+  <line x1="360" y1="430" x2="360" y2="392" stroke="#3fb950" stroke-width="2" marker-end="url(#ah-green)"/>
+  <text x="352" y="414" text-anchor="end" fill="#3fb950" font-size="11" font-weight="600">just-in-time load</text>
+  <line x1="620" y1="392" x2="620" y2="430" stroke="#58a6ff" stroke-width="2" marker-end="url(#ah-blue)"/>
+  <text x="630" y="414" fill="#58a6ff" font-size="11" font-weight="600">externalize</text>
+
+  <!-- Durable -->
+  <rect x="210" y="432" width="368" height="152" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1.4"/>
+  <text x="232" y="457" fill="#e6edf3" font-size="13" font-weight="700">DURABLE</text>
+  <text x="318" y="457" fill="#8b949e" font-size="11">— load on demand</text>
+  <text x="232" y="484" fill="#c9d1d9" font-size="12">• Skills — procedures</text>
+  <text x="232" y="507" fill="#c9d1d9" font-size="12">• Memory tiers — facts</text>
+  <text x="232" y="530" fill="#c9d1d9" font-size="12">• Project context</text>
+  <text x="232" y="553" fill="#c9d1d9" font-size="12">• Config</text>
+  <text x="232" y="574" fill="#3fb950" font-size="10">Context Recycling promotes here →</text>
+
+  <!-- Archive -->
+  <rect x="600" y="432" width="380" height="152" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1.4"/>
+  <text x="622" y="457" fill="#e6edf3" font-size="13" font-weight="700">ARCHIVE</text>
+  <text x="708" y="457" fill="#8b949e" font-size="11">— append-only · searched on demand</text>
+  <text x="622" y="484" fill="#c9d1d9" font-size="12">• Session logs</text>
+  <text x="622" y="507" fill="#c9d1d9" font-size="12">• Learnings</text>
+  <text x="622" y="530" fill="#c9d1d9" font-size="12">• Idea backlog</text>
+  <text x="622" y="566" fill="#8b949e" font-size="10.5">the extended mind — survives any single session</text>
+
+  <!-- Cycle + platform note -->
+  <text x="500" y="624" text-anchor="middle" fill="#8b949e" font-size="11.5">Cycle:  Archive → Durable (capture / promote) → Context (load / reason) → Durable (externalize) → Archive</text>
+  <text x="500" y="648" text-anchor="middle" fill="#6e7681" font-size="11">Increasingly platform-native: compaction · file-memory · portable skills format</text>
 </svg>

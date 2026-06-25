@@ -14,6 +14,19 @@ This is not an accident. It is a consequence of the architecture itself.
 
 ---
 
+## What's ours in this claim
+
+The cognitive science in this essay is borrowed and credited — the Socratic
+method, rubber-duck debugging, the protégé effect, reflective practice. None of
+it is new. What this framework adds is the *architectural* claim: that
+**externalizing an agent's configuration is, for the person doing it, an
+instrument of thought** — and that you can deliberately design your setup to
+maximize that effect rather than tolerate it as a side benefit. Sections 1–6
+make the case; section 7 is how you actually do it. This piece is openly
+conceptual: its sources orient the design, they do not prove it.
+
+---
+
 ## 1. The Socratic Method, Unbounded
 
 Socrates taught by asking questions, not by providing answers. The Socratic method (*elenchus*) works through a disciplined sequence:
@@ -172,13 +185,13 @@ It is not a replacement for a human tutor — it lacks embodied understanding, e
 
 ## 4. The Reflective Mirror: Workflow as Pedagogy
 
-The Distillation Cycle (DÉMÊLER → DISTILLER → DÉCIDER) is not just a processing model. It is a **learning cycle.**
+The Distillation Cycle (Disentangle → Distill → Decide) is not just a processing model. It is a **learning cycle.**
 
 | Distillation Phase | Cognitive Act | Learning Outcome |
 |---|---|---|
-| **DÉMÊLER** (Untangle) | Decompose, question, identify contradictions | Critical analysis — *"What do I actually know?"* |
-| **DISTILLER** (Distill) | Extract patterns, compress, find connections | Synthesis — *"What matters and why?"* |
-| **DÉCIDER** (Decide) | Commit, externalize, act | Decision-making — *"What will I do?"* |
+| **Disentangle** | Decompose, question, identify contradictions | Critical analysis — *"What do I actually know?"* |
+| **Distill** | Extract patterns, compress, find connections | Synthesis — *"What matters and why?"* |
+| **Decide** | Commit, externalize, act | Decision-making — *"What will I do?"* |
 
 Every pass through this cycle is an act of learning. The user who decomposes a messy problem is practicing **analytical thinking.** The user who distills patterns is practicing **synthesis.** The user who commits to a decision and externalizes it is practicing **judgment.**
 
@@ -273,6 +286,50 @@ This is the deepest claim of the externalization architecture: **the system is n
 > *"The medium is the message."* — Marshall McLuhan, *Understanding Media* (1964)
 
 The medium here is externalization. The message is: **to know something, write it down. To understand it, teach it. To master it, build a system around it.**
+
+---
+
+## 7. Using the Mirror While You Configure
+
+Theory is worth only the habits it produces. Five practices turn the
+architecture into an actual thinking instrument while you build your agent —
+each one a way of forcing the articulation that *is* the understanding.
+
+### 1. Explain before you implement
+Before writing a skill or a config block, state the problem and the *why* to the
+agent, and have it withhold the implementation until you have. The friction is
+the feature: if you can't say what problem this config solves, the config is
+premature.
+> *Standing instruction:* "When I ask you to build config or a skill, first make
+> me state the problem and why this approach. Don't write anything until I have."
+
+### 2. The "why is this here" review
+Periodically re-read your own skills and config with the agent and let it
+interrogate provenance: *why does this rule exist, what breaks if it's removed,
+when did it last earn its place?* Your past self wrote it; your present self has
+to defend it. Most dead config dies in this review.
+
+### 3. Instruct it to challenge, not comply
+Put a reflex in your identity layer: before executing a config change, the agent
+surfaces one tension and asks one generative question. An agent tuned to agree
+faster is a mirror that flatters — useless for thinking. You want the question
+you'd rather skip.
+
+### 4. Write skills as teaching artifacts
+Treat every skill as a lecture to a student with no prior context (the Feynman
+technique at system scale). If a step won't reduce to plain language, you don't
+yet understand it — and the gap in your explanation is the gap in your design.
+
+### 5. Externalize the decision, not just the result
+Capture the rationale, not only the outcome — this is where the mirror meets the
+Ariadne's Thread. "We chose X because Y, having rejected Z" is the sentence future-you
+will thank you for. Re-reading it months later is the mirror talking back.
+
+### What this is not
+The mirror is not a yes-man and not therapy. Its entire value is friction. If
+your configuration makes the agent comply faster and question less, you have
+optimized away the one thing this principle is about. Speed of agreement is not
+the goal; clarity of your own thinking is.
 
 ---
 

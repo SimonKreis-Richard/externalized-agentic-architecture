@@ -1,140 +1,56 @@
-# Architecture — Technical Topology
+# Architecture — How the Principles Compose
 
-> Information flow, component map, and the 3-layer stack for context-efficient AI agents.
-
----
-
-## System Overview
-
-```
-┌──────────────────────────────────────────────────────┐
-│                    USER INPUT                         │
-└──────────────────────┬───────────────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────────────┐
-│              ORCHESTRATION LAYER                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │   Routing    │  │   Direct    │  │  Parallel   │ │
-│  │   (Goal)     │  │  Execution  │  │  Workers    │ │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘ │
-└─────────┼────────────────┼────────────────┼─────────┘
-          │                │                │
-          ▼                ▼                ▼
-┌──────────────────────────────────────────────────────┐
-│              COGNITION LAYER                          │
-│  ┌─────────────────────────────────────────────────┐ │
-│  │  Context Window (processing workspace)          │ │
-│  │  • Active reasoning                             │ │
-│  │  • Working memory (hard cap)                    │ │
-│  │  • Loaded skills (on demand)                    │ │
-│  └─────────────────────────────────────────────────┘ │
-└──────────────────────┬───────────────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────────────┐
-│              EXTERNALIZATION LAYER                    │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐ │
-│  │ Identity │ │  Skills  │ │  Memory  │ │Project │ │
-│  │ (SOUL)   │ │ (Procs)  │ │ (Facts)  │ │Context │ │
-│  └──────────┘ └──────────┘ └──────────┘ └────────┘ │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐            │
-│  │ Backlog  │ │ Learnings│ │  Config  │            │
-│  │ (Ideas)  │ │ (Insights│ │ (Prefs)  │            │
-│  └──────────┘ └──────────┘ └──────────┘            │
-└──────────────────────────────────────────────────────┘
-```
-
-## The 3-Zone Model
-
-Information in the system exists in three zones:
-
-| Zone | What | Lifecycle | Access |
-|------|------|-----------|--------|
-| **Zone 1: Context** | Active reasoning, loaded skills, working memory | Per-session | Every turn |
-| **Zone 2: Durable** | Skills, memory, project context, config | Persistent | On demand |
-| **Zone 3: Archive** | Session logs, learnings history, idea backlog | Append-only | On search |
-
-**The flow:** Zone 3 → Zone 2 (capture/promote) → Zone 1 (load/reason) → Zone 2 (externalize) → Zone 3 (archive)
-
-## Information Flow
-
-### Inbound (User → Agent)
-
-```
-User message
-  → Orchestrator (routing decision)
-  → Direct / Goal-loop / Parallel workers
-  → Load relevant skills (progressive disclosure)
-  → Reason in context window
-  → Externalize results
-```
-
-### Outbound (Agent → User)
-
-```
-Reasoning output
-  → Format for user (concise, cited, actionable)
-  → If durable: externalize to Zone 2
-  → If archival: log to Zone 3
-  → If traceable: add breadcrumb (Fil d'Ariane)
-```
-
-### Self-Maintenance (Agent → System)
-
-```
-Periodic audit (every ~10 sessions)
-  → Check skill freshness
-  → Check memory hygiene
-  → Check config drift
-  → Promote patterns (3-uses rule)
-  → Prune stale artifacts
-```
-
-## Component Map
-
-| Component | Zone | Purpose | Scientific Basis |
-|-----------|------|---------|-----------------|
-| **Identity Layer** | 1 (always) | Who the agent is | Stigmem — compact boot stub |
-| **Core Skills** | 1 (always) | Universal reflexes, safety | SRA-Bench — 2-layer optimal |
-| **Specialist Skills** | 2 (lazy) | Domain procedures | Stigmem — recall on demand |
-| **Working Memory** | 1 (capped) | Durable facts (hard limit) | Cowan — 4±1 chunks |
-| **Long-term Memory** | 2 (unlimited) | Skills, procedures | Clark & Chalmers — extended mind |
-| **Episodic Memory** | 3 (searchable) | Session insights | Biological analogy |
-| **Backlog** | 2-3 | Idea funnel | Funnel Cognition pattern |
-| **Config** | 2 | System preferences | Stable across sessions |
-
-## Token Budget Allocation
-
-Based on Tian Pan (2026) 4-tier allocation model:
-
-| Tier | Purpose | % of Context Window |
-|------|---------|-------------------|
-| **Static Anchors** | Identity + core skills + tools | 10-15% |
-| **Retrieved Context** | Loaded specialist skills | 5-20% |
-| **Conversation** | User messages + reasoning | 50-70% |
-| **Scratch** | Working memory, tool output | 10-20% |
-
-**Key constraint:** Static anchors must remain stable for prompt caching. Dynamic content (loaded skills, conversation) goes after the static prefix.
-
-## Scaling Behavior
-
-| Load Level | Core Skills | Specialist Skills | Total Context Usage |
-|------------|------------|-------------------|-------------------|
-| **Light** (simple query) | 3 loaded | 0 loaded | ~15-20% |
-| **Medium** (research task) | 3 loaded | 1-2 loaded | ~25-35% |
-| **Heavy** (complex project) | 3 loaded | 3-5 loaded | ~40-60% |
-| **Maximum** (multi-domain) | 3 loaded | 5-8 loaded | ~60-80% |
+> The principles aren't a checklist; they form a topology. This is how they fit
+> together around a single agent, across many, and around the human.
 
 ---
 
-## References
+![Architecture overview](concepts/architecture-overview.svg)
 
-| Source | Relevance |
-|--------|-----------|
-| Tian Pan (2026) | Token budget allocation model |
-| Clark & Chalmers (1998) | Extended mind — externalization zones |
-| Cowan (2001) | Working memory capacity |
-| SRA-Bench (2026) | 2-layer loading validation |
-| Stigmem (2026) | Progressive disclosure |
-| Lumer et al. (2026) | Cache stability — static prefix |
+## The one constraint
+
+Everything below exists to answer one question at every step: *what is the
+smallest high-signal context that gets this done?* The architecture is just the
+set of places content can live so that the context window stays lean.
+
+## Three zones
+
+| Zone | What lives here | Loaded |
+|------|-----------------|--------|
+| **Context** | Active reasoning, the loaded skill, working memory | Every turn |
+| **Durable** | Skills, memory tiers, project context, config | On demand |
+| **Archive** | Session logs, learnings, idea backlog | On search |
+
+The flow is a cycle: Archive → Durable (capture / promote) → Context
+(load / reason) → Durable (externalize) → Archive. The Placement Rule decides,
+for each piece, which zone it belongs to.
+
+## The map (principle → zone → Placement Rule question)
+
+| Principle | Operates on | Placement Rule |
+|-----------|-------------|----------------|
+| Pointer Identity | the always-loaded core | Q2 |
+| Progressive Disclosure | how the periphery loads | Q2 |
+| Externalized Memory | the durable tiers | Q1, Q3 |
+| Context Recycling | the Context ↔ Archive loop | Q3 |
+| Orchestrated Routing | execution mode selection | Q4 |
+| Dynamic Delegation | sub-agent context isolation | Q4 |
+| Ariadne's Thread | provenance across all zones | Q5 |
+| The Reflective Mirror | the human reading the system | Q7 |
+
+## Single agent → many agents → the human
+
+- **One agent:** the context-discipline principles (1–4) keep its window lean.
+- **Many agents:** orchestration (5–6) is *distributed* context management —
+  isolate expensive context in workers, surface only distilled output.
+- **The human:** the same externalization that helps the model (every zone above)
+  is a thinking aid for the person configuring it (principle 8).
+
+## User-space vs. platform-space
+
+A 2026 reality check: much of the Durable zone is becoming platform-native —
+compaction, file-memory, and skills formats now ship as primitives. The
+architecture still holds, but on a modern harness you increasingly *configure*
+these zones rather than *build* them. Each principle marks where that line falls.
+The decisions — what's core, what tier a fact belongs in, when to delegate, what
+deserves a breadcrumb — remain yours.

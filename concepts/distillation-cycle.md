@@ -1,157 +1,71 @@
-# The Distillation Cycle — DÉMÊLER → DISTILLER → DÉCIDER
+# The Distillation Cycle — Disentangle → Distill → Decide
 
-> *A complementary cognitive model to the four-stage Funnel Cognition pipeline. Where Funnel Cognition describes the system-level information flow (chaotic input → structured knowledge), the Distillation Cycle describes the agent's internal cognitive loop — the moment-to-moment processing rhythm within a single session.*
+> The agent's intra-session cognitive loop. Where the Placement Rule decides
+> *where things live*, the Distillation Cycle describes *how the agent processes
+> any non-trivial input* before it externalizes — the moment-to-moment rhythm
+> inside a single turn.
 
 ---
 
-## 1. The Three Phases
-
-The Distillation Cycle is a three-phase cognitive model derived from v3.1 SOUL design. It governs how the agent processes any non-trivial input:
+## The three phases
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    1. DÉMÊLER (Untangle)                    │
-│  Break down the raw input. Identify threads, contradictions,│
-│  unknowns. Separate signal from noise. Map the territory.   │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    2. DISTILLER (Distill)                    │
-│  Extract what matters. Compress to essence. Find patterns,  │
-│  connections, and reusable structures. Reduce volume while  │
-│  preserving meaning.                                        │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     3. DÉCIDER (Decide)                      │
-│  Commit to an output. Write the file, delegate the task,     │
-│  execute the command, or deliver the answer. Externalize.    │
-└─────────────────────────────────────────────────────────────┘
+1. DISENTANGLE   Break the raw input apart. Identify threads, contradictions,
+                 unknowns. Separate signal from noise. Map the territory.
+                          │
+                          ▼
+2. DISTILL       Extract what matters. Compress to essence. Find patterns and
+                 reusable structure. Reduce volume while preserving meaning.
+                          │
+                          ▼
+3. DECIDE        Commit to an output. Write the file, delegate, execute, or
+                 answer. Externalize — cognition becomes durable.
 ```
 
-### Phase 1 — DÉMÊLER (Untangle)
+### 1 — Disentangle
 
-The raw input arrives messy — a user note, a web research result, a sub-agent output, a file dump. The agent's first job is **not** to answer, but to understand.
+Input arrives messy: a note, a research result, a sub-agent dump. The first job
+is **not** to answer but to understand. Decompose it; surface explicit and
+implicit questions; flag contradictions and unknowns; separate what's known from
+what needs research. Output: a structured model of the problem, still in context.
 
-**Actions:**
-- Decompose the input into its constituent parts
-- Identify explicit and implicit questions
-- Flag contradictions, ambiguities, and unknowns
-- Separate what is known from what needs research
-- Map the relationships between elements
+### 2 — Distill
 
-**Output:** A structured mental model of the problem space. Still in context — not yet externalized.
+With a clear model, compress. Extract the core question from each thread; sort
+urgent from important from irrelevant; recognize patterns from past sessions;
+decide what is durable (memory/skill) vs. ephemeral (this session only).
+Distillation is lossy by design — the goal is to lose noise, not signal.
+Traceability (Ariadne's Thread) ensures a discarded thread is still recoverable.
 
-**Example:**
-> User says: *"We need to fix the latency issue in the API gateway, but the team is split on whether to use Redis caching or rewrite the throttling middleware. Also, the CI/CD pipeline is failing intermittently."*
->
-> Démêler produces:
-> - Problem 1: API gateway latency
->   - Solution A: Redis caching
->   - Solution B: Rewrite throttling middleware
-> - Problem 2: CI/CD pipeline intermittent failure (possibly unrelated)
-> - Unknowns: current latency numbers, team size, budget, timeline
+### 3 — Decide
 
-### Phase 2 — DISTILLER (Distill)
+Commit. This is the externalization moment: choose the path, write to the right
+external structure, delegate, execute, and leave a breadcrumb. Output: a durable
+artifact.
 
-With a clear mental model, the agent now **compresses**. This is the active reasoning phase where raw understanding becomes actionable insight.
+## Why it pairs with the attention budget
 
-**Actions:**
-- Extract the core question from each thread
-- Identify which threads are urgent vs. important vs. irrelevant
-- Recognize patterns from past sessions — *"We solved this before"*
-- Determine what is durable (belongs in memory/skills) vs. ephemeral (session-only)
-- Formulate the minimal response that fully addresses the core need
+Each phase is a defense of the attention budget. Disentangle prevents answering
+the wrong question; Distill is the act of finding the "smallest high-signal set";
+Decide moves the result *out* of the window so the next turn starts lean. The
+cycle is the per-turn discipline that the Placement Rule encodes at the level of
+the whole system.
 
-**Output:** A compressed, prioritized representation of what to do. Still in context — the decision moment approaches.
+## When the cycle breaks
 
-**Tension to manage:** Distillation is lossy by nature. The goal is to lose noise, not signal. The fil d'Ariane ensures that if the distillation discarded something important, the original input is still traceable.
+| Failure | Phase | Symptom | Recovery |
+|---------|-------|---------|----------|
+| **Analysis paralysis** | Disentangle | Endless decomposition; the window fills with intermediate models | Time-box it. Externalize the current model as a note, then force Decide. |
+| **Premature commitment** | Distill skipped | Confident but wrong output; externalization that must be reversed | Re-assert the order: disentangle, then distill, then decide. |
+| **Indecision** | Decide | Has the answer, asks permission instead of acting | If the first two phases were thorough, Decide is the natural conclusion. |
+| **Collapse** | All three | Under pressure all phases fuse into one rushed step | Recognize it. Note quickly, then loop properly. Speed without the cycle is noise. |
 
-### Phase 3 — DÉCIDER (Decide)
+## A naming note
 
-The agent commits. This is the **externalization moment** — the phase where cognition becomes durable.
-
-**Actions:**
-- Choose the path (which solution, which sub-agent, which tool)
-- Write the output to the appropriate external structure
-- Delegate parallel work to sub-agents
-- Execute commands, create files, update memory
-- Log the decision node on the fil d'Ariane
-
-**Output:** An externalized artifact — file, skill entry, memory fact, conversation turn, or command result.
+These phases were originally coined in French (*Démêler, Distiller, Décider*) for
+the alliteration and the precision of *démêler* — to untangle a knot. The English
+*Disentangle → Distill → Decide* preserves the meaning and the three-beat rhythm.
 
 ---
 
-## 2. Relationship to Funnel Cognition
-
-The Distillation Cycle and Funnel Cognition are **complementary models at different scales**:
-
-| Dimension | Funnel Cognition | Distillation Cycle |
-|-----------|-----------------|-------------------|
-| **Scope** | System-level, cross-session | Agent-level, intra-session |
-| **Stages** | 4 (Chaotic → Distillation → Categorization → Structured) | 3 (Démêler → Distiller → Décider) |
-| **Analogy** | The entire water treatment plant | The filter at each tap |
-| **Granularity** | Information lifecycle over days/weeks | Cognitive loop over seconds/minutes |
-| **Output** | Durable external structures (skills, memory) | Immediate externalization (file, command, message) |
-
-The two models nest: every turn within the Funnel Cognition pipeline goes through its own DÉMÊLER → DISTILLER → DÉCIDER cycle. A single session may contain dozens of these micro-cycles as the agent processes, delegates, receives results, and externalizes.
-
-```
-Funnel Cognition Pipeline (macro):
-
-  Chaotic Input → [DÉMÊLER → DISTILLER → DÉCIDER] → Categorization → Structured Knowledge
-                      ↑                                     ↑
-                  Each micro-cycle processes              Each routing decision
-                  one piece of input or                   is itself a DÉCIDER
-                  sub-agent result                        moment
-```
-
----
-
-## 3. When the Cycle Breaks
-
-The Distillation Cycle assumes linear progress through all three phases. When it breaks, the system produces characteristic failure modes:
-
-| Failure Mode | Phase | Symptom | Recovery |
-|-------------|-------|---------|----------|
-| **Analysis Paralysis** | DÉMÊLER | Agent keeps decomposing without reaching a decision. Context window fills with intermediate mental models. | Set a time-box. Externalize the current model as a note, then force DÉCIDER. |
-| **Premature Commitment** | DISTILLER skipped | Agent answers before understanding. Produces a confident but wrong output. Waste of externalization — must be reversed. | Retrain the reflex: "DÉMÊLER first, DISTILLER second, DÉCIDER third." The order is not optional. |
-| **Indecision** | DÉCIDER | Agent has the answer but hesitates — asks for permission when it should act. | Trust the cycle. If DÉMÊLER and DISTILLER were thorough, DÉCIDER is the natural conclusion. |
-| **Cycle Collapse** | All three | Under time pressure, all three phases collapse into a single rushed step. Output is low-quality and likely wrong. | Recognize the pressure. Externalize a quick note, then loop properly. Speed without the cycle is noise. |
-
----
-
-## 4. Coaching Application
-
-The Distillation Cycle is also a **coaching tool** for human-agent interactions:
-
-- **When the user is vague**: Guide them through DÉMÊLER by asking clarifying questions (instead of guessing and producing waste).
-- **When analysis is needed**: Signal that you're entering DISTILLER: *"Let me distill this down — here's what I think matters."*
-- **When a decision is due**: Signal DÉCIDER: *"I have enough to decide. Here's my recommendation."*
-
-This explicit phase-signaling builds trust. The user sees the cognitive process, not just the output.
-
----
-
-## 5. The French Naming
-
-The phases are intentionally named in French. Reasons:
-
-1. **Cognitive separation** — French triggers a distinct mental frame from English-language task nouns, reducing automatic mode-switching.
-2. **Precision** — *Démêler* (to untangle a knot) is more specific than "analyze." *Distiller* (to distill a liquid to its essence) is more specific than "synthesize." *Décider* (to cut through) carries the etymological weight of cutting through uncertainty.
-3. **Hermetic signal** — In a bilingual FR/EN system, these terms are recognized as internal cognitive primitives, not conversational filler.
-
----
-
-> *"Démêle avant de distiller. Distille avant de décider. L'ordre n'est pas optionnel."*
->
-> — SOUL v3.1, cognitive model
-
----
-
-**Version**: 1.0.0
-**Date**: 2026-05-19
-**Status**: Complementary to Funnel Cognition
-**Concepts liés**: [information-flow.md](information-flow.md), [fil-dariane.md](fil-dariane.md), [Funnel Cognition in MANIFESTO.md](../MANIFESTO.md)
+*Related: [the-placement-rule.md](the-placement-rule.md), [the-reflective-mirror.md](the-reflective-mirror.md)*

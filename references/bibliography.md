@@ -1,200 +1,104 @@
-# Bibliography — Scientific Foundations
+# Bibliography
 
-> Complete academic references supporting the Externalized Agentic Architecture framework.
-
----
-
-## Foundational Cognitive Science
-
-### Clark, A. & Chalmers, D. (1998)
-**"The Extended Mind"**
-*Analysis, 58*(1), 7-19. doi:10.1093/analys/58.1.7
-
-**Key claim:** Cognition extends into the environment. When external processes function as cognitive processes, they *are* cognition.
-
-**Relevance to this framework:** Foundational justification for externalizing identity, memory, and procedures into files. The agent's mind is not confined to the context window — it extends into its filesystem.
+> Every source here has been opened and verified. Each carries one of three
+> labels — **Validated by** (direct empirical/practitioner evidence on LLMs),
+> **Consistent with** (a cognitive-science analogy that orients design, not a
+> proof), or **Engineering judgment** (convergent practice, no specific paper).
+> Nothing is dressed up as something it is not.
 
 ---
 
-### Miller, G. A. (1956)
-**"The Magical Number Seven, Plus or Minus Two: Some Limits on Our Capacity for Processing Information"**
-*Psychological Review, 63*(2), 81-97.
+## Practitioner & empirical evidence on agents (Validated by)
 
-**Key claim:** Working memory holds 7±2 chunks of information.
+### Anthropic — Effective context engineering for AI agents (2025)
+https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+The anchor for this whole framework. Establishes context as a finite resource
+and the "attention budget"; gives the guiding line — "the smallest possible set
+of high-signal tokens that maximize the likelihood of some desired outcome";
+documents just-in-time retrieval, compaction, structured note-taking, and
+sub-agent architectures.
 
-**Relevance:** Justifies hard caps on working memory and the need for externalization. Even generous context windows have attention limits.
+### Anthropic — Building effective agents (2024)
+https://www.anthropic.com/research/building-effective-agents
+Workflows vs. agents; start simple, add orchestration only when it helps.
+Grounds *Orchestrated Routing*.
 
----
+### Anthropic — How we built our multi-agent research system (2025)
+https://www.anthropic.com/engineering/multi-agent-research-system
+Sub-agents returning distilled summaries outperform single-agent systems on
+complex research. Grounds *Dynamic Delegation*.
 
-### Cowan, N. (2001)
-**"The Magical Number 4 in Short-Term Memory: A Reconsideration of Mental Storage Capacity"**
-*Behavioral and Brain Sciences, 24*(1), 87-114.
+### Liu, N. F. et al. — Lost in the Middle (2023)
+https://arxiv.org/abs/2307.03172
+LLMs show U-shaped attention: strongest at the start and end of context, weakest
+in the middle. Grounds the position arguments in *Pointer Identity* and
+*Progressive Disclosure*.
 
-**Key claim:** Working memory capacity is closer to 4±1 chunks.
+### Lumer, E. et al. — Don't Break the Cache (2026)
+https://arxiv.org/abs/2601.06007
+Prompt caching cuts cost 41–80% and improves TTFT 13–31% when the static prefix
+is kept stable. Supports keeping the core stable (*Pointer Identity*).
 
-**Relevance:** Strengthens the case for hard memory caps and lazy loading. The effective capacity is even smaller than Miller suggested.
+### Chroma — Context Rot (research)
+https://research.trychroma.com/context-rot
+Recall degrades as context length grows. The empirical basis for the
+"finite resource with diminishing returns" claim.
 
----
+## Cognitive-science framing (Consistent with — analogy, not proof)
 
-### Sweller, J. (1988)
-**"Cognitive Load During Problem Solving: Effects on Learning"**
-*Cognitive Science, 12*(2), 257-285.
+### Clark, A. & Chalmers, D. — The Extended Mind (1998)
+https://doi.org/10.1093/analys/58.1.7
+External structures that function as cognition are part of the cognitive system.
+The framing for *Externalized Memory* and *The Reflective Mirror*.
 
-**Key claim:** Intrinsic cognitive load (task complexity) and extraneous cognitive load (presentation format) compete for working memory.
+### Miller, G. A. — The Magical Number Seven (1956)
+https://doi.org/10.1037/h0043158
+Working memory ≈ 7±2 chunks. Motivates hard caps on always-loaded context.
 
-**Relevance:** Instruction-heavy system prompts create extraneous load that competes with task reasoning. The 3-tier reflex architecture minimizes extraneous load.
+### Cowan, N. — The Magical Number 4 (2001)
+https://doi.org/10.1017/S0140525X01003922
+A tighter estimate of working-memory capacity. Motivates the working-memory cap
+in *Externalized Memory*.
 
----
+### Sweller, J. — Cognitive Load During Problem Solving (1988)
+https://doi.org/10.1207/s15516709cog1202_4
+Intrinsic vs. extraneous load compete for working memory. Frames instruction-heavy
+prompts as extraneous load.
 
-## LLM-Specific Research
+## Engineering heritage (Consistent with / Engineering judgment)
 
-### Liu, N. F. et al. (2023)
-**"Lost in the Middle: How Language Models Use Long Contexts"**
-*Transactions of the Association for Computational Linguistics (TACL)*. arXiv:2307.03172.
+### Hunt, A. & Thomas, D. — The Pragmatic Programmer (1999)
+https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/
+DRY and rubber-duck debugging. Grounds *Context Recycling* and *The Reflective Mirror*.
 
-**Key claim:** LLMs exhibit U-shaped attention — strongest at beginning and end of context, weakest in the middle.
+### Gamma, E. et al. — Design Patterns (1994)
+https://www.oreilly.com/library/view/design-patterns-elements/0201633612/
+The problem → solution → consequences format this catalog borrows.
 
-**Relevance:** Identity must be positioned first (primacy). Pointers to skills go last (recency). Middle content degrades. This drives the placement strategy for all system components.
-
----
-
-### Huang, J. et al. (2025)
-**"Persona Scaling Law: When Does Persona Prompting Work?"**
-arXiv:2510.11734.
-
-**Key claim:** Beyond anchoring, more persona text yields diminishing returns in behavior quality.
-
-**Relevance:** Compact identity (~800-1200 tokens) outperforms verbose identity. The quality ceiling is reached quickly; additional text adds noise, not signal.
-
----
-
-### Tian Pan (2026)
-**"Token Budget Allocation for Agent Systems"**
-April 2026.
-
-**Key claim:** 4-tier allocation — static anchors (10-15%), retrieved context, conversation, scratch. Context rot causes 65% of enterprise AI failures.
-
-**Relevance:** Drives the token budget model. Static anchors (identity + core skills) must be stable and compact. Dynamic content fills the rest.
-
----
-
-## Agent Architecture Research
-
-### Su et al. (2026) — SRA-Bench
-**"SRA-Bench: Benchmarking Skill Retrieval and Augmentation for LLM Agents"**
-arXiv 2604.24594, April 2026.
-
-**Key claims:**
-- 2-layer loading (always + retrieved) is optimal
-- Passing the correct skill improves performance by 12-23 points
-- 8 distractor skills drop accuracy from 60% to 45%
-- This fragility does not disappear with larger models
-- Beyond ~50 skills, retrieval is mandatory
-
-**Relevance:** Validates the 2-layer skill architecture. Core skills (always loaded) + specialist skills (lazy). Also justifies keeping core skills few (3 is optimal).
+### Plato — Apology (Socratic method)
+https://www.gutenberg.org/ebooks/1656
+Understanding through articulation and questioning. Framing for *The Reflective Mirror*.
 
 ---
 
-### Stigmem — Stanford/Eidetic Labs (2026)
-**"Lazy Instruction Discovery for LLM Agents"**
-May 2026.
+## Removed sources (transparency)
 
-**Key claims:**
-- Compact boot stub (<400 tokens) + recall on demand = 50-87% token reduction
-- 0 regressions from lazy loading
-- Intent-derived keywords beat content-derived keywords for retrieval triggers
+Earlier drafts of this repo cited the following, which **could not be verified
+and have been removed**. We list them so the correction is on the record:
 
-**Relevance:** Validates progressive disclosure pattern. Compact identity + lazy skill loading is the optimal architecture. Also informs trigger design for skill discovery.
+- *"Stigmem — Stanford/Eidetic Labs (2026)"* — no such paper or lab found. Fabricated.
+- *"Dochkina (2026), Google Scaling Agent Study"* — not found. Fabricated.
+- *"Do et al. (2024), Dynamite Delegation, 38.7% on GAIA"* — not found. Fabricated.
+- *"Persona Scaling Law: When Does Persona Prompting Work? (Huang et al., 2025)"* —
+  the arXiv ID 2510.11734 is real, but the paper is *"Scaling Law in LLM Simulated
+  Personality: More Detailed and Realistic Persona Profile Is All You Need"* and
+  argues roughly the **opposite** of what was claimed. Removed.
+- *"SRA-Bench: Benchmarking… (Su et al., 2026)"* with specific stats — a real
+  paper exists ("Skill Retrieval Augmentation for Agentic AI", arXiv 2604.24594)
+  but the cited title and figures were not verifiable, so the citation was dropped
+  rather than misrepresent it.
+- *"Tian Pan (2026), Token Budget Allocation"* — a real blog post, not a paper,
+  with an unverifiable headline statistic. Dropped; the point it supported is
+  already covered by the Anthropic guide above.
 
----
-
-### Lumer et al. (2026)
-**"Don't Break the Cache: Optimizing Prompt Caching for LLM Agents"**
-January 2026. arXiv 2601.
-
-**Key claims:**
-- Prompt caching reduces API costs 41-80%
-- TTFT improves 13-31%
-- Static content first (system prompt + tools) = cacheable
-- Dynamic content last = not cacheable
-
-**Relevance:** Justifies the static prefix architecture. Identity + core skills must not change between turns to maximize cache hits.
-
----
-
-### Dochkina (2026)
-**"Dynamic Delegation in Multi-Agent Systems"**
-Google Scaling Agent Study.
-
-**Key claim:** Dynamic delegation (orchestrator composes optimal worker per task) outperforms static role assignment in task completion and resource efficiency.
-
-**Relevance:** Validates the orchestrated routing pattern. The orchestrator routes, doesn't execute. Roles are composed per task, not pre-assigned.
-
----
-
-### Do et al. (2024)
-**"Dynamite Delegation: A Framework for Multi-Agent Orchestration"**
-GAIA Benchmark.
-
-**Key claim:** 38.7% improvement on GAIA benchmark with dynamic delegation framework.
-
-**Relevance:** Empirical validation of dynamic orchestration over static multi-agent patterns.
-
----
-
-## Design Methodology
-
-### Ries, E. (2011)
-**"The Lean Startup"**
-*Crown Business.*
-
-**Key claim:** Build-Measure-Learn. Minimum Viable Product (MVP) — ship the simplest version that works, then iterate.
-
-**Relevance:** The MVP pattern in agent architecture — implement minimum viable behavior, test, iterate. Don't over-engineer before validating.
-
----
-
-### Catrambone, R. (2002)
-**"Problem Solving as an Organized Activity"**
-*In: Handbook of Applied Cognition.*
-
-**Key claim:** Structured procedures reduce cognitive load and improve transfer.
-
-**Relevance:** Externalized procedures (skills) reduce agent cognitive load and improve consistency across sessions.
-
----
-
-## Software Engineering
-
-### Gamma, E. et al. (1994)
-**"Design Patterns: Elements of Reusable Object-Oriented Software"**
-*Addison-Wesley.*
-
-**Key claim:** Documenting recurring design patterns improves software quality and maintainability.
-
-**Relevance:** The patterns catalog in this framework follows the Gang-of-Four pattern format: Problem → Solution → Validation → Anti-patterns.
-
----
-
-### Hunt, A. & Thomas, D. (1999)
-**"The Pragmatic Programmer"**
-*Addison-Wesley.*
-
-**Key claim:** DRY (Don't Repeat Yourself). Every piece of knowledge should have a single, unambiguous representation.
-
-**Relevance:** The 3-uses rule and context recycling pattern. Repeated procedures are promoted to single-source skills.
-
----
-
-## Citation Format
-
-When referencing this framework, use:
-
-```
-Externalized Agentic Architecture (2026). Design patterns for 
-context-efficient AI agents. GitHub repository.
-```
-
----
-
-*Last updated: 2026-06-06*
+*Last verified: 2026-06-24*
