@@ -60,11 +60,6 @@ the whole system.
 | **Indecision** | Decide | Has the answer, asks permission instead of acting | If the first two phases were thorough, Decide is the natural conclusion. |
 | **Collapse** | All three | Under pressure all phases fuse into one rushed step | Recognize it. Note quickly, then loop properly. Speed without the cycle is noise. |
 
-## A naming note
-
-These phases were originally coined in French (*Démêler, Distiller, Décider*) for
-the alliteration and the precision of *démêler* — to untangle a knot. The English
-*Disentangle → Distill → Decide* preserves the meaning and the three-beat rhythm.
 
 ---
 
